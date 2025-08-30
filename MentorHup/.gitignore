@@ -1,0 +1,8 @@
+# Visual Studio temporary files
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.log
+*.dbmdl

@@ -1,0 +1,44 @@
+@MentorHup_HostAddress = https://localhost:7020
+
+GET {{MentorHup_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
+
+POST {{MentorHup_HostAddress}}/api/mentees/login
+Content-Type: application/json
+
+{
+  //MenteeLoginRequest
+}
+
+###
+
+GET {{MentorHup_HostAddress}}/api/mentees/profile
+
+###
+
+POST {{MentorHup_HostAddress}}/api/mentees/register
+Content-Type: application/json
+
+{
+  "name": "a7med",
+  "gender": "Male",
+  "email": "a7med12@string.com",
+  "password": "string@123"
+}
+
+
+
+
+###
+
+POST {{MentorHup_HostAddress}}/api/mentees/login-admin
+Content-Type: application/json
+
+{
+  "email": "admin@mentorhub.com",
+  "password": "Admin@123"
+}
+
+###
