@@ -38,6 +38,7 @@ namespace MentorHup.Extensions
             services.AddScoped<IMenteeAuthService, MenteeAuthService>();
             services.AddScoped<IMentorAuthService, MentorAuthService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAuthService, AuthService>();
 
             services.AddSwaggerGen(c =>
             {
