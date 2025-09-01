@@ -1,3 +1,10 @@
+@import "tailwindcss";
+
+#root {
+  max-width: 100% !important;
+  padding: 0 !important;
+}
+
 :root {
   --primary: #06171c;
   --primary-rgba: rgba(6, 23, 28, 0.8); /* background */
@@ -23,7 +30,7 @@ body {
 }
 
 .bg-dark {
-  background-color: var(--primary-rgba);
+  background-color: var(--primary);
 }
 
 .text-dark {
