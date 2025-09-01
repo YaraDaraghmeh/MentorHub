@@ -1,8 +1,10 @@
 @import "tailwindcss";
 
 #root {
-  max-width: 100% !important;
-  padding: 0 !important;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 0px;
 }
 
 :root {
@@ -27,6 +29,10 @@
 body {
   margin: 0;
   font-family: "Inter", sans-serif;
+  text-align: center;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
 }
 
 .bg-dark {

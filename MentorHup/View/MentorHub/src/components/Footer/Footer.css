@@ -1,0 +1,6 @@
+footer {
+  border-top: 1px solid var(--primary-light);
+  font-size: 14px;
+  color: var(--accent);
+  height: 233px;
+}

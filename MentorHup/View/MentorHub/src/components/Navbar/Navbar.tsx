@@ -7,11 +7,11 @@ import { IoIosArrowForward } from "react-icons/io";
 
 const Nav = () => {
   return (
-    <nav className="relative bg-dark flex flex-shrink-0 self-stretch items-center justify-between mx-auto">
+    <nav className="relative bg-dark flex flex-shrink-0 self-stretch items-center justify-between w-full">
       <a className="flex items-start">
         <img src={logo} />
       </a>
-      <ul className="flex items-center justify-center self-stretch gap-3">
+      <ul className="flex items-center justify-center h-full self-stretch h-full w-full gap-3">
         <ListItem link="/"> Home</ListItem>
         <ListItem link="/about"> About</ListItem>
         <ListItem link="/browsMentor"> Brows Mentors</ListItem>
