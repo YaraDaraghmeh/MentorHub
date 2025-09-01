@@ -12,6 +12,7 @@
             public List<string> Skills { get; set; } = new();
             public string AccessToken { get; set; } = null!;
             public DateTime Expires { get; set; }
+          //  public List<MentorAvailabilityResponse> Availabilities { get; set; } = new();
 
-        }
     }
+}

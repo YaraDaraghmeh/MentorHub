@@ -11,6 +11,7 @@ namespace MentorHup.Infrastructure.Context
         public DbSet<Mentor> Mentors { get; set; }
         public DbSet<Skill> Skills { get; set; } 
         public DbSet<MentorSkill> MentorSkills { get; set; }
+        public DbSet<MentorAvailability> MentorAvailabilities { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -35,6 +36,12 @@ namespace MentorHup.Infrastructure.Context
                 .HasOne(ms => ms.Skill)
                 .WithMany(s => s.MentorSkills)
                 .HasForeignKey(ms => ms.SkillId);
+
+            builder.Entity<MentorAvailability>()
+                .HasOne(ma => ma.Mentor)
+                .WithMany(m => m.Availabilities)
+                .HasForeignKey(ma => ma.MentorId)
+                .OnDelete(DeleteBehavior.Cascade);
 
 
             builder.Entity<Skill>().HasData(
