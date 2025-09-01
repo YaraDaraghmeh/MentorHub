@@ -11,7 +11,9 @@ export default function ListItem({ link, children }: ListItemProps) {
     <li className="flex-col items-center p-3">
       <NavLink
         to={link}
-        className={({ isActive }) => (isActive ? ".active" : "")}
+        className={({ isActive }) =>
+          isActive ? "active flex-col items-center p-3" : ""
+        }
       >
         {children}
       </NavLink>
