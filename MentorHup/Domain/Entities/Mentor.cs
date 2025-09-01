@@ -12,5 +12,7 @@
         public ApplicationUser ApplicationUser { get; set; } = null!;
 
         public ICollection<MentorSkill> MentorSkills { get; set; } = new List<MentorSkill>();
+        public ICollection<MentorAvailability> Availabilities { get; set; } = new List<MentorAvailability>();
+
     }
 }

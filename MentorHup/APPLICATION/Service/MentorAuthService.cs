@@ -82,6 +82,18 @@ namespace MentorHup.APPLICATION.Service
                     SkillId = skillId
                 });
             }
+
+            foreach (var availabilityDto in request.Availabilities)
+            {
+                _context.MentorAvailabilities.Add(new MentorAvailability
+                {
+                    MentorId = mentor.Id,
+                    StartTime = availabilityDto.StartTime,
+                    EndTime = availabilityDto.EndTime,
+                    DurationInMinutes = availabilityDto.DurationInMinutes,
+                    IsBooked = false
+                });
+            }
             await _context.SaveChangesAsync();
 
             var token = await _tokenService.CreateTokenAsync(user);
@@ -92,6 +104,17 @@ namespace MentorHup.APPLICATION.Service
                             .Include(ms => ms.Skill)
                             .Select(ms => ms.Skill.SkillName)
                             .ToListAsync();
+
+            //var availabilities = await _context.MentorAvailabilities
+            //                        .Where(ma => ma.MentorId == mentor.Id)
+            //                        .Select(ma => new MentorAvailabilityResponse
+            //                        {
+            //                            StartTime = ma.StartTime,
+            //                            EndTime = ma.EndTime,
+            //                            DurationInMinutes = ma.DurationInMinutes,
+            //                            IsBooked = ma.IsBooked
+            //                        })
+            //                        .ToListAsync();
 
             return new MentorLoginRegistrationResult
             {
@@ -106,6 +129,7 @@ namespace MentorHup.APPLICATION.Service
                     Email = user.Email!,
                     Roles = roles.ToList(),
                     Skills = skills,
+                   // Availabilities = availabilities,
                     AccessToken = token,
                     Expires = DateTime.UtcNow.AddHours(3)
                 }
