@@ -8,6 +8,9 @@ namespace MentorHup.Infrastructure.Context
         : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Mentee> Mentees { get; set; }
+        public DbSet<Mentor> Mentors { get; set; }
+        public DbSet<Skill> Skills { get; set; } 
+        public DbSet<MentorSkill> MentorSkills { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -17,6 +20,29 @@ namespace MentorHup.Infrastructure.Context
              .HasOne(m => m.ApplicationUser)
              .WithOne(u => u.Mentee)
              .HasForeignKey<Mentee>(m => m.ApplicationUserId);
+
+            builder.Entity<Mentor>()
+                .HasOne(m => m.ApplicationUser)
+                .WithOne(u => u.Mentor)
+                .HasForeignKey<Mentor>(m => m.ApplicationUserId);
+
+            builder.Entity<MentorSkill>()
+                .HasOne(ms => ms.Mentor)
+                .WithMany(m => m.MentorSkills)
+                .HasForeignKey(ms => ms.MentorId);
+
+            builder.Entity<MentorSkill>()
+                .HasOne(ms => ms.Skill)
+                .WithMany(s => s.MentorSkills)
+                .HasForeignKey(ms => ms.SkillId);
+
+
+            builder.Entity<Skill>().HasData(
+        new Skill { Id = 1, SkillName = "C#" },
+        new Skill { Id = 2, SkillName = "JavaScript" },
+        new Skill { Id = 3, SkillName = "React" },
+        new Skill { Id = 4, SkillName = "SQL" }
+    );
 
         }
     }

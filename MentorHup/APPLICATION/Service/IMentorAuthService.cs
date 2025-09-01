@@ -1,0 +1,11 @@
+﻿using MentorHup.APPLICATION.DTOs.Mentor;
+
+namespace MentorHup.APPLICATION.Service
+{
+    public interface IMentorAuthService
+    {
+        Task<MentorLoginRegistrationResult> RegisterAsync(MentorRegisterRequest request);
+        Task<MentorLoginRegistrationResult> LoginAsync(MentorLoginRequest request);
+    }
+
+}

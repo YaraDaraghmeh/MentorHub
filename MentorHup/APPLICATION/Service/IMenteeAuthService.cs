@@ -7,4 +7,5 @@ namespace MentorHup.APPLICATION.Service
         Task<MenteeRegisterResult> RegisterAsync(MenteeRegisterRequest request);
         Task<MenteeLoginResult> LoginAsync(MenteeLoginRequest request);
     }
+
 }
