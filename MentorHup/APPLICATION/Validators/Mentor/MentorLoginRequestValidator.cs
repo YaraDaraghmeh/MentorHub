@@ -1,11 +1,11 @@
 ﻿using FluentValidation;
-using MentorHup.APPLICATION.Dtos.Mentee;
+using MentorHup.APPLICATION.DTOs.Mentor;
 
-namespace MentorHup.APPLICATION.Validators.Mentee
+namespace MentorHup.APPLICATION.Validators.Mentor
 {
-    public class MenteeLoginRequestValidator : AbstractValidator<MenteeLoginRequest>
+    public class MentorLoginRequestValidator: AbstractValidator<MentorLoginRequest>
     {
-        public MenteeLoginRequestValidator()
+       public MentorLoginRequestValidator()
         {
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Email is required")

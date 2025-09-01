@@ -42,3 +42,21 @@ Content-Type: application/json
 }
 
 ###
+
+POST {{MentorHup_HostAddress}}/api/mentors/login
+Content-Type: application/json
+
+{
+  //MentorLoginRequest
+}
+
+###
+
+POST {{MentorHup_HostAddress}}/api/mentors/register
+Content-Type: application/json
+
+{
+  //MentorRegisterRequest
+}
+
+###

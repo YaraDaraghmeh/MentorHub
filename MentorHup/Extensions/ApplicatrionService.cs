@@ -36,6 +36,7 @@ namespace MentorHup.Extensions
                 .AddFluentValidationAutoValidation();
 
             services.AddScoped<IMenteeAuthService, MenteeAuthService>();
+            services.AddScoped<IMentorAuthService, MentorAuthService>();
             services.AddScoped<ITokenService, TokenService>();
 
             services.AddSwaggerGen(c =>

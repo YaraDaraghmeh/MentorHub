@@ -6,6 +6,7 @@ namespace MentorHup.Domain.Entities
     {
 
         public Mentee? Mentee { get; set; }
+        public Mentor? Mentor { get; set; }
 
 
     }
