@@ -1,9 +1,10 @@
 ﻿using FluentValidation;
 using MentorHup.APPLICATION.DTOs.Mentor;
+using MentorHup.APPLICATION.DTOs.Unified_Login;
 
-namespace MentorHup.APPLICATION.Validators.Mentor
+namespace MentorHup.APPLICATION.Validators.Unified_Login
 {
-    public class LoginRequestValidator: AbstractValidator<MentorLoginRequest>
+    public class LoginRequestValidator: AbstractValidator<LoginRequest>
     {
        public LoginRequestValidator()
         {
