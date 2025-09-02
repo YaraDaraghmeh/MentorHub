@@ -32,6 +32,10 @@ namespace MentorHup.APPLICATION.Validators.Mentor
             RuleFor(x => x.SkillIds)
                 .NotEmpty().WithMessage("At least one skill is required");
 
+            RuleFor(x => x.Field)
+                .NotEmpty().WithMessage("Field is required")
+                .MaximumLength(100).WithMessage("Field must not exceed 100 characters");
+
 
             RuleForEach(x => x.Availabilities).ChildRules(
                 a =>
