@@ -5,7 +5,7 @@ using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace MentorHup.APPLICATION.Service
+namespace MentorHup.APPLICATION.Service.AuthServices
 {
     public class MenteeAuthService : IMenteeAuthService
     {
@@ -95,6 +95,7 @@ namespace MentorHup.APPLICATION.Service
             }
 
             var token = await _tokenService.CreateTokenAsync(user);
+            var roles = await _userManager.GetRolesAsync(user);
 
             return new MenteeLoginResult
             {
@@ -105,7 +106,9 @@ namespace MentorHup.APPLICATION.Service
                     Name = user.Mentee.Name,
                     Gender = user.Mentee.Gender,
                     Email = user.Email!,
-                    AccessToken = token
+                    Roles = roles.ToList() ,
+                    AccessToken = token,
+                    Expires = DateTime.UtcNow.AddHours(3)
                 }
             };
         }

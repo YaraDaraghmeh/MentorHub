@@ -1,6 +1,6 @@
 ﻿using MentorHup.APPLICATION.Dtos.Mentee;
 
-namespace MentorHup.APPLICATION.Service
+namespace MentorHup.APPLICATION.Service.AuthServices
 {
     public interface IMenteeAuthService
     {

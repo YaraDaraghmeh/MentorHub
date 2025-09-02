@@ -5,7 +5,7 @@ using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-namespace MentorHup.APPLICATION.Service
+namespace MentorHup.APPLICATION.Service.AuthServices
 {
     public class MentorAuthService : IMentorAuthService
     {

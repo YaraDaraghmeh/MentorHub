@@ -1,7 +1,10 @@
 ﻿using MentorHup.APPLICATION.Dtos.Mentee;
+using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.APPLICATION.Service;
+using MentorHup.APPLICATION.Service.AuthServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 
 namespace MentorHup.APPLICATION.Controllers
 {
@@ -10,10 +13,12 @@ namespace MentorHup.APPLICATION.Controllers
     public class MenteesController : ControllerBase
     {
         private readonly IMenteeAuthService _menteeAuthService;
+        private readonly IMentorService _mentorService;
 
-        public MenteesController(IMenteeAuthService menteeAuthService)
+        public MenteesController(IMenteeAuthService menteeAuthService , IMentorService mentorService)
         {
             _menteeAuthService = menteeAuthService;
+            _mentorService = mentorService;
         }
 
         [HttpPost("register")]
@@ -49,17 +54,6 @@ namespace MentorHup.APPLICATION.Controllers
             return Ok(result);
         }
 
-        //[HttpGet("profile")]
-        //[Authorize(Roles = "Mentee")]
-        //[ProducesResponseType(StatusCodes.Status200OK)]   
-        //[ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        //[ProducesResponseType(StatusCodes.Status403Forbidden)]
-        //public IActionResult GetProfile()
-        //{
-        //    var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        //    var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
-
-        //    return Ok(new { UserId = userId, Email = email });
-        //}
+      
     }
 }
