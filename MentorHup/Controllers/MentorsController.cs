@@ -57,15 +57,16 @@ namespace MentorHup.API.Controllers
         [Authorize(Roles = "Mentee")]
         [ProducesResponseType(typeof(List<MentorOverviewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetAll([FromQuery] PaginationDto paginationDto)
+        public async Task<IActionResult> GetAll([FromQuery] PaginationDto dto)
         {
 
             if(!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-            var mentors = await _mentorService.GetAllMentorsAsync(paginationDto.PageSize
-                , paginationDto.PageNumber);
+            var mentors = await _mentorService.GetAllMentorsAsync(dto.PageSize
+                , dto.PageNumber , dto.Field , dto.SkillName , dto.MinPrice , dto.MaxPrice,
+                dto.Experiences);
 
             return Ok(mentors);
         }

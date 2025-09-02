@@ -60,6 +60,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 Description = request.Description,
                 Experiences = request.Experiences,
                 Price = request.Price,
+                Field = request.Field,
                 ApplicationUserId = user.Id
             };
 
@@ -129,7 +130,8 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Email = user.Email!,
                     Roles = roles.ToList(),
                     Skills = skills,
-                   // Availabilities = availabilities,
+                    Field = mentor.Field,
+                    // Availabilities = availabilities,
                     AccessToken = token,
                     Expires = DateTime.UtcNow.AddHours(3)
                 }
@@ -167,6 +169,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Name = user.Mentor.Name,
                     Description = user.Mentor.Description,
                     Experiences = user.Mentor.Experiences,
+                    Field = user.Mentor.Field,
                     Price = user.Mentor.Price,
                     Email = user.Email!,
                     Roles = roles.ToList(),

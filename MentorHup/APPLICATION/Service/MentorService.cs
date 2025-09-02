@@ -8,10 +8,32 @@ namespace MentorHup.APPLICATION.Service
 {
     public class MentorService(ApplicationDbContext context) : IMentorService
     {
-        public async Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(int pageSize, int pageNumber)
+        public async Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(int pageSize,
+            int pageNumber,
+            string? field,
+            string? skillName,
+            decimal? minPrice,
+            decimal? maxPrice,
+            int? Experiences)
         {
             var query =  context.Mentors.Include(m => m.MentorSkills)
-               .ThenInclude(ms => ms.Skill).Include(s => s.Availabilities).AsQueryable();
+               .ThenInclude(ms => ms.Skill).Include(s => s.Availabilities)
+               .AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(field))
+                query = query.Where(m => m.Field.Contains(field));
+
+            if (!string.IsNullOrWhiteSpace(skillName))
+                query = query.Where(m => m.MentorSkills.Any(ms => ms.Skill.SkillName.Contains(skillName)));
+
+            if (minPrice.HasValue)
+                query = query.Where(m => m.Price >= minPrice.Value);
+
+            if (maxPrice.HasValue)
+                query = query.Where(m => m.Price <= maxPrice.Value);
+
+            if (Experiences.HasValue)
+                query = query.Where(m => m.Experiences == Experiences.Value);
 
             var totalCount = await query.CountAsync();
 
@@ -25,6 +47,7 @@ namespace MentorHup.APPLICATION.Service
                     Description = m.Description,
                     Experiences = m.Experiences,
                     Price = m.Price,
+                    Field = m.Field,
                     Skills = m.MentorSkills.Select(ms => ms.Skill.SkillName).ToList(),
                     Availabilities = m.Availabilities.Select(a => new MentorAvailabilityRequest
                     {
