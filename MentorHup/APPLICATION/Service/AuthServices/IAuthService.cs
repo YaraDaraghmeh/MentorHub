@@ -1,6 +1,6 @@
 ﻿using MentorHup.APPLICATION.DTOs.Unified_Login;
 
-namespace MentorHup.APPLICATION.Service
+namespace MentorHup.APPLICATION.Service.AuthServices
 {
     public interface IAuthService
     {

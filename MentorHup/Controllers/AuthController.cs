@@ -1,5 +1,5 @@
 ﻿using MentorHup.APPLICATION.DTOs.Unified_Login;
-using MentorHup.APPLICATION.Service;
+using MentorHup.APPLICATION.Service.AuthServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

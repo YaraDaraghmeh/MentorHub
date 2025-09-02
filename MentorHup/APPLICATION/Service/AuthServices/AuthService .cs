@@ -1,9 +1,9 @@
-﻿    using MentorHup.APPLICATION.DTOs.Unified_Login;
-    using MentorHup.Domain.Entities;
-    using Microsoft.AspNetCore.Identity;
-    using Microsoft.EntityFrameworkCore;
+﻿using MentorHup.APPLICATION.DTOs.Unified_Login;
+using MentorHup.Domain.Entities;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-    namespace MentorHup.APPLICATION.Service
+namespace MentorHup.APPLICATION.Service.AuthServices
     {
         public class AuthService : IAuthService
         {
