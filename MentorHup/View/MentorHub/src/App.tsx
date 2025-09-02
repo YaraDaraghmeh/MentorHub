@@ -2,6 +2,7 @@ import Nav from "./components/Navbar/Navbar";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer/Footer";
+import CompanyLogosSection from "./components/HomePageComponents/CompanyLogosSection";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         </Routes>
         <Footer />
       </Router>
+      
     </>
   );
 }
