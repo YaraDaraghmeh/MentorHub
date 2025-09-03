@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 0px;
+  min-height: 100vh;
 }
 
 :root {
@@ -24,6 +24,18 @@
   --gray-light: #bfbfbf;
   --gray-lighter: #eaecf0;
   --gray-medium: #475467;
+
+  --green-dark: #1e874e;
+  --green-medium: #2c313a;
+
+  --white: #fff;
+  --System-Gray-200: #eae9ed;
+  --System-Gray-500: #878199;
+
+  --black: #000;
+  --Philippine: #8c8c8c;
+
+  --blue-medium: #174291;
 }
 
 body {
@@ -31,8 +43,6 @@ body {
   font-family: "Inter", sans-serif;
   text-align: center;
   box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
 }
 
 .bg-dark {
