@@ -1,31 +1,76 @@
-// import { useState } from "react";
+import { useState } from "react";
 import "./Navbar.css";
 import ListItem from "./list";
 import logo from "/src/assets/MentorHub-logo (1)/cover.png";
 import { BsMoonFill } from "react-icons/bs";
 import { IoIosArrowForward } from "react-icons/io";
+import { IoClose, IoMenu } from "react-icons/io5";
+import { Link, NavLink } from "react-router-dom";
 
 const Nav = () => {
+  const [open, setOpen] = useState(false);
+
+  const navLinks = [
+    { title: "Home", path: "/" },
+    { title: "About", path: "/about" },
+    { title: "Mentors", path: "/browsMentor" },
+    { title: "Contact Us", path: "/contactUs" },
+    { title: "Join Us", path: "/joinUs" },
+  ];
+
   return (
-    <nav className="relative bg-dark flex flex-shrink-0 self-stretch items-center justify-between w-full">
-      <a className="flex items-start">
-        <img src={logo} />
-      </a>
-      <ul className="flex items-center justify-center h-full self-stretch h-full w-full gap-3">
-        <ListItem link="/"> Home</ListItem>
-        <ListItem link="/about"> About</ListItem>
-        <ListItem link="/browsMentor"> Brows Mentors</ListItem>
-        <ListItem link="/contactUs"> Contact Us</ListItem>
-        <ListItem link="/joinUs"> Join Us</ListItem>
-      </ul>
+    <nav className="fixed top-0 left-0 z-50 lg:px-[45px] md:px-[38px] px-6 bg-dark flex flex-shrink-0 items-center justify-between w-full">
+      <Link to="/" className="flex items-center">
+        <img
+          className="cursor-pointer h-10 w-auto cursor-pointer object-contain"
+          src={logo}
+        />
+      </Link>
+      <div className="md:flex hidden md:w-auto items-center px-5 transition-all duration-300 z-50">
+        <ul className="flex md:flex-row flex-col md:items-center justify-center lg:gap-[12px] md:gap-[4px] gap-1">
+          {navLinks.map((link) => (
+            <ListItem link={link.path}>{link.title}</ListItem>
+          ))}
+        </ul>
+      </div>
       <div className="flex items-center justify-center self-stretch gap-3 p-2">
-        <span className="flex-col items-center">
-          <BsMoonFill style={{ width: "24px", height: "24px" }} />
+        <span className="hidden md:flex flex-col items-center">
+          <BsMoonFill className="lg:w-[24px] lg:h-[24px] lg:w-[22px] md:h-22px" />
         </span>
-        <button className="flex items-center justify-center gap-2">
-          <h5>Sign in</h5>
+        <button className="hidden md:flex items-center justify-center gap-2">
+          <h5 className="lg:text-[14px] md:text-[13px]">Sign in</h5>
           <IoIosArrowForward />
         </button>
+        <span
+          onClick={() => setOpen(!open)}
+          className="text-3xl cursor-pointer md:hidden"
+        >
+          {open ? <IoClose /> : <IoMenu />}
+        </span>
+      </div>
+
+      {/* Mobile Menu */}
+      <div
+        className={`
+          md:hidden fixed left-0 w-full bg-dark transition-all duration-300 overflow-auto z-40 ${
+            open ? "top-16 max-h-screen" : "top-16 max-h-0"
+          }`}
+      >
+        <ul className="flex flex-col items-center gap-[20px] py-6">
+          {navLinks.map((link) => (
+            <li className="flex-col items-center md:p-2 lg:text-[14px] md:text-[13px] w-full">
+              <NavLink
+                to={link.path}
+                onClick={() => setOpen(false)}
+                className={({ isActive }) =>
+                  isActive ? "activeMobile w-full items-center py-4" : ""
+                }
+              >
+                {link.title}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
       </div>
     </nav>
   );
