@@ -9,7 +9,7 @@
 
 :root {
   --primary: #06171c;
-  --primary-rgba: rgba(6, 23, 28, 0.8); /* background */
+  --primary-rgba: #071b21; /* background */
 
   --primary-light: #1b2a30;
   --primary-dark: #000e12;
@@ -30,7 +30,10 @@
 
   --white: #fff;
   --System-Gray-200: #eae9ed;
+  --System-Gray-300: #d0d5dd;
+  --System-Gray-400: #98a2b3;
   --System-Gray-500: #878199;
+  --System-Gray-700: #374151;
 
   --black: #000;
   --Philippine: #8c8c8c;
@@ -38,6 +41,8 @@
   --blue-medium: #174291;
 
   --primary-green-light: #96fbf1;
+  --aqua-green: #0adec9;
+  --dark-desaturated-cyan-green: #2a5a55;
 }
 
 body {
@@ -45,6 +50,27 @@ body {
   font-family: "Inter", sans-serif;
   text-align: center;
   box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+}
+
+.search:focus {
+  border: 2px solid blue; /* Add a custom border */
+  box-shadow: 0 0 5px rgba(0, 0, 255, 0.5); /* Add a subtle shadow */
+  outline: none;
+}
+
+.scrollDark {
+  /* scrollbar-width: "thin"; */
+  scrollbar-color: var(--secondary-light);
+  /* background: transparent; */
+}
+.scrollLi {
+  /* scrollbar-width: "thin"; */
+  scrollbar-color: var(--primary);
+  /* background: transparent; */
 }
 
 .bg-dark {
