@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "./TestemotionalSection.css";
 
-// تعريف الأنواع
 interface Testimonial {
   id: number;
   content: string;

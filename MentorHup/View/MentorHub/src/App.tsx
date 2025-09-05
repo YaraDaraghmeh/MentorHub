@@ -3,7 +3,6 @@ import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer/Footer";
 
-import HeroSection from "./components/HomePageComponents/HeroSection";
 
 
 function App() {
