@@ -2,7 +2,7 @@ import Nav from "./components/Navbar/Navbar";
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer/Footer";
-
+import TestimonialsSection from "./components/HomePageComponents/Testemotional";
 
 function App() {
   return (
@@ -17,6 +17,7 @@ function App() {
         </Routes>
         <Footer />
       </Router>
+      
     </>
   );
 }
