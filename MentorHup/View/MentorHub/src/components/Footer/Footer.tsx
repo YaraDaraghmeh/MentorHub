@@ -1,27 +1,85 @@
 import "./Footer.css";
 import { FaCopyright } from "react-icons/fa";
 
-const Footer = () => {
+const Footer = ({ isDark = true }) => {
   return (
-    <footer className="relative flex w-full flex-shrink-0 self-stretch items-center justify-between flex-wrap ">
+    <footer
+      className={`relative flex w-full flex-shrink-0 self-stretch items-center justify-between flex-wrap 
+      ${
+        isDark
+          ? "bg-gradient-to-br from-[var(--primary-dark)] via-[var(--primary)] to-[var(--primary-light)]"
+          : ""
+      }
+    `}
+    >
       <div className="flex flex-row items-centers justify-center w-full gap-4">
         <div className="flex flex-col flex-wrap gap-2">
-          <span className="title">Technical Support & Help</span>
-          <span>support@mentorhub.com</span>
+          <span
+            className={`${
+              isDark ? "text-[var(--gray-light)] " : "text-[var(--primary)]"
+            } `}
+          >
+            Technical Support & Help
+          </span>
+          <span
+            className={`${
+              isDark ? "text-[var(--primary-light)]" : "text-[var(--accent)]"
+            } `}
+          >
+            support@mentorhub.com
+          </span>
         </div>
         <div className="flex flex-col flex-wrap gap-2">
-          <span className="title">Business Inquiries & Partnerships</span>
-          <span>business@mentorhub.com</span>
+          <span
+            className={`${
+              isDark ? "text-[var(--gray-light)]" : "text-[var(--primary)]"
+            } `}
+          >
+            Business Inquiries & Partnerships
+          </span>
+          <span
+            className={`${
+              isDark ? "text-[var(--primary-light)]" : "text-[var(--accent)]"
+            } `}
+          >
+            business@mentorhub.com
+          </span>
         </div>
       </div>
       <div className="flex flex-row items-centers justify-center w-full gap-4">
-        <span>Privacy Policy</span>
-        <span>Terms of Service</span>
+        <span
+          className={` ${
+            isDark ? "text-[var(--accent)]" : "text-[var(--gray-dark)]"
+          }`}
+        >
+          Privacy Policy
+        </span>
+        <span
+          className={` ${
+            isDark ? "text-[var(--accent)]" : "text-[var(--gray-dark)]"
+          }`}
+        >
+          Terms of Service
+        </span>
       </div>
       <div className="flex items-centers justify-center w-full gap-2">
         <FaCopyright className="copyright" />
-        <span className="year">2025, made by </span>
-        <b>SKAY</b>
+        <span
+          className={`${
+            isDark ? "text-[var(--secondary)]" : "text-[var(--primary-light)]"
+          }`}
+        >
+          2025, made by
+        </span>
+        <b
+          className={`${
+            isDark
+              ? "text-[var(--secondary-light)]"
+              : "text-[var(--green-dark)]"
+          }`}
+        >
+          SKAY
+        </b>
       </div>
     </footer>
   );
