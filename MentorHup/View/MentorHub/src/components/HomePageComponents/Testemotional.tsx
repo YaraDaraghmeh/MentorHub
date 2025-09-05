@@ -92,7 +92,7 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive
         isActive ? "opacity-100 scale-100" : "opacity-40 scale-90"
       }`}
       style={{
-        backgroundColor: isDark ? "#0a1419" : "#5ce1a6"
+        backgroundColor: isDark ? "#06171c" : "#96FBF1"
       }}
     >
       <div className="flex flex-col h-full">
@@ -162,7 +162,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ isDark = fals
     <section
       className="py-16 transition-colors duration-300"
       style={{
-        backgroundColor: isDark ? "#0a1419" : "#5ce1a6"
+        backgroundColor: isDark ? "#06171c" : "#96fbf1"
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -182,7 +182,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ isDark = fals
           </p>
         </div>
 
-        {/* Desktop carousel */}
+      
         <div className="hidden md:block relative max-w-5xl mx-auto">
           <div className="overflow-hidden">
             <div className="flex transition-all duration-500" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
@@ -234,7 +234,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ isDark = fals
           </button>
         </div>
 
-        {/* Mobile view */}
+        
         <div className="md:hidden">
           <TestimonialCard
             testimonial={testimonials[activeIndex]}
@@ -243,7 +243,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ isDark = fals
           />
         </div>
 
-        {/* Dots */}
+        
         <div className="flex justify-center mt-8 gap-2">
           {testimonials.map((_, index) => (
             <button

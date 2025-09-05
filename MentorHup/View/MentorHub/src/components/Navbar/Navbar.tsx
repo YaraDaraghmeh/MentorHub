@@ -2,12 +2,17 @@ import { useState } from "react";
 import "./Navbar.css";
 import ListItem from "./list";
 import logo from "/src/assets/MentorHub-logo (1)/cover.png";
-import { BsMoonFill } from "react-icons/bs";
+import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { Link, NavLink } from "react-router-dom";
 
-const Nav = () => {
+interface NavProps {
+  isDark?: boolean;
+  toggleTheme?: () => void;
+}
+
+const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
   const [open, setOpen] = useState(false);
 
   const navLinks = [
@@ -34,9 +39,17 @@ const Nav = () => {
         </ul>
       </div>
       <div className="flex items-center justify-center self-stretch gap-3 p-2">
-        <span className="hidden md:flex flex-col items-center">
-          <BsMoonFill className="lg:w-[24px] lg:h-[24px] lg:w-[22px] md:h-22px" />
-        </span>
+        <button 
+          onClick={toggleTheme}
+          className="hidden md:flex flex-col items-center p-2 rounded-lg hover:bg-gray-700 transition-colors duration-200"
+          aria-label="Toggle theme"
+        >
+          {isDark ? (
+            <BsSunFill className="lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px] text-yellow-400" />
+          ) : (
+            <BsMoonFill className="lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px] text-gray-300" />
+          )}
+        </button>
         <button className="hidden md:flex items-center justify-center gap-2">
           <h5 className="lg:text-[14px] md:text-[13px]">Sign in</h5>
           <IoIosArrowForward />
@@ -70,6 +83,23 @@ const Nav = () => {
               </NavLink>
             </li>
           ))}
+          <li className="flex items-center justify-center w-full py-4">
+            <button 
+              onClick={() => {
+                toggleTheme?.();
+                setOpen(false);
+              }}
+              className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-700 transition-colors duration-200"
+              aria-label="Toggle theme"
+            >
+              {isDark ? (
+                <BsSunFill className="w-6 h-6 text-yellow-400" />
+              ) : (
+                <BsMoonFill className="w-6 h-6 text-gray-300" />
+              )}
+              <span className="text-sm">{isDark ? 'Light Mode' : 'Dark Mode'}</span>
+            </button>
+          </li>
         </ul>
       </div>
     </nav>

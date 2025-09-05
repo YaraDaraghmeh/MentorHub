@@ -28,28 +28,13 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   recommendation,
   delay = 0 
 }) => {
-  const cardVariants = {
-    hidden: { opacity: 0, y: 50, scale: 0.95 },
-    visible: { 
-      opacity: 1, y: 0, scale: 1,
-      transition: { duration: 0.6, delay, ease: "easeInOut" }
-    },
-    hover: { scale: 1.03, transition: { duration: 0.3, ease: "easeInOut" } }
-  };
-
-  const metricVariants = {
-    hidden: { width: 0 },
-    visible: (custom: number) => ({
-      width: `${custom}%`,
-      transition: { duration: 1.2, delay: delay + 0.3, ease: [0.42, 0, 1, 1] }
-    })
-  };
 
   return (
     <motion.div
       initial="hidden"
-      animate="visible"
+      whileInView="visible"
       whileHover="hover"
+      viewport={{ once: true, amount: 0.3 }}
       className={`relative rounded-2xl p-6 md:p-8 backdrop-blur-lg overflow-hidden ${
         isDark 
           ? 'bg-[#1b2a30] border border-gray-700/30' 
@@ -63,7 +48,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
       <div className="flex items-center gap-4 mb-6">
         <motion.div
           initial={{ rotate: -180, scale: 0 }}
-          animate={{ rotate: 0, scale: 1 }}
+          whileInView={{ rotate: 0, scale: 1 }}
+          viewport={{ once: true, amount: 0.3 }}
           transition={{ duration: 0.5, delay: delay + 0.2 }}
           className={`p-3 rounded-xl ${
             isDark ? 'bg-[#00a896]/20 text-[#56e39f]' : 'bg-[#00a896]/20 text-[#56e39f]'
@@ -83,7 +69,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
             <motion.div
               key={metric.label}
               initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: delay + 0.4 + index * 0.1 }}
             >
               <div className="flex justify-between items-center mb-2">
@@ -98,7 +85,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
                 <motion.div
                   custom={metric.value}
                   initial="hidden"
-                  animate="visible"
+                  whileInView="visible"
+                  viewport={{ once: true, amount: 0.3 }}
                   className="h-full rounded-full relative overflow-hidden"
                   style={{ background: `linear-gradient(90deg, ${metric.color}88, ${metric.color})` }}
                 >
@@ -121,7 +109,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
             <motion.div
               key={index}
               initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.3 }}
               transition={{ delay: delay + 0.4 + index * 0.15 }}
               className="flex items-start gap-3"
             >
@@ -144,7 +133,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
         <div>
           <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ delay: delay + 0.4 }}
             className="flex items-center gap-2 mb-4"
           >
@@ -156,7 +146,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
           </motion.div>
           <motion.p
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ delay: delay + 0.5 }}
             className={`text-sm leading-relaxed ${isDark ? 'text-gray-300' : 'text-gray-300'}`}
           >

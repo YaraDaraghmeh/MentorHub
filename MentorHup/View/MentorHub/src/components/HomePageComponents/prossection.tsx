@@ -5,8 +5,7 @@ import SectionHeader from './SectionHeader';
 
 
 
-const LiveSessionsLanding = ({ isDark: propIsDark }: { isDark?: boolean }) => {
-  const [isDark] = React.useState(propIsDark || false);
+const LiveSessionsLanding = ({ isDark = false }: { isDark?: boolean }) => {
   const [mounted, setMounted] = React.useState(false);
 
   React.useEffect(() => {

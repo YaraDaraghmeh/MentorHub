@@ -15,16 +15,13 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ isDark }) => {
     visible: { opacity: 1, transition: { duration: 0.8 } }
   };
 
-  const titleVariants = {
-    hidden: { opacity: 0, y: -30 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
-  };
 
   return (
     <motion.div
       variants={backgroundVariants}
       initial="hidden"
-      animate="visible"
+      whileInView="visible"
+      viewport={{ once: true, amount: 0.3 }}
       className={`min-h-screen relative overflow-hidden ${isDark ? 'bg-[#06171c]' : 'bg-[#96fbf1]'}`}
     >
 
@@ -47,7 +44,8 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ isDark }) => {
       <div className="relative z-10 container mx-auto px-4 py-16 md:py-24">
         <motion.div 
           initial="hidden"
-          animate="visible"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.3 }}
           className="text-center mb-12 md:mb-16"
         >
           <motion.h1
@@ -57,7 +55,8 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ isDark }) => {
           </motion.h1>
           <motion.p
             initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true, amount: 0.3 }}
             transition={{ delay: 0.3 }}
             className={`text-lg md:text-xl ${isDark ? 'text-gray-300' : 'text-[#1b2a30]'}`}
           >

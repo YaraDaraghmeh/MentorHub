@@ -14,14 +14,14 @@ const CompanyLogosSection = ({ isDark = true }) => {
 
   return (
     <div 
-      className={`min-h-screen transition-all duration-300 ${
+      className={`pt-24 pb-16 transition-all duration-300 ${
         isDark 
-          ? 'text-white bg-gradient-to-br from-[var(--primary-dark)] via-[var(--primary)] to-[var(--primary-light)]' 
-          : 'text-[var(--primary)] bg-[var(--primary-green-light)]'
+          ? 'text-white bg-[#06171c]' 
+          : 'text-[var(--primary)] bg-[#96FBF1]'
       }`}
     >
-      <div className="container mx-auto px-6 py-20">
-        <div className="text-center mb-16">
+      <div className="container mx-auto px-6 py-8">
+        <div className="text-center mb-8">
           <h2 className={`text-base md:text-lg font-medium tracking-wide ${
             isDark 
               ? 'text-[var(--gray-light)]' 
@@ -43,7 +43,7 @@ const CompanyLogosSection = ({ isDark = true }) => {
               initial={{ opacity: 0, y: -50, scale: 0.8 }}
               whileInView={{ opacity: 1, y: 0, scale: 1 }}
               transition={{ duration: 0.6, delay: i * 0.2, ease: "easeOut" }}
-              viewport={{ once: true }}
+              viewport={{ once: true, amount: 0.3 }}
             >
               
               <motion.div
@@ -64,7 +64,7 @@ const CompanyLogosSection = ({ isDark = true }) => {
         </div>
 
         
-        <div className={`mt-20 flex justify-center space-x-4 ${
+        <div className={`mt-8 flex justify-center space-x-4 ${
           isDark ? 'opacity-30' : 'opacity-40'
         }`}>
           <div className={`w-2 h-2 rounded-full ${isDark ? 'bg-[var(--secondary)]' : 'bg-[var(--accent)]'}`}></div>
@@ -72,7 +72,7 @@ const CompanyLogosSection = ({ isDark = true }) => {
           <div className={`w-2 h-2 rounded-full ${isDark ? 'bg-[var(--secondary)]' : 'bg-[var(--accent)]'}`}></div>
         </div>
 
-        <div className="text-center mt-12">
+        <div className="text-center mt-6">
           <p className={`text-sm md:text-base ${
             isDark 
               ? 'text-[var(--gray-light)]' 
