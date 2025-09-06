@@ -1,9 +1,7 @@
 import Nav from "./components/Navbar/Navbar";
-import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Footer from "./components/Footer/Footer";
-
-
+import Table from "./components/Tables/Table";
 
 function App() {
   return (
@@ -16,6 +14,7 @@ function App() {
             element={
               <>
                 <h1>Home</h1>
+                <Table isDark={true} />
               </>
             }
           />
