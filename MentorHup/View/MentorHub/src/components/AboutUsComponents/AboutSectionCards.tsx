@@ -50,7 +50,7 @@ const MentorHubAbout: React.FC<MentorHubAboutProps> = ({ isDark = true }) => {
   };
 
   const gradientTextStyle = {
-    background: 'linear-gradient(135deg, #2a5a55, #5FF4C2, #062234ff)',
+    background: 'linear-gradient(135deg, #2a5a55, #05704cff, #062234ff)',
     WebkitBackgroundClip: 'text',
     WebkitTextFillColor: 'transparent',
     backgroundClip: 'text',
