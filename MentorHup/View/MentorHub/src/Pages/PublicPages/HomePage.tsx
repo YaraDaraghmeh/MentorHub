@@ -18,7 +18,7 @@ const HomePage: React.FC<HomePageProps> = ({ isDark = false }) => {
     <CompanyLogosSection isDark={isDark} />
     <WhatNumberssaySection isDark={isDark} />
     <LiveSessionsLanding isDark={isDark} />
-   <PlatformWalkthrough isDark={isDark} />
+   <PlatformWalkthrough isDark={isDark} videoUrl={'https://www.youtube.com/embed/Y9-0Jj3avRg?si=A-35oqff_ahFSrqo'} />
    <TestimonialsSection isDark={isDark} />
    </>
       

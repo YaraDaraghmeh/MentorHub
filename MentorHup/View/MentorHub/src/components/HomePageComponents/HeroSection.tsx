@@ -13,7 +13,7 @@ const HeroSection = ({ isDark }: { isDark: boolean }) => {
                             typewriter
                                 .typeString('Prepare for your ')
                                 .pauseFor(500)
-                                .typeString('<span class="text-green-600">interview</span>')
+                                .typeString('<span class="text-[#27B467]">interview</span>')
                                 .start();
                         }}
                         options={{
