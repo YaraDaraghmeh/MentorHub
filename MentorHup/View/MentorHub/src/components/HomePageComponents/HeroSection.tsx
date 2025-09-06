@@ -1,13 +1,12 @@
-import React from 'react';
 import Typewriter from "typewriter-effect";
 
 import image from '../../assets/Home.png';
 
 const HeroSection = ({ isDark }: { isDark: boolean }) => {
     return (
-        <div className={`relative flex flex-col items-center justify-between h-screen bg-gradient-to-b ${isDark ? 'from-teal-950 to-teal-500' : 'from-teal-950 to-teal-200'} text-center p-5 overflow-hidden`}>
+        <div className={`relative flex flex-col items-center justify-between h-screen bg-gradient-to-b ${isDark ? 'from-teal-950 to-teal-500' : 'from-teal-950 to-teal-200'} text-center p-5 overflow-visible`}>
             {/* Text Section */}
-            <div className="relative z-10 flex flex-col items-center mt-10 animate-fadeIn">
+            <div className="relative z-10 flex flex-col items-center mt-20 pt-16 animate-fadeIn">
                 <h1 className={`text-6xl font-bold mb-4 ${isDark ? 'text-white' : 'text-white'}`}>
                     <Typewriter
                         onInit={(typewriter) => {
@@ -35,7 +34,7 @@ const HeroSection = ({ isDark }: { isDark: boolean }) => {
                 src={image} 
                 alt="Interview Setup"
                 style={{ width: '690px', height: '548px', zIndex: 2 }}
-                className="absolute bottom-0 left-1/2 transform -translate-x-1/2 object-cover animate-slideIn"
+                className="absolute -bottom-32 left-1/2 transform -translate-x-1/2 object-cover animate-slideIn"
             />
         </div>
     );
