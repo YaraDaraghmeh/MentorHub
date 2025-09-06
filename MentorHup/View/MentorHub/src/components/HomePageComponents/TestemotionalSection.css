@@ -27,14 +27,14 @@
     transition: transform 0.3s ease, box-shadow 0.3s ease;
   }
   
-  /* Hover effect for the shape items */
+  
   .item:hover {
     transform: translateY(-5px) scale(1.05);
     box-shadow: 0 15px 25px rgba(0, 0, 0, 0.3);
     z-index: 10;
   }
   
-  /* Light theme specific colors for the shapes */
+  
   .lightBlue {
     background-color: #4299e1 !important; /* Bright blue */
   }
