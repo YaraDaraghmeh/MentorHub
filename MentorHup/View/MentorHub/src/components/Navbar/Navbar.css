@@ -12,13 +12,12 @@ nav {
 }
 
 nav ul li a {
-  /* font-size: 16px; */
   font-style: normal;
   font-weight: 400;
   line-height: 20px;
 }
 
-nav div button {
+nav div .btn-nav {
   color: var(--primary);
   width: 112px;
   height: 34px;

@@ -3,7 +3,7 @@ type listData = {
   message: string;
 };
 
-const MessageSend = ({ isDark = false, message }: listData) => {
+const MessageSend = ({ isDark = true, message }: listData) => {
   return (
     <div className="w-full inline-flex flex-col h-auto flex-wrap justify-center items-end gap-2 text-end">
       <div className="w-96 h-auto inline-flex justify-center items-start gap-3">

@@ -10,7 +10,7 @@ type ListInfo = {
   picture?: string;
 };
 
-const Chatting = ({ isDark = false, name, picture }: ListInfo) => {
+const Chatting = ({ isDark = true, name, picture }: ListInfo) => {
   return (
     <div className="shadow flex md:flex-col flex-row md:w-[793px] w-full h-full flex-wrap justify-start items-start hidden md:block overflow-hidden rounded-[54px]">
       {/* Header */}
@@ -51,29 +51,29 @@ const Chatting = ({ isDark = false, name, picture }: ListInfo) => {
             ${isDark ? "scrollDark" : "scrollLi"}`}
         >
           <MessageSend
-            isDark={false}
+            isDark={true}
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
           />
 
           <MessageReceive
-            isDark={false}
+            isDark={true}
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
             picture=""
           />
 
           <MessageSend
-            isDark={false}
+            isDark={true}
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit 😊✔️"
           />
 
           <MessageReceive
-            isDark={false}
+            isDark={true}
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
             picture=""
           />
 
           <MessageSend
-            isDark={false}
+            isDark={true}
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit 😊✔️"
           />
         </div>
