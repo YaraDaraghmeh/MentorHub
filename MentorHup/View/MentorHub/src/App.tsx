@@ -3,7 +3,7 @@ import HomePage from "./Pages/PublicPages/HomePage";
 import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
 import { useState } from "react";
-
+import AboutUsPage from "./Pages/PublicPages/AboutUs";
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -33,7 +33,7 @@ function App() {
         {/*  */}
         <Routes>
           <Route path="/" element={<HomePage isDark={isDark} />} />
-          <Route path="/about" element={<h1>About</h1>} />
+          <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
           <Route path="/browsMentor" element={<h1>Brows Mentors</h1>} />
         </Routes>
       </Router>

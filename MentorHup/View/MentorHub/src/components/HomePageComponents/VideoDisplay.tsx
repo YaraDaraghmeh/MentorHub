@@ -14,11 +14,17 @@ const VideoDisplay: React.FC<VideoDisplayProps> = ({
   delay = 0,
 }) => {
   return (
+<<<<<<< HEAD
     <div
       className={`${
         isDark ? "bg-gray-900" : "!bg-[var(--primary-light)]"
       } rounded-xl p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[220px] relative overflow-hidden transition-all duration-500 hover:scale-105 shadow-lg transform`}
       style={{
+=======
+    <div 
+      className={`${isDark ? '!bg-[#2C313A]' : '!bg-[#1B2A30]'} rounded-xl p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[220px] relative overflow-hidden transition-all duration-500 hover:scale-105 shadow-lg transform`}
+      style={{ 
+>>>>>>> 69ad844abd6cb40bac51f800cfe370eda1848071
         animationDelay: `${delay * 200}ms`,
         animationDuration: "1s",
         animationFillMode: "both",
