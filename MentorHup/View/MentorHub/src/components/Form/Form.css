@@ -1,21 +1,14 @@
 form {
-  padding: 28px 38px;
+  padding: 22px 38px;
   gap: 14px;
   border-radius: 16px;
   background-color: var(--secondary-light);
 }
 
-form h2 span {
+form h2 .interview {
   color: var(--secondary);
 }
 
-form div label {
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
-  color: var(--primary);
-}
 form div input {
   height: 52px;
   padding: 12px;

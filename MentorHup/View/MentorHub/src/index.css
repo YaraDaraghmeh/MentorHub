@@ -43,6 +43,9 @@
   --primary-green-light: #96fbf1;
   --aqua-green: #0adec9;
   --dark-desaturated-cyan-green: #2a5a55;
+
+  --teal-950: #0a272f;
+  --cyan-800: #1c6b82;
 }
 
 body {
@@ -63,12 +66,9 @@ input:focus {
 }
 
 .scrollDark {
-  /* scrollbar-width: "thin"; */
   scrollbar-color: var(--secondary-light);
-  /* background: transparent; */
 }
 .scrollLi {
-  /* scrollbar-width: "thin"; */
   scrollbar-color: var(--primary);
   /* background: transparent; */
 }

@@ -51,42 +51,42 @@ const ListOfChat = ({ isDark = false }) => {
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={false}
+          isDark={true}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={false}
+          isDark={true}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={false}
+          isDark={true}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={false}
+          isDark={true}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={false}
+          isDark={true}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={false}
+          isDark={true}
         />
       </div>
     </div>

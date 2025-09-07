@@ -6,7 +6,7 @@ type listData = {
   picture?: string;
 };
 
-const MessageReceive = ({ isDark = false, message, picture }: listData) => {
+const MessageReceive = ({ isDark = true, message, picture }: listData) => {
   return (
     <div className="w-full inline-flex flex-col h-auto flex-wrap justify-center items-start text-start gap-2">
       <div className="w-96 h-auto inline-flex justify-center items-start gap-3">
