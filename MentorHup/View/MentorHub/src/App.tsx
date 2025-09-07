@@ -4,6 +4,7 @@ import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
 import { useState } from "react";
 import AboutUsPage from "./Pages/PublicPages/AboutUs";
+import SignUp from "./Pages/PublicPages/Registration";
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -20,7 +21,7 @@ function App() {
             element={<MainLayout isDark={isDark} toggleTheme={toggleTheme} />}
           >
             <Route path="/" element={<HomePage isDark={isDark} />} />
-            <Route path="/about" element={<h1>About</h1>} />
+            <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
             <Route path="/browsMentor" element={<h1>Brows Mentors</h1>} />
           </Route>
         </Routes>
@@ -28,13 +29,12 @@ function App() {
         {/* Login & Registration */}
         <Routes>
           <Route path="/login" element={<LoginUser />} />
+          <Route path="/registration" element={<SignUp />} />
         </Routes>
 
         {/*  */}
         <Routes>
-          <Route path="/" element={<HomePage isDark={isDark} />} />
-          <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
-          <Route path="/browsMentor" element={<h1>Brows Mentors</h1>} />
+          <Route path="/dashboard" element={<h1>Dashboard</h1>} />
         </Routes>
       </Router>
     </>

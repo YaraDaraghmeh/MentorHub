@@ -26,6 +26,9 @@ nav div .btn-nav {
   border: 1px solid #2c313a;
   background: var(--accent);
 }
+nav div .btn-nav:hover {
+  background-color: var(--secondary);
+}
 nav div button h5 {
   color: var(--primary);
   font-weight: 600;

@@ -12,7 +12,7 @@ const MainLayout = ({ isDark, toggleTheme }: listLayout) => {
     <>
       <Nav isDark={isDark} toggleTheme={toggleTheme} />
       <Outlet />
-      <Footer />
+      <Footer isDark={isDark} />
     </>
   );
 };

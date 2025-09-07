@@ -62,7 +62,7 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
         </button>
         <button
           onClick={handleClick}
-          className="btn-nav hidden md:flex items-center justify-center gap-2"
+          className="btn-nav hover:bg-[var(--secondary)] hidden md:flex items-center justify-center gap-2"
         >
           <h5 className="lg:text-[14px] md:text-[13px]">Sign in</h5>
           <IoIosArrowForward />
@@ -102,7 +102,7 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
                 toggleTheme?.();
                 setOpen(false);
               }}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-600 transition-colors duration-200 cursuor-pointer"
+              className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-600 transition-colors duration-200"
               aria-label="Toggle theme"
             >
               {isDark ? (
