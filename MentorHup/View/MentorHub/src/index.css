@@ -80,3 +80,7 @@ input:focus {
 .text-dark {
   color: var(--secondary-light);
 }
+
+button {
+  cursor: pointer;
+}
