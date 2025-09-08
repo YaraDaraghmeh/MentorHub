@@ -1,4 +1,5 @@
-﻿using MentorHup.Domain.Entities;
+﻿using MentorHup.APPLICATION.Settings;
+using MentorHup.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -12,6 +13,7 @@ namespace MentorHup.Infrastructure.Context
         public DbSet<Skill> Skills { get; set; } 
         public DbSet<MentorSkill> MentorSkills { get; set; }
         public DbSet<MentorAvailability> MentorAvailabilities { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
