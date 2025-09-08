@@ -2,6 +2,9 @@
 using FluentValidation.AspNetCore;
 using MentorHup.APPLICATION.Service;
 using MentorHup.APPLICATION.Service.AuthServices;
+using MentorHup.APPLICATION.Service.Booking;
+using MentorHup.APPLICATION.Service.Message;
+using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
@@ -41,6 +44,9 @@ namespace MentorHup.Extensions
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IMentorService, MentorService>();
+            services.AddScoped<IStripeService, StripeService>();
+            services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IMessageService, MessageService>();
 
 
             services.AddSwaggerGen(c =>

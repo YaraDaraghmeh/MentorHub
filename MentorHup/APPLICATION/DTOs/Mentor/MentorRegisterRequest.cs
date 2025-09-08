@@ -10,6 +10,7 @@
             public string Password { get; set; } = null!;
             public int Experiences { get; set; }
              public string Field { get; set; } = null!;
+           public string? StripeAccountId { get; set; }
 
             public decimal Price { get; set; }
             public List<int> SkillIds { get; set; } = new();

@@ -8,5 +8,7 @@
 
         public string ApplicationUserId { get; set; } = null!;
         public ApplicationUser ApplicationUser { get; set; } = null!;
+
+        public ICollection<Booking>? Bookings { get; set; }
     }
 }

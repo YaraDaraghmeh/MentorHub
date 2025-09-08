@@ -12,5 +12,6 @@ public class MentorAvailability
 
     public bool IsBooked { get; set; } = false;
 
-    public int DurationInMinutes { get; set; } 
+    public int DurationInMinutes { get; set; }
+    public Booking? Booking { get; set; }
 }

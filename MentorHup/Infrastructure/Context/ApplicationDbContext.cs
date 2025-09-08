@@ -8,10 +8,14 @@ namespace MentorHup.Infrastructure.Context
         : IdentityDbContext<ApplicationUser>(options)
     {
         public DbSet<Mentee> Mentees { get; set; }
+        public DbSet<Message> Messages { get; set; }
         public DbSet<Mentor> Mentors { get; set; }
-        public DbSet<Skill> Skills { get; set; } 
+        public DbSet<Skill> Skills { get; set; }
         public DbSet<MentorSkill> MentorSkills { get; set; }
         public DbSet<MentorAvailability> MentorAvailabilities { get; set; }
+        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Payment> Payments { get; set; }
+        public DbSet<AdminCommission> AdminCommissions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -42,6 +46,62 @@ namespace MentorHup.Infrastructure.Context
                 .WithMany(m => m.Availabilities)
                 .HasForeignKey(ma => ma.MentorId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.Entity<Booking>()
+                .HasOne(b => b.Mentee)
+                .WithMany(m => m.Bookings)
+                .HasForeignKey(b => b.MenteeId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Booking>()
+                .HasOne(b => b.Mentor)
+                .WithMany(m => m.Bookings)
+                .HasForeignKey(b => b.MentorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Booking>()
+                .HasOne(b => b.Payment)
+                .WithOne(p => p.Booking)
+                .HasForeignKey<Payment>(p => p.BookingId);
+
+            builder.Entity<MentorAvailability>()
+                .HasOne(ma => ma.Booking)
+                .WithOne(b => b.MentorAvailability)
+                .HasForeignKey<Booking>(b => b.MentorAvailabilityId);
+
+            builder.Entity<Booking>()
+                .HasOne(b => b.AdminCommission)
+                .WithOne(ac => ac.Booking)
+                .HasForeignKey<AdminCommission>(ac => ac.BookingId);
+            
+            builder.Entity<Message>()
+                .HasOne(m => m.Sender)
+                .WithMany(u => u.SentMessages)
+                .HasForeignKey(m => m.SenderId)
+                .OnDelete(DeleteBehavior.Restrict);
+            
+            builder.Entity<Message>()
+                .HasOne(m => m.Receiver)
+                .WithMany(u => u.ReceivedMessages)
+                .HasForeignKey(m => m.ReceiverId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+
+            builder.Entity<Booking>()
+                .Property(b => b.Amount)
+                .HasPrecision(18, 2);
+            
+            builder.Entity<Payment>()
+                .Property(p => p.Amount)
+                .HasPrecision(18, 2);
+            
+            builder.Entity<AdminCommission>()
+                .Property(a => a.Amount)
+                .HasPrecision(18, 2);
+            
+            builder.Entity<Mentor>().
+                Property(m => m.Price).
+                HasPrecision(18, 2);
 
 
             builder.Entity<Skill>().HasData(

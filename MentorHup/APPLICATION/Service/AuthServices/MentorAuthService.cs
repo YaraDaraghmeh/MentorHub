@@ -54,7 +54,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
             await _userManager.AddToRoleAsync(user, "Mentor");
 
-            var mentor = new Mentor
+            var mentor = new Domain.Entities.Mentor
             {
                 Name = request.Name,
                 Description = request.Description,

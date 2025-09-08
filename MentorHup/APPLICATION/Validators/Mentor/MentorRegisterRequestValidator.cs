@@ -47,6 +47,10 @@ namespace MentorHup.APPLICATION.Validators.Mentor
                         .WithMessage("StartTime must be before EndTime");
                 });
 
+            RuleFor(x => x.StripeAccountId)
+                .NotEmpty().WithMessage("StripeAccountId is required")
+                .MaximumLength(100).WithMessage("StripeAccountId must not exceed 100 characters");
+
         }
     }
 }
