@@ -5,6 +5,7 @@ import MainLayout from "./layouts/MainLayout";
 import { useState } from "react";
 import AboutUsPage from "./Pages/PublicPages/AboutUs";
 import SignUp from "./Pages/PublicPages/Registration";
+import PublicMentors from "./Pages/PublicPages/PublicMentors";
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -22,7 +23,10 @@ function App() {
           >
             <Route path="/" element={<HomePage isDark={isDark} />} />
             <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
-            <Route path="/browsMentor" element={<h1>Brows Mentors</h1>} />
+            <Route path="/browsMentor" element={<PublicMentors isDark={isDark} />} />
+
+      
+           
           </Route>
         </Routes>
 
