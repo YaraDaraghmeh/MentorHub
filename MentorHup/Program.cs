@@ -39,7 +39,7 @@ builder.Services.ConfigureJwt(builder.Configuration);
 builder.Services.ConfigureCors();
 builder.Services.ConfigureSomeServices();
 builder.Services.AddSignalR();
-builder.Services.Configure<StripSettings>(builder.Configuration.GetSection("strip"));
+builder.Services.Configure<StripSettings>(builder.Configuration.GetSection("stripe"));
 
 var app = builder.Build();
 //  Seed Roles , Admin
@@ -63,7 +63,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseExceptionHandler();
 app.UseAuthentication();
 
