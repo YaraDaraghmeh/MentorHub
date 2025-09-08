@@ -1,0 +1,75 @@
+using MentorHup.APPLICATION.Settings;
+using MentorHup.Domain.Entities;
+using MentorHup.Exceptions;
+using MentorHup.Extensions;
+using MentorHup.Infrastructure.Context;
+using MentorHup.Infrastructure.Mapping;
+using MentorHup.Infrastructure.Seed;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+builder.Services.AddProblemDetails();
+
+builder.Services.AddControllers();
+// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+builder.Services.AddOpenApi();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddDbContext<ApplicationDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MentorHupDB"));
+});
+
+builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection("JwtSettings"));
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    options.Password.RequireNonAlphanumeric = true;
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = false;
+    options.Password.RequiredLength = 8;
+})
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddDefaultTokenProviders();
+
+builder.Services.ConfigureJwt(builder.Configuration);
+builder.Services.ConfigureCors();
+builder.Services.ConfigureSomeServices();
+builder.Services.AddSignalR();
+builder.Services.Configure<StripSettings>(builder.Configuration.GetSection("stripe"));
+
+var app = builder.Build();
+//  Seed Roles , Admin
+using (var scope = app.Services.CreateScope())
+{
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
+    var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+    await DefaultRolesSeeder.SeedAsync(roleManager, userManager, configuration);
+}
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MentorHub API V1");
+        c.RoutePrefix = string.Empty;
+    });
+}
+
+//app.UseHttpsRedirection();
+app.UseExceptionHandler();
+app.UseAuthentication();
+
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapHub<ChatHub>("/chathub");
+
+app.Run();
