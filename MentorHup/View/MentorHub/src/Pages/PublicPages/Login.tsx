@@ -1,21 +1,28 @@
+import { useNavigate } from "react-router-dom";
 import AppForm from "../../components/Form/Form";
 import FormFiled from "../../components/Form/FormFiled";
 import logo from "/src/assets/MentorHub-logo (1)/vector/default-monochrome.svg";
 import { FcGoogle } from "react-icons/fc";
 
 const LoginUser = () => {
+  const navigate = useNavigate();
+
   const handleContact = () => {
     console.log("test");
   };
 
+  const handleSignUp = () => {
+    navigate("/registration");
+  };
+
   return (
-    <div className="w-full h-screen flex justify-between items-center px-8 py-4 bg-gradient-to-b from-[var(--primary)] from-[0%] via-[var(--teal-950)] via-[80%] to-[var(--cyan-800)] to-[100%]">
-      <div className="flex-1 flex-col md:flex-row ">
-        <div className="self-stretch self-stretch inline-flex flex-col justify-center items-center gap-12">
+    <div className="w-full h-screen flex lg:flex-row flex-col justify-between items-center px-8 py-4 bg-gradient-to-b from-[var(--primary)] from-[0%] via-[var(--teal-950)] via-[80%] to-[var(--cyan-800)] to-[100%]">
+      <div className="flex-1">
+        <div className="self-stretch inline-flex flex-col justify-center items-center">
           <img className="w-[492px] h-24 p-2.5" src={logo} />
         </div>
       </div>
-      <div className="flex-1 flex-col md:flex-row w-full h-full">
+      <div className="flex-1  w-full h-full">
         <AppForm
           title="Welcome back! Ready to ace your next"
           span=" interview"
@@ -74,7 +81,10 @@ const LoginUser = () => {
             <span className="justify-center text-[var(--gray-dark)] text-xs font-medium">
               Don’t have an account?
             </span>
-            <span className="justify-center text-[var(--blue-medium)] text-xs underline font-medium cursor-pointer">
+            <span
+              onClick={handleSignUp}
+              className="justify-center text-[var(--blue-medium)] text-xs underline font-medium cursor-pointer"
+            >
               Sign up
             </span>
           </div>
