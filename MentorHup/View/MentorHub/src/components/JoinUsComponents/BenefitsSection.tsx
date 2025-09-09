@@ -9,7 +9,7 @@ interface BenefitsSectionProps {
 }
 
 const BenefitsSection: React.FC<BenefitsSectionProps> = ({ benefits, isDark }) => {
-  const sectionStyle = isDark ? { backgroundColor: '#071b21' } : { backgroundColor: '#96fbf1' };
+  const sectionStyle = isDark ? { backgroundColor: '#06171c' } : { backgroundColor: '#96fbf1' };
 
   const cardVariants: Variants = {
     hidden: { opacity: 0, y: 40 },

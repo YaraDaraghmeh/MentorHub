@@ -31,7 +31,7 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isDark }) => {
 
   return (
     <motion.section 
-      className="relative px-4 py-16 sm:py-24"
+      className="relative px-4 py-16 sm:py-24 "
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
@@ -43,6 +43,8 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isDark }) => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-8"
         >
+          <br/>
+          <br/>
           <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 ${accentClass}`}>
             Join Mentor Hub
           </h1>

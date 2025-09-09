@@ -79,7 +79,7 @@ const JoinUsPage: React.FC<JoinUsPageProps> = ({ isDark = false }) => {
   ];
 
   const containerStyle = isDark 
-    ? { backgroundColor: '#071b21', color: 'white' } 
+    ? { backgroundColor: '#06171c', color: 'white' } 
     : { backgroundColor: '#96fbf1', color: '#1f2937' };
 
   return (
