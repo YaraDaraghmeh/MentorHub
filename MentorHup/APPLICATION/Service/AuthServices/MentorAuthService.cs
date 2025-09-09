@@ -1,33 +1,35 @@
 ﻿using AutoMapper;
+using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.Domain.Entities;
+using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using System.Text;
 
 namespace MentorHup.APPLICATION.Service.AuthServices
 {
-    public class MentorAuthService : IMentorAuthService
+    public class MentorAuthService( // Primary Constructor
+        UserManager<ApplicationUser> userManager,
+        RoleManager<IdentityRole> roleManager,
+        ApplicationDbContext context,
+        ITokenService tokenService,
+        IEmailSender emailSender,
+        IHttpContextAccessor httpContextAccessor
+            ) : IMentorAuthService
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly ApplicationDbContext _context;
-        private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
-
-        public MentorAuthService(
-            UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager,
-            ApplicationDbContext context,
-            ITokenService tokenService,
-            IMapper mapper)
-        {
-            _userManager = userManager;
-            _roleManager = roleManager;
-            _context = context;
-            _tokenService = tokenService;
-            _mapper = mapper;
-        }
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+        private readonly ApplicationDbContext _context = context;
+        private readonly ITokenService _tokenService = tokenService;
+        private readonly IEmailSender emailSender = emailSender;
+        private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
 
         public async Task<MentorLoginRegistrationResult> RegisterAsync(MentorRegisterRequest request)
         {
@@ -37,7 +39,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
             var user = new ApplicationUser
             {
-                UserName = request.Email,
+                UserName = request.Name,
                 Email = request.Email
             };
 
@@ -53,6 +55,46 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 await _roleManager.CreateAsync(new IdentityRole("Mentor"));
 
             await _userManager.AddToRoleAsync(user, "Mentor");
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
+            var confirmUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}/api/mentors/confirm-email?userId={user.Id}&token={encodedToken}";
+
+            string email = user.Email;
+            string subject = "Welcome to MentorHub – Thank You for Joining as a Mentor";
+            string htmlMessage = $@"
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset='UTF-8' />
+                </head>
+                <body style='font-family: Arial, sans-serif; background-color: #f9fafb; padding: 20px;'>
+                  <div style='max-width:600px;margin:auto;background:#fff;border-radius:10px;padding:30px;box-shadow:0 2px 8px rgba(0,0,0,0.1);'>
+                    <h2 style='color:#16a34a;'>Welcome {user.UserName} to MentorHub 🌟</h2>
+                    <p>Hello Mentor,</p>
+                    <p>
+                      We’re honored to welcome you as a <strong>Mentor</strong> at MentorHub!  
+                      Your knowledge, guidance, and experience will play a key role in helping mentees grow, 
+                      achieve their goals, and unlock new opportunities.
+                    </p>
+                    <p>
+                      You can now log in to your account, complete your mentor profile, and start connecting with mentees who need your expertise.
+                    </p>
+                    <a href='{confirmUrl}' 
+                       style='display:inline-block;margin-top:20px;padding:12px 20px;background:#4f46e5;color:#fff;border-radius:6px;text-decoration:none;font-weight:bold;'>
+                       Confirm Email
+                    </a>
+                    <div style='margin-top:30px;font-size:13px;color:#6b7280;'>
+                      <p>Thank you for becoming part of the MentorHub community. Together, we build brighter futures ✨</p>
+                      <p>&copy; 2025 MentorHub Team</p>
+                    </div>
+                  </div>
+                </body>
+                </html>";
+
+            await emailSender.SendEmailAsync(email, subject, htmlMessage);
+
+
 
             var mentor = new Domain.Entities.Mentor
             {
@@ -97,7 +139,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             }
             await _context.SaveChangesAsync();
 
-            var token = await _tokenService.CreateTokenAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
 
             var skills = await _context.MentorSkills
@@ -138,6 +179,19 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             };
         }
 
+        public async Task<bool> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return false;
+
+            var decodedBytes = WebEncoders.Base64UrlDecode(token);
+            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            return result.Succeeded;
+        }
+
+
         public async Task<MentorLoginRegistrationResult> LoginAsync(MentorLoginRequest request)
         {
             var user = await _userManager.Users
@@ -152,6 +206,15 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 {
                     IsSuccess = false,
                     Errors = new[] { "Invalid email or password" }
+                };
+            }
+
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return new MentorLoginRegistrationResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Please confirm your email before logging in." }
                 };
             }
 

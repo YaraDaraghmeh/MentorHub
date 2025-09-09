@@ -2,7 +2,9 @@
 using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.APPLICATION.Service;
 using MentorHup.APPLICATION.Service.AuthServices;
+using MentorHup.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 
@@ -40,6 +42,18 @@ namespace MentorHup.APPLICATION.Controllers
             return StatusCode(StatusCodes.Status201Created, result.Mentee);
         }
 
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var success = await _menteeAuthService.ConfirmEmailAsync(userId, token);
+
+            if (!success)
+                return BadRequest(new { message = "Email confirmation failed." });
+
+            return Ok(new { message = "Email confirmed successfully." });
+        }
+
+
         [HttpPost("login")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(MenteeResponse), StatusCodes.Status200OK)]
@@ -54,6 +68,6 @@ namespace MentorHup.APPLICATION.Controllers
             return Ok(result);
         }
 
-      
+
     }
 }
