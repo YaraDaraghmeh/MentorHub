@@ -1,5 +1,8 @@
-﻿using MentorHup.APPLICATION.DTOs.Unified_Login;
+﻿using MentorHup.APPLICATION.DTOs.Token;
+using MentorHup.APPLICATION.DTOs.Unified_Login;
+using MentorHup.APPLICATION.Settings;
 using MentorHup.Domain.Entities;
+using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -9,11 +12,15 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         {
             private readonly UserManager<ApplicationUser> _userManager;
             private readonly ITokenService _tokenService;
+            private readonly ApplicationDbContext _context;
 
-            public AuthService(UserManager<ApplicationUser> userManager, ITokenService tokenService)
+        public AuthService(UserManager<ApplicationUser> userManager,
+                ITokenService tokenService,
+                ApplicationDbContext context)
             {
                 _userManager = userManager;
                 _tokenService = tokenService;
+                _context = context;
             }
 
             public async Task<LoginResponse?> LoginAsync(LoginRequest request)
@@ -26,7 +33,20 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
                     return null;
 
-                var token = await _tokenService.CreateTokenAsync(user);
+                var accessToken = await _tokenService.CreateTokenAsync(user);
+
+                var refreshToken = new RefreshToken
+                {
+                    Token = Guid.NewGuid().ToString(),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    UserId = user.Id,
+                    IsRevoked = false
+                };
+            
+                await _context.RefreshTokens.AddAsync(refreshToken);
+                await _context.SaveChangesAsync();
+
+                
                 var roles = await _userManager.GetRolesAsync(user);
 
                 return new LoginResponse
@@ -34,10 +54,35 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     UserId = user.Id,
                     Email = user.Email!,
                     Roles = roles.ToList(),
-                    AccessToken = token,
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken.Token,
                     Expires = DateTime.UtcNow.AddHours(3)
+                };
+            }
+
+
+
+            public async Task<RefreshTokenResponse?> RefreshTokenAsync(string refreshToken)
+            {
+                var storedToken = await _context.RefreshTokens
+                    .FirstOrDefaultAsync(t => t.Token == refreshToken);
+                
+                if (storedToken == null || storedToken.Expires < DateTime.UtcNow || storedToken.IsRevoked)
+                    return null;
+
+                var user = await _userManager.FindByIdAsync(storedToken.UserId);
+                if (user == null)
+                    return null;
+
+                var newAccessToken = await _tokenService.CreateTokenAsync(user);
+
+                return new RefreshTokenResponse
+                {
+                    AccessToken = newAccessToken,
+                    RefreshToken = storedToken.Token,
+                    ExpireAt = DateTime.UtcNow.AddHours(3)
                 };
             }
         }
 
-    }
+}

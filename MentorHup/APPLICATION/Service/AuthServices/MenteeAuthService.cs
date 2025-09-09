@@ -1,9 +1,15 @@
 ﻿using AutoMapper;
 using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.Domain.Entities;
+using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace MentorHup.APPLICATION.Service.AuthServices
 {
@@ -14,19 +20,28 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         private readonly ApplicationDbContext _context;
         private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+        private readonly IEmailSender emailSender;
+        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IUrlHelper urlHelper;
 
         public MenteeAuthService(
             UserManager<ApplicationUser> userManager,
             RoleManager<IdentityRole> roleManager,
             ApplicationDbContext context,
             ITokenService tokenService,
-            IMapper mapper)
+            IEmailSender emailSender,
+            IUrlHelperFactory urlHelperFactory,
+            IActionContextAccessor actionContextAccessor,
+            IHttpContextAccessor httpContextAccessor
+            )
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
             _tokenService = tokenService;
-            _mapper = mapper;
+            this.emailSender = emailSender;
+            this.httpContextAccessor = httpContextAccessor;
+            this.urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext!);
         }
 
         public async Task<MenteeRegisterResult> RegisterAsync(MenteeRegisterRequest request)
@@ -37,7 +52,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
             var user = new ApplicationUser
             {
-                UserName = request.Email,
+                UserName = request.Name,
                 Email = request.Email
             };
 
@@ -49,6 +64,53 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 await _roleManager.CreateAsync(new IdentityRole("Mentee"));
 
             await _userManager.AddToRoleAsync(user, "Mentee");
+
+
+            var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var encodedToken = System.Web.HttpUtility.UrlEncode(token);
+
+            var confirmUrl = urlHelper.Action(
+                "ConfirmEmail",       // action name
+                "Mentees",               // controller name
+                new { userId = user.Id, token = encodedToken },  // route values
+                httpContextAccessor.HttpContext.Request.Scheme        // protocol (http/https)
+            );
+
+
+            string email = user.Email;
+            string subject = "Welcome to MentorHub – Your Learning Journey Begins";
+            string htmlMessage = $@"
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset='UTF-8' />
+                </head>
+                <body style='font-family: Arial, sans-serif; background-color: #f9fafb; padding: 20px;'>
+                  <div style='max-width:600px;margin:auto;background:#fff;border-radius:10px;padding:30px;box-shadow:0 2px 8px rgba(0,0,0,0.1);'>
+                    <h2 style='color:#4f46e5;'>Welcome {user.UserName} to MentorHub 🎉</h2>
+                    <p>Hi there,</p>
+                    <p>
+                      We’re excited to have you on board as a <strong>Mentee</strong>!  
+                      MentorHub is here to support you in connecting with experienced mentors, 
+                      enhancing your skills, and achieving your career goals.
+                    </p>
+                    <p>
+                      You can now log in to your account, explore mentors, and start your learning journey.
+                    </p>
+                    <a href='{confirmUrl}' 
+                       style='display:inline-block;margin-top:20px;padding:12px 20px;background:#4f46e5;color:#fff;border-radius:6px;text-decoration:none;font-weight:bold;'>
+                       Confirm Email
+                    </a>
+                    <div style='margin-top:30px;font-size:13px;color:#6b7280;'>
+                      <p>Thank you for joining MentorHub. Let’s grow together 🚀</p>
+                      <p>&copy; 2025 MentorHub Team</p>
+                    </div>
+                  </div>
+                </body>
+                </html>";
+
+            await emailSender.SendEmailAsync(email, subject, htmlMessage);
+
             
             var mentee = new Mentee
             {
@@ -60,7 +122,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             _context.Mentees.Add(mentee);
             await _context.SaveChangesAsync();
 
-            var token = await _tokenService.CreateTokenAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
 
             return new MenteeRegisterResult
@@ -79,6 +140,18 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             };
         }
 
+
+        public async Task<bool> ConfirmEmailAsync(string userId, string token)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null) return false;
+
+            var decodedToken = System.Web.HttpUtility.UrlDecode(token);
+            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+            return result.Succeeded;
+        }
+
         public async Task<MenteeLoginResult> LoginAsync(MenteeLoginRequest request)
         {
             var user = await _userManager.Users
@@ -91,6 +164,15 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 {
                     IsSuccess = false,
                     Errors = new[] { "Invalid email or password" }
+                };
+            }
+
+            if (!await _userManager.IsEmailConfirmedAsync(user))
+            {
+                return new MenteeLoginResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Please confirm your email before logging in." }
                 };
             }
 
