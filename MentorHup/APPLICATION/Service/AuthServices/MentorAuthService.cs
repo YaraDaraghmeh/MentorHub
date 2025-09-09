@@ -1,14 +1,8 @@
-﻿using AutoMapper;
-using MentorHup.APPLICATION.Dtos.Mentee;
-using MentorHup.APPLICATION.DTOs.Mentor;
+﻿using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.Domain.Entities;
-using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using System.Text;

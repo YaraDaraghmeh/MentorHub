@@ -1,7 +1,6 @@
 ﻿using MentorHup.APPLICATION.DTOs.Review;
 using MentorHup.APPLICATION.Responses;
 using MentorHup.APPLICATION.Service.Review;
-using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
