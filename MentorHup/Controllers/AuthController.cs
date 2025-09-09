@@ -1,4 +1,5 @@
 ﻿using MentorHup.APPLICATION.DTOs.ForgetPassword;
+using MentorHup.APPLICATION.DTOs.Token;
 using MentorHup.APPLICATION.DTOs.Unified_Login;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.Infrastructure.Context;
@@ -34,9 +35,9 @@ namespace MentorHup.Controllers
 
 
         [HttpPost("refresh")]
-        public async Task<IActionResult> Refresh([FromBody] string refreshToken)
+        public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequest refreshTokenRequest)
         {
-            var response = await _authService.RefreshTokenAsync(refreshToken);
+            var response = await _authService.RefreshTokenAsync(refreshTokenRequest.RefreshToken);
             if (response == null)
                 return Unauthorized(new { message = "Invalid refresh token" });
 
@@ -46,11 +47,11 @@ namespace MentorHup.Controllers
 
         [HttpPost("logout")]
         [Authorize]
-        public async Task<IActionResult> Logout([FromBody] string refreshToken,
+        public async Task<IActionResult> Logout([FromBody] RefreshTokenRequest refreshTokenRequest,
             [FromServices] ApplicationDbContext context)
         {
             var storedToken = await context.RefreshTokens
-                .FirstOrDefaultAsync(t => t.Token == refreshToken);
+                .FirstOrDefaultAsync(t => t.Token == refreshTokenRequest.RefreshToken);
 
             if (storedToken == null)
                 return NotFound(new { message = "Refresh token not found" });

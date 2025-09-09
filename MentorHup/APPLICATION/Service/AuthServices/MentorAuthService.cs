@@ -1,6 +1,7 @@
 ﻿using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
@@ -15,7 +16,8 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         ApplicationDbContext context,
         ITokenService tokenService,
         IEmailSender emailSender,
-        IHttpContextAccessor httpContextAccessor
+        IHttpContextAccessor httpContextAccessor,
+        IWebHostEnvironment webHostEnvironment
             ) : IMentorAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
@@ -24,6 +26,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         private readonly ITokenService _tokenService = tokenService;
         private readonly IEmailSender emailSender = emailSender;
         private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
+        private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
         public async Task<MentorLoginRegistrationResult> RegisterAsync(MentorRegisterRequest request)
         {
@@ -101,6 +104,21 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 StripeAccountId = request.StripeAccountId, 
             };
 
+            var request2 = httpContextAccessor.HttpContext.Request;
+            if (request.Image != null && request.Image.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/mentors");
+                Directory.CreateDirectory(uploadsFolder); // create folder if does not exist
+                var uniqueFileName = $"{Guid.NewGuid()}_{request.Image.FileName}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await request.Image.CopyToAsync(fileStream);
+
+                var baseUrl = $"{request2.Scheme}://{request2.Host}";
+                mentor.ImageUrl = $"{baseUrl}/images/mentors/{uniqueFileName}"; // var mentor = new Mentor must be before this line
+            }
+
             _context.Mentors.Add(mentor);
             await _context.SaveChangesAsync();
 
@@ -163,6 +181,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Description = mentor.Description,
                     Experiences = mentor.Experiences,
                     Price = mentor.Price,
+                    ImageLink = mentor.ImageUrl,
                     Email = user.Email!,
                     Roles = roles.ToList(),
                     Skills = skills,

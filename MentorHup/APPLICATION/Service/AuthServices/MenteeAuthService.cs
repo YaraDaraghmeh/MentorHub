@@ -3,6 +3,7 @@ using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.Domain.Entities;
 using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
@@ -22,6 +23,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         private readonly IMapper _mapper;
         private readonly IEmailSender emailSender;
         private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IUrlHelper urlHelper;
 
         public MenteeAuthService(
@@ -32,7 +34,8 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             IEmailSender emailSender,
             IUrlHelperFactory urlHelperFactory,
             IActionContextAccessor actionContextAccessor,
-            IHttpContextAccessor httpContextAccessor
+            IHttpContextAccessor httpContextAccessor,
+            IWebHostEnvironment _webHostEnvironment
             )
         {
             _userManager = userManager;
@@ -41,6 +44,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             _tokenService = tokenService;
             this.emailSender = emailSender;
             this.httpContextAccessor = httpContextAccessor;
+            this._webHostEnvironment = _webHostEnvironment;
             this.urlHelper = urlHelperFactory.GetUrlHelper(actionContextAccessor.ActionContext!);
         }
 
@@ -55,6 +59,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 UserName = request.Name,
                 Email = request.Email
             };
+
 
             var result = await _userManager.CreateAsync(user, request.Password);
             if (!result.Succeeded)
@@ -119,6 +124,23 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 ApplicationUserId = user.Id
             };
 
+
+            var request2 = httpContextAccessor.HttpContext.Request;
+            if (request.Image != null && request.Image.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/mentees");
+                Directory.CreateDirectory(uploadsFolder);
+                var uniqueFileName = $"{Guid.NewGuid()}_{request.Image.FileName}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await request.Image.CopyToAsync(fileStream);
+
+                var baseUrl = $"{request2.Scheme}://{request2.Host}";
+                mentee.ImageUrl = $"{baseUrl}/images/mentees/{uniqueFileName}"; // var mentee = new Mentee must be before this line
+            }
+
+
             _context.Mentees.Add(mentee);
             await _context.SaveChangesAsync();
 
@@ -132,6 +154,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Id = mentee.Id,
                     Name = mentee.Name,
                     Gender = mentee.Gender,
+                    ImageLink = mentee.ImageUrl,
                     Email = user.Email!,
                     AccessToken = token,
                     Roles = roles.ToList(),

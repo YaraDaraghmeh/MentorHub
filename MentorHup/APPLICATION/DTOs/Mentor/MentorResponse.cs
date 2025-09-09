@@ -7,6 +7,7 @@
             public string Description { get; set; } = null!;
             public int Experiences { get; set; }
             public decimal Price { get; set; }
+            public string? ImageLink {  get; set; }
             public string Email { get; set; } = null!;
             public string Field { get; set; } = null!;
 

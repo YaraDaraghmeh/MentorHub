@@ -24,7 +24,7 @@ namespace MentorHup.API.Controllers
         [ProducesResponseType(typeof(MentorResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> Register([FromBody] MentorRegisterRequest request)
+        public async Task<IActionResult> Register([FromForm] MentorRegisterRequest request)
         {
             var result = await _mentorAuthService.RegisterAsync(request);
 
