@@ -9,6 +9,7 @@ import ContactUs from "./components/ContactUsPageComponents/ContactUs";
 import ChooseUser from "./components/Cards/ChooseUser";
 import SignUpMentee from "./Pages/PublicPages/SignUp/RegistrationMentee";
 import SignUpMentor from "./Pages/PublicPages/SignUp/RegistrationMetor";
+import JoinUsPage from "./Pages/PublicPages/JoinUsPage";
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -33,6 +34,7 @@ function App() {
               path="/browsMentor"
               element={<PublicMentors isDark={isDark} />}
             />
+            <Route path = "/joinUs" element = {<JoinUsPage isDark={isDark}/>}/>
           </Route>
         </Routes>
 
