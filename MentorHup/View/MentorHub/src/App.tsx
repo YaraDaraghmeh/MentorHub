@@ -5,6 +5,7 @@ import MainLayout from "./layouts/MainLayout";
 import { useState } from "react";
 import AboutUsPage from "./Pages/PublicPages/AboutUs";
 import PublicMentors from "./Pages/PublicPages/PublicMentors";
+import ContactUs from "./components/ContactUsPageComponents/ContactUs";
 import ChooseUser from "./components/Cards/ChooseUser";
 import SignUpMentee from "./Pages/PublicPages/SignUp/RegistrationMentee";
 import SignUpMentor from "./Pages/PublicPages/SignUp/RegistrationMetor";
@@ -26,6 +27,9 @@ function App() {
           >
             <Route path="/" element={<HomePage isDark={isDark} />} />
             <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
+            <Route path="/browsMentor" element={<PublicMentors isDark={isDark} />} />
+            <Route path="/browsMentor" element={<PublicMentors isDark={isDark} />} />
+            <Route path="/contactUs" element={<ContactUs isDark={isDark} />} />
             <Route
               path="/browsMentor"
               element={<PublicMentors isDark={isDark} />}
