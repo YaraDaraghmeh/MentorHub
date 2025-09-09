@@ -64,6 +64,19 @@ namespace MentorHup.APPLICATION.Controllers
             return Ok(result);
         }
 
+        [HttpPatch("edit")]
+        [Authorize]
+        public async Task<IActionResult> Edit([FromForm] MenteeUpdateRequest menteeUpdateRequest)
+        {
+            var result = await _menteeAuthService.UpdateAsync(menteeUpdateRequest);
+
+            if(!result)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+
 
     }
 }

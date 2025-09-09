@@ -82,5 +82,21 @@ namespace MentorHup.API.Controllers
 
             return Ok(mentors);
         }
+
+
+        [HttpPatch("edit")]
+        [Authorize]
+        public async Task<IActionResult> Edit([FromForm] MentorUpdateRequest mentorUpdateRequest)
+        {
+            var result = await _mentorAuthService.UpdateAsync(mentorUpdateRequest);
+
+            if (!result)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+
+
     }
 }
