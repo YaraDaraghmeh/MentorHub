@@ -22,6 +22,32 @@ namespace MentorHup.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("MentorHup.Domain.Entities.AdminCommission", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
+
+                    b.ToTable("AdminCommissions");
+                });
+
             modelBuilder.Entity("MentorHup.Domain.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
@@ -87,6 +113,51 @@ namespace MentorHup.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("MentorHup.Domain.Entities.Booking", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime>("EndTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsConfirmed")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("MenteeId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MentorAvailabilityId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MentorId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartTime")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MenteeId");
+
+                    b.HasIndex("MentorAvailabilityId")
+                        .IsUnique();
+
+                    b.HasIndex("MentorId");
+
+                    b.ToTable("Bookings");
+                });
+
             modelBuilder.Entity("MentorHup.Domain.Entities.Mentee", b =>
                 {
                     b.Property<int>("Id")
@@ -143,7 +214,11 @@ namespace MentorHup.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<decimal>("Price")
+                        .HasPrecision(18, 2)
                         .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("StripeAccountId")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
@@ -204,6 +279,107 @@ namespace MentorHup.Migrations
                     b.HasIndex("SkillId");
 
                     b.ToTable("MentorSkills");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Message", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("ReceiverId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("SenderId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<DateTime>("SentAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReceiverId");
+
+                    b.HasIndex("SenderId");
+
+                    b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Payment", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PaymentIntentId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
+
+                    b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Skill", b =>
@@ -378,6 +554,44 @@ namespace MentorHup.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("MentorHup.Domain.Entities.AdminCommission", b =>
+                {
+                    b.HasOne("MentorHup.Domain.Entities.Booking", "Booking")
+                        .WithOne("AdminCommission")
+                        .HasForeignKey("MentorHup.Domain.Entities.AdminCommission", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Booking", b =>
+                {
+                    b.HasOne("MentorHup.Domain.Entities.Mentee", "Mentee")
+                        .WithMany("Bookings")
+                        .HasForeignKey("MenteeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MentorHup.Domain.Entities.MentorAvailability", "MentorAvailability")
+                        .WithOne("Booking")
+                        .HasForeignKey("MentorHup.Domain.Entities.Booking", "MentorAvailabilityId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("MentorHup.Domain.Entities.Mentor", "Mentor")
+                        .WithMany("Bookings")
+                        .HasForeignKey("MentorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Mentee");
+
+                    b.Navigation("Mentor");
+
+                    b.Navigation("MentorAvailability");
+                });
+
             modelBuilder.Entity("MentorHup.Domain.Entities.Mentee", b =>
                 {
                     b.HasOne("MentorHup.Domain.Entities.ApplicationUser", "ApplicationUser")
@@ -428,6 +642,47 @@ namespace MentorHup.Migrations
                     b.Navigation("Mentor");
 
                     b.Navigation("Skill");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Message", b =>
+                {
+                    b.HasOne("MentorHup.Domain.Entities.ApplicationUser", "Receiver")
+                        .WithMany("ReceivedMessages")
+                        .HasForeignKey("ReceiverId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("MentorHup.Domain.Entities.ApplicationUser", "Sender")
+                        .WithMany("SentMessages")
+                        .HasForeignKey("SenderId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Receiver");
+
+                    b.Navigation("Sender");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Payment", b =>
+                {
+                    b.HasOne("MentorHup.Domain.Entities.Booking", "Booking")
+                        .WithOne("Payment")
+                        .HasForeignKey("MentorHup.Domain.Entities.Payment", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
+                {
+                    b.HasOne("MentorHup.Domain.Entities.Booking", "Booking")
+                        .WithOne("Review")
+                        .HasForeignKey("MentorHup.Domain.Entities.Review", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -486,13 +741,38 @@ namespace MentorHup.Migrations
                     b.Navigation("Mentee");
 
                     b.Navigation("Mentor");
+
+                    b.Navigation("ReceivedMessages");
+
+                    b.Navigation("SentMessages");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Booking", b =>
+                {
+                    b.Navigation("AdminCommission");
+
+                    b.Navigation("Payment");
+
+                    b.Navigation("Review");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Mentee", b =>
+                {
+                    b.Navigation("Bookings");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Mentor", b =>
                 {
                     b.Navigation("Availabilities");
 
+                    b.Navigation("Bookings");
+
                     b.Navigation("MentorSkills");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.MentorAvailability", b =>
+                {
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Skill", b =>

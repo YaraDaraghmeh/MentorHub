@@ -61,7 +61,8 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 Experiences = request.Experiences,
                 Price = request.Price,
                 Field = request.Field,
-                ApplicationUserId = user.Id
+                ApplicationUserId = user.Id,
+                StripeAccountId = request.StripeAccountId, 
             };
 
             _context.Mentors.Add(mentor);

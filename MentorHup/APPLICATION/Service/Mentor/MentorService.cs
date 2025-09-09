@@ -8,7 +8,8 @@ namespace MentorHup.APPLICATION.Service.Mentor
 {
     public class MentorService(ApplicationDbContext context) : IMentorService
     {
-        public async Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(int pageSize,
+        public async Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(
+            int pageSize,
             int pageNumber,
             string? field,
             string? skillName,
@@ -54,7 +55,8 @@ namespace MentorHup.APPLICATION.Service.Mentor
                         DurationInMinutes = a.DurationInMinutes,
                         StartTime = a.StartTime,
                         EndTime = a.EndTime
-                    }).ToList()
+                    }).ToList(),
+                    ReviewCount =  m.Bookings.Count(b => b.Review != null)
                 })
                 .ToListAsync();
 

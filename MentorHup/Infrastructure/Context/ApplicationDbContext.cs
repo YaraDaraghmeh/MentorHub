@@ -1,6 +1,7 @@
 ﻿using MentorHup.Domain.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection.Emit;
 
 namespace MentorHup.Infrastructure.Context
 {
@@ -16,6 +17,8 @@ namespace MentorHup.Infrastructure.Context
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<AdminCommission> AdminCommissions { get; set; }
+        public DbSet<Review> Reviews { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -85,6 +88,12 @@ namespace MentorHup.Infrastructure.Context
                 .WithMany(u => u.ReceivedMessages)
                 .HasForeignKey(m => m.ReceiverId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Entity<Booking>()
+            .HasOne(b => b.Review)
+            .WithOne(r => r.Booking)
+            .HasForeignKey<Review>(r => r.BookingId)
+            .OnDelete(DeleteBehavior.Cascade);
 
 
             builder.Entity<Booking>()
