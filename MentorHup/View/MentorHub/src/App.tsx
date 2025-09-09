@@ -4,9 +4,11 @@ import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
 import { useState } from "react";
 import AboutUsPage from "./Pages/PublicPages/AboutUs";
-import SignUp from "./Pages/PublicPages/Registration";
 import PublicMentors from "./Pages/PublicPages/PublicMentors";
 import ContactUs from "./components/ContactUsPageComponents/ContactUs";
+import ChooseUser from "./components/Cards/ChooseUser";
+import SignUpMentee from "./Pages/PublicPages/SignUp/RegistrationMentee";
+import SignUpMentor from "./Pages/PublicPages/SignUp/RegistrationMetor";
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -27,13 +29,19 @@ function App() {
             <Route path="/browsMentor" element={<PublicMentors isDark={isDark} />} />
             <Route path="/browsMentor" element={<PublicMentors isDark={isDark} />} />
             <Route path="/contactUs" element={<ContactUs isDark={isDark} />} />
+            <Route
+              path="/browsMentor"
+              element={<PublicMentors isDark={isDark} />}
+            />
           </Route>
         </Routes>
 
         {/* Login & Registration */}
         <Routes>
           <Route path="/login" element={<LoginUser />} />
-          <Route path="/registration" element={<SignUp />} />
+          <Route path="/registration" element={<ChooseUser />} />
+          <Route path="/SignUp-mentee" element={<SignUpMentee />} />
+          <Route path="/SignUp-mentor" element={<SignUpMentor />} />
         </Routes>
 
         {/*  */}
