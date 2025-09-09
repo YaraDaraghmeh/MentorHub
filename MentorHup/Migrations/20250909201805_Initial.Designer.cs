@@ -12,13 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MentorHup.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-<<<<<<<< HEAD:MentorHup/Migrations/20250908231909_initial.Designer.cs
-    [Migration("20250908231909_initial")]
-    partial class initial
-========
-    [Migration("20250908224007_Add_RefreshToken")]
-    partial class Add_RefreshToken
->>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f:MentorHup/Migrations/20250908224007_Add_RefreshToken.Designer.cs
+    [Migration("20250909201805_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -362,11 +357,7 @@ namespace MentorHup.Migrations
                     b.ToTable("Payments");
                 });
 
-<<<<<<<< HEAD:MentorHup/Migrations/20250908231909_initial.Designer.cs
-            modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
-========
             modelBuilder.Entity("MentorHup.Domain.Entities.RefreshToken", b =>
->>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f:MentorHup/Migrations/20250908224007_Add_RefreshToken.Designer.cs
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -374,26 +365,6 @@ namespace MentorHup.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-<<<<<<<< HEAD:MentorHup/Migrations/20250908231909_initial.Designer.cs
-                    b.Property<int>("BookingId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Comment")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("BookingId")
-                        .IsUnique();
-
-                    b.ToTable("Reviews");
-========
                     b.Property<DateTime>("Expires")
                         .HasColumnType("datetime2");
 
@@ -413,7 +384,34 @@ namespace MentorHup.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
->>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f:MentorHup/Migrations/20250908224007_Add_RefreshToken.Designer.cs
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("BookingId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BookingId")
+                        .IsUnique();
+
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Skill", b =>
@@ -708,17 +706,6 @@ namespace MentorHup.Migrations
                     b.Navigation("Booking");
                 });
 
-<<<<<<<< HEAD:MentorHup/Migrations/20250908231909_initial.Designer.cs
-            modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
-                {
-                    b.HasOne("MentorHup.Domain.Entities.Booking", "Booking")
-                        .WithOne("Review")
-                        .HasForeignKey("MentorHup.Domain.Entities.Review", "BookingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Booking");
-========
             modelBuilder.Entity("MentorHup.Domain.Entities.RefreshToken", b =>
                 {
                     b.HasOne("MentorHup.Domain.Entities.ApplicationUser", "User")
@@ -728,7 +715,17 @@ namespace MentorHup.Migrations
                         .IsRequired();
 
                     b.Navigation("User");
->>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f:MentorHup/Migrations/20250908224007_Add_RefreshToken.Designer.cs
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
+                {
+                    b.HasOne("MentorHup.Domain.Entities.Booking", "Booking")
+                        .WithOne("Review")
+                        .HasForeignKey("MentorHup.Domain.Entities.Review", "BookingId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Booking");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

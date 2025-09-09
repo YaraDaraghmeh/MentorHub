@@ -17,12 +17,9 @@ namespace MentorHup.Infrastructure.Context
         public DbSet<Booking> Bookings { get; set; }
         public DbSet<Payment> Payments { get; set; }
         public DbSet<AdminCommission> AdminCommissions { get; set; }
-<<<<<<< HEAD
         public DbSet<Review> Reviews { get; set; }
 
-=======
         public DbSet<RefreshToken> RefreshTokens { get; set; }
->>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
