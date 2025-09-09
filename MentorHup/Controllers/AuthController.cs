@@ -1,6 +1,6 @@
-﻿using MentorHup.APPLICATION.DTOs.Unified_Login;
+﻿using MentorHup.APPLICATION.DTOs.ForgetPassword;
+using MentorHup.APPLICATION.DTOs.Unified_Login;
 using MentorHup.APPLICATION.Service.AuthServices;
-using MentorHup.APPLICATION.Settings;
 using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -59,6 +59,26 @@ namespace MentorHup.Controllers
             await context.SaveChangesAsync();
 
             return Ok(new { message = "Logged out successfully" });
+        }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordRequest request)
+        {
+            var response = await _authService.ForgotPasswordAsync(request);
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
+        {
+            var response = await _authService.ResetPasswordAsync(request);
+            if (!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
         }
 
 

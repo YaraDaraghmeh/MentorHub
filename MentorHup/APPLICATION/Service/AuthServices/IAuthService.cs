@@ -8,5 +8,8 @@ namespace MentorHup.APPLICATION.Service.AuthServices
     {
         Task<LoginResponse?> LoginAsync(LoginRequest request);
         Task<RefreshTokenResponse?> RefreshTokenAsync(string userId);
+        Task<ResetPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request);
+        Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request);
+
     }
 }
