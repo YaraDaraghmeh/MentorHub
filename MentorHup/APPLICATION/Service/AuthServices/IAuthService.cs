@@ -1,4 +1,5 @@
-﻿using MentorHup.APPLICATION.DTOs.Token;
+﻿using MentorHup.APPLICATION.DTOs.ForgetPassword;
+using MentorHup.APPLICATION.DTOs.Token;
 using MentorHup.APPLICATION.DTOs.Unified_Login;
 
 namespace MentorHup.APPLICATION.Service.AuthServices
