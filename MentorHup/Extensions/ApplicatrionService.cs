@@ -7,6 +7,7 @@ using MentorHup.APPLICATION.Service.Message;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -47,6 +48,10 @@ namespace MentorHup.Extensions
             services.AddScoped<IMessageService, MessageService>();
 
             services.AddTransient<IEmailSender, EmailSender>();
+
+            // for reset password
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromMinutes(30)); // 30 min then it will expired
 
 
 
