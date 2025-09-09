@@ -6,6 +6,7 @@
         {
             public string Name { get; set; } = null!;
             public string Description { get; set; } = null!;
+            public IFormFile? Image { get; set; }
             public string Email { get; set; } = null!;
             public string Password { get; set; } = null!;
             public int Experiences { get; set; }

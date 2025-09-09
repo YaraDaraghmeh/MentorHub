@@ -24,7 +24,7 @@ namespace MentorHup.APPLICATION.Controllers
         [ProducesResponseType(typeof(MenteeResponse),StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<ActionResult<MenteeRegisterResult>> Register([FromBody] MenteeRegisterRequest request)
+        public async Task<ActionResult<MenteeRegisterResult>> Register([FromForm] MenteeRegisterRequest request)
         {
             var result = await _menteeAuthService.RegisterAsync(request);
 
