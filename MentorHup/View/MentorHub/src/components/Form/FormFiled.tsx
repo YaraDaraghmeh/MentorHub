@@ -1,17 +1,23 @@
 import "./Form.css";
 
 type ListItemProps = {
-  label: string;
-  name: string;
-  placeholder: string;
-  type: string;
+  value?: string;
+  label?: string;
+  name?: string;
+  placeholder?: string;
+  type?: string;
+  onChange: (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => void;
 };
 
 const FormFiled = ({
+  value,
   label,
   name,
   placeholder,
   type = "text",
+  onChange,
 }: ListItemProps) => {
   return (
     <div className="flex flex-wrap flex-col items-start justify-center gap-4 self-stretch w-full">
@@ -19,6 +25,8 @@ const FormFiled = ({
         {label}
       </label>
       <input
+        value={value}
+        onChange={onChange}
         name={name}
         type={type}
         placeholder={placeholder}

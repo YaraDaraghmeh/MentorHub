@@ -59,6 +59,14 @@ input:focus {
   outline: none;
 }
 
+select {
+  height: 52px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid var(--System-Gray-200);
+  background: var(--white);
+}
+
 .search:focus {
   border: 2px solid blue; /* Add a custom border */
   box-shadow: 0 0 5px rgba(0, 0, 255, 0.5); /* Add a subtle shadow */
