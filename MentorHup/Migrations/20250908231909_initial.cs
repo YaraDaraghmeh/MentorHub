@@ -8,7 +8,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MentorHup.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:MentorHup/Migrations/20250908231909_initial.cs
     public partial class initial : Migration
+========
+    public partial class Initial : Migration
+>>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f:MentorHup/Migrations/20250908223858_Initial.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

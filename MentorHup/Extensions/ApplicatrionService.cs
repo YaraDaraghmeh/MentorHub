@@ -8,10 +8,8 @@ using MentorHup.APPLICATION.Service.Message;
 using MentorHup.APPLICATION.Service.Review;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
-using MentorHup.Domain.Entities;
-using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -50,6 +48,9 @@ namespace MentorHup.Extensions
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IReviewService, ReviewService>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
 
 
             services.AddSwaggerGen(c =>

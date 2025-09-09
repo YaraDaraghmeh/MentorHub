@@ -41,6 +41,19 @@ namespace MentorHup.API.Controllers
             return Created(nameof(Register),  result.Mentor);
         }
 
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var success = await _mentorAuthService.ConfirmEmailAsync(userId, token);
+
+            if (!success)
+                return BadRequest(new { message = "Email confirmation failed." });
+
+            return Ok(new { message = "Email confirmed successfully." });
+        }
+
+
         [HttpPost("login")]
         [ProducesResponseType(typeof(MentorResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]

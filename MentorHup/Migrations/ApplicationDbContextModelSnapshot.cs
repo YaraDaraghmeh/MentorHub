@@ -354,7 +354,11 @@ namespace MentorHup.Migrations
                     b.ToTable("Payments");
                 });
 
+<<<<<<< HEAD
             modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
+=======
+            modelBuilder.Entity("MentorHup.Domain.Entities.RefreshToken", b =>
+>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -362,6 +366,7 @@ namespace MentorHup.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+<<<<<<< HEAD
                     b.Property<int>("BookingId")
                         .HasColumnType("int");
 
@@ -380,6 +385,27 @@ namespace MentorHup.Migrations
                         .IsUnique();
 
                     b.ToTable("Reviews");
+=======
+                    b.Property<DateTime>("Expires")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRevoked")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Token")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("RefreshTokens");
+>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Skill", b =>
@@ -674,6 +700,7 @@ namespace MentorHup.Migrations
                     b.Navigation("Booking");
                 });
 
+<<<<<<< HEAD
             modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
                 {
                     b.HasOne("MentorHup.Domain.Entities.Booking", "Booking")
@@ -683,6 +710,17 @@ namespace MentorHup.Migrations
                         .IsRequired();
 
                     b.Navigation("Booking");
+=======
+            modelBuilder.Entity("MentorHup.Domain.Entities.RefreshToken", b =>
+                {
+                    b.HasOne("MentorHup.Domain.Entities.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -752,8 +790,11 @@ namespace MentorHup.Migrations
                     b.Navigation("AdminCommission");
 
                     b.Navigation("Payment");
+<<<<<<< HEAD
 
                     b.Navigation("Review");
+=======
+>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Mentee", b =>
