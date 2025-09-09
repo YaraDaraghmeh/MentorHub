@@ -6,7 +6,7 @@ type ListItemProps = {
   name?: string;
   placeholder?: string;
   type?: string;
-  onChange: (
+  onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
 };

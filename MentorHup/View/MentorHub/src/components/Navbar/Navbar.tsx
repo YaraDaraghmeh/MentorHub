@@ -29,7 +29,7 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 z-50 lg:px-[45px] md:px-[38px] px-6 bg-dark flex flex-shrink-0 items-center justify-between w-full">
+    <nav className="nav fixed top-0 left-0 z-50 lg:px-[45px] md:px-[38px] px-6 bg-dark flex flex-shrink-0 items-center justify-between w-full">
       {/* logo */}
       <Link to="/" className="flex items-center">
         <img
