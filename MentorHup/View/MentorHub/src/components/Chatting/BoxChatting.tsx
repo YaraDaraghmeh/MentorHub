@@ -1,6 +1,5 @@
 import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
 import { BsThreeDotsVertical } from "react-icons/bs";
-import { BiMicrophone } from "react-icons/bi";
 import MessageReceive from "./MessageReceive";
 import MessageSend from "./MessageSend";
 
@@ -71,11 +70,6 @@ const Chatting = ({ isDark = true, name, picture }: ListInfo) => {
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
             picture=""
           />
-
-          <MessageSend
-            isDark={true}
-            message="Lorem ipsum dolor sit amet, consectetur adipiscing elit 😊✔️"
-          />
         </div>
 
         {/* input */}
@@ -92,13 +86,6 @@ const Chatting = ({ isDark = true, name, picture }: ListInfo) => {
                   : "text-[var(--primary-light)]"
               }`}
               placeholder="Type a message"
-            />
-            <BiMicrophone
-              className={`w-[24px] h-[24px] ${
-                isDark
-                  ? "text-[var(--aqua-green)]"
-                  : "text-[var(--primary-light)]"
-              }`}
             />
           </div>
         </div>
