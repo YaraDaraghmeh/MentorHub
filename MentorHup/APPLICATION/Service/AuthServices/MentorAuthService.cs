@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Text;
 
 namespace MentorHup.APPLICATION.Service.AuthServices
@@ -255,6 +256,72 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Expires = DateTime.UtcNow.AddHours(3)
                 }
             };
+        }
+
+        public async Task<bool> UpdateAsync(MentorUpdateRequest request)
+        {
+
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _context.Users
+                .Include(u => u.Mentor)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.Mentor == null)
+                return false;
+
+            var mentor = user.Mentor;
+
+            if (mentor == null)
+                return false;
+
+            if (!string.IsNullOrEmpty(request.Name))
+                mentor.Name = request.Name;
+
+            if (!string.IsNullOrEmpty(request.Field))
+                mentor.Field = request.Field;
+
+            if (!string.IsNullOrEmpty(request.Description))
+                mentor.Description = request.Description;
+
+            if (request.Experiences.HasValue)
+                mentor.Experiences = request.Experiences.Value;
+
+            if (request.Price.HasValue)
+                mentor.Price = request.Price.Value;
+
+            if (!string.IsNullOrEmpty(request.StripeAccountId))
+                mentor.StripeAccountId = request.StripeAccountId;
+
+
+            if (request.ImageForm != null && request.ImageForm.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/mentors");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // delete the old one from server (if exist)
+                if (!string.IsNullOrEmpty(mentor.ImageUrl))
+                {
+                    var oldFileName = Path.GetFileName(new Uri(mentor.ImageUrl).LocalPath);
+                    var oldFilePath = Path.Combine(uploadsFolder, oldFileName);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // upload new image
+                var uniqueFileName = $"{Guid.NewGuid()}_{request.ImageForm.FileName}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await request.ImageForm.CopyToAsync(fileStream);
+
+                var baseUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
+                mentor.ImageUrl = $"{baseUrl}/images/mentors/{uniqueFileName}";
+            }
+
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }
