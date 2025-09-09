@@ -21,4 +21,6 @@ public class Booking
     public Payment? Payment { get; set; }
     public AdminCommission? AdminCommission { get; set; }
 
+    public Review? Review { get; set; }
+
 }

@@ -8,7 +8,11 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MentorHup.Migrations
 {
     /// <inheritdoc />
+<<<<<<<< HEAD:MentorHup/Migrations/20250908231909_initial.cs
+    public partial class initial : Migration
+========
     public partial class Initial : Migration
+>>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f:MentorHup/Migrations/20250908223858_Initial.cs
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -378,6 +382,28 @@ namespace MentorHup.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Reviews",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    BookingId = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reviews", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Reviews_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.InsertData(
                 table: "Skills",
                 columns: new[] { "Id", "SkillName" },
@@ -492,6 +518,12 @@ namespace MentorHup.Migrations
                 table: "Payments",
                 column: "BookingId",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reviews_BookingId",
+                table: "Reviews",
+                column: "BookingId",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -523,6 +555,9 @@ namespace MentorHup.Migrations
 
             migrationBuilder.DropTable(
                 name: "Payments");
+
+            migrationBuilder.DropTable(
+                name: "Reviews");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
