@@ -2,7 +2,11 @@
 using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.APPLICATION.Service;
 using MentorHup.APPLICATION.Service.AuthServices;
+<<<<<<< HEAD
+using MentorHup.APPLICATION.Service.Mentor;
+=======
 using MentorHup.Domain.Entities;
+>>>>>>> d17ff95dbdf9d75e402a256a4e46f59e7205302f
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

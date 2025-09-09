@@ -3,7 +3,9 @@ using FluentValidation.AspNetCore;
 using MentorHup.APPLICATION.Service;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Booking;
+using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.APPLICATION.Service.Message;
+using MentorHup.APPLICATION.Service.Review;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -46,6 +48,7 @@ namespace MentorHup.Extensions
             services.AddScoped<IStripeService, StripeService>();
             services.AddScoped<IBookingService, BookingService>();
             services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IReviewService, ReviewService>();
 
             services.AddTransient<IEmailSender, EmailSender>();
 
