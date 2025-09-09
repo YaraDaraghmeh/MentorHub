@@ -6,6 +6,7 @@ import { useState } from "react";
 import AboutUsPage from "./Pages/PublicPages/AboutUs";
 import SignUp from "./Pages/PublicPages/Registration";
 import PublicMentors from "./Pages/PublicPages/PublicMentors";
+import ContactUs from "./components/ContactUsPageComponents/ContactUs";
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -24,9 +25,8 @@ function App() {
             <Route path="/" element={<HomePage isDark={isDark} />} />
             <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
             <Route path="/browsMentor" element={<PublicMentors isDark={isDark} />} />
-
-      
-           
+            <Route path="/browsMentor" element={<PublicMentors isDark={isDark} />} />
+            <Route path="/contactUs" element={<ContactUs isDark={isDark} />} />
           </Route>
         </Routes>
 
