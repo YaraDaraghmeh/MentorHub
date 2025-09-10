@@ -2,6 +2,7 @@
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
 using Microsoft.Extensions.Options;
+using Stripe;
 using Stripe.Checkout;
 
 namespace MentorHup.APPLICATION.Service.Strip;
@@ -63,5 +64,24 @@ public class StripeService : IStripeService
         var service = new SessionService();
         var session = await service.CreateAsync(options);
         return session.Url!;
+    }
+
+    public async Task<Refund> RefundPaymentAsync(string paymentIntentId)
+    {
+        if (string.IsNullOrWhiteSpace(paymentIntentId))
+            throw new ArgumentException("PaymentIntentId cannot be null or empty.");
+
+        var refundService = new RefundService();
+
+        var options = new RefundCreateOptions
+        {
+            PaymentIntent = paymentIntentId,
+            Reason = "requested_by_customer",
+            RefundApplicationFee = false, 
+            ReverseTransfer = true 
+        };
+
+        var refund = await refundService.CreateAsync(options);
+        return refund;
     }
 }

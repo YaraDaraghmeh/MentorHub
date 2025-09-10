@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
-using MentorHup.APPLICATION.Service;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Booking;
 using MentorHup.APPLICATION.Service.Mentor;
@@ -8,7 +7,6 @@ using MentorHup.APPLICATION.Service.Message;
 using MentorHup.APPLICATION.Service.Review;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
-using MentorHup.Infrastructure.EmailSender;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;

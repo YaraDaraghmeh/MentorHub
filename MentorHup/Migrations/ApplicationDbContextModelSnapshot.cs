@@ -134,6 +134,9 @@ namespace MentorHup.Migrations
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MeetingUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MenteeId")
                         .HasColumnType("int");
 
@@ -145,6 +148,9 @@ namespace MentorHup.Migrations
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -348,9 +354,11 @@ namespace MentorHup.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("RefundedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

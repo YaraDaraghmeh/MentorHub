@@ -12,7 +12,17 @@ public class Payment
     public string PaymentIntentId { get; set; } = null!;
 
     // Pending, Succeeded, Failed
-    public string Status { get; set; } = "Pending"; 
+    public PaymentStatus Status { get; set; } = PaymentStatus.Pending; 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? RefundedAt { get; set; }
+
+}
+
+public enum PaymentStatus
+{
+    Pending,
+    Succeeded,
+    Failed,
+    Refunded
 }
 

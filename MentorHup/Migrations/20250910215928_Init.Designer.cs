@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MentorHup.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250909201805_Initial")]
-    partial class Initial
+    [Migration("20250910215928_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -137,6 +137,9 @@ namespace MentorHup.Migrations
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MeetingUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MenteeId")
                         .HasColumnType("int");
 
@@ -148,6 +151,9 @@ namespace MentorHup.Migrations
 
                     b.Property<DateTime>("StartTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -175,6 +181,9 @@ namespace MentorHup.Migrations
 
                     b.Property<string>("Gender")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -210,6 +219,9 @@ namespace MentorHup.Migrations
 
                     b.Property<string>("Field")
                         .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImageUrl")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
@@ -345,9 +357,11 @@ namespace MentorHup.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime?>("RefundedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 

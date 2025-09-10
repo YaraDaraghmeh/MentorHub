@@ -105,6 +105,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 StripeAccountId = request.StripeAccountId, 
             };
 
+
             _context.Mentors.Add(mentor);
             await _context.SaveChangesAsync();
 
