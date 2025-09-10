@@ -13,6 +13,7 @@ import JoinUsPage from "./Pages/PublicPages/JoinUsPage";
 import BodySystem from "./layouts/bodyPages";
 // import DashboardMentor from "./components/Dashboard/dashboard";
 import Dashboard from "./components/Dashboard/dashboard";
+import ChateUser from "./Pages/MentorPages/Chatting";
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -58,12 +59,13 @@ function App() {
         {/* System Pages */}
         <Routes>
           <Route
-            element={<BodySystem isDark={true} toggleTheme={toggleTheme} />}
+            element={<BodySystem isDark={isDark} toggleTheme={toggleTheme} />}
           >
             <Route
               path="/mentor/dashboard"
-              element={<Dashboard isDark={true} />}
+              element={<Dashboard isDark={isDark} />}
             />
+            <Route path="/mentor/chatting" element={<ChateUser />} />
           </Route>
         </Routes>
       </Router>

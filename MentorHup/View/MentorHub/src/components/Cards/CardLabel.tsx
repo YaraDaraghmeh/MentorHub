@@ -12,7 +12,7 @@ const CardLabel = ({ isDark, picture, name, time, date }: ListInfo) => {
   return (
     <div className="py-1.5 hover:transition-transform hover:duration-150 hover:scale-95 w-full">
       <div
-        className={`w-full h-[86px] flex justify-center items-center gap-2 overflow-hidden rounded-[22px] p-[10px] hover:shadow-[0px_0px_12px_0px_rgba(0,0,0,25%)] shadow-[0px_0px_12px_0px_rgba(0,0,0,25%)] cursor-pointer hover:transition-all hover:duration-300 ${
+        className={`w-full h-[86px] flex justify-center items-center gap-2 overflow-hidden rounded-[22px] p-[10px] hover:shadow-[0px_0px_12px_0px_rgba(0,0,0,25%)] shadow-[1px_1px_4px_0px_rgba(0,0,0,25%)] cursor-pointer hover:transition-all hover:duration-300 ${
           isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--secondary-light)] "
         }`}
       >

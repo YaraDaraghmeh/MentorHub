@@ -25,7 +25,7 @@ const BodySystem = ({ isDark }: listLayout) => {
       <SideBar
         profile={userProfile}
         role="mentor"
-        isDark={true}
+        isDark={false}
         expended={isSidebarOpen}
         setExpended={setIsSidebarOpen}
       />
@@ -36,9 +36,9 @@ const BodySystem = ({ isDark }: listLayout) => {
           isSidebarOpen ? "ml-[230px]" : "ml-20"
         }`}
       >
-        <div className="p-5 gap-7">
+        <div className="flex flex-col p-5 gap-7">
           {/* header */}
-          <div className="w-full flex justify-between items-center">
+          <div className="w-full flex flex-col lg:gap-0 lg:flex-row gap-3 justify-between items-center">
             <div className="flex justify-center items-center gap-2.5">
               <div
                 className={`justify-start text-lg font-bold leading-7 ${
@@ -63,7 +63,7 @@ const BodySystem = ({ isDark }: listLayout) => {
 
             {/* Search */}
             <div
-              className={`flex-1 max-w-[660px] h-9 p-3.5 rounded-[52px] outline outline-2 outline-offset-[-2px] flex justify-between items-center overflow-hidden ${
+              className={`flex-1 w-full lg:max-w-[660px] h-9 p-3.5 rounded-[52px] outline outline-2 outline-offset-[-2px] flex justify-between items-center overflow-hidden ${
                 isDark
                   ? "outline-[var(--primary)] text-[var(--aqua-green)] bg-[var(--primary-rgba)]"
                   : "outline-[var(--System-Gray-200)] text-[var(--System-Gray-400)] bg-white"
@@ -72,16 +72,22 @@ const BodySystem = ({ isDark }: listLayout) => {
               <div className="justify-start text-base font-medium  leading-normal">
                 Search...
               </div>
-              <div className="w-5 h-5 overflow-hidden">
+              <div className="w-5 h-5">
                 <BiSearch className="w-full h-full" />
               </div>
             </div>
 
-            <IoNotifications className="lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px]" />
+            <div className="flex">
+              <IoNotifications
+                className={`lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px] ${
+                  isDark ? "text-white" : "text-[var(--primary-rgba)]"
+                }`}
+              />
+            </div>
           </div>
 
           {/* Main content */}
-          <div className="flex-1 p-5">
+          <div className="flex-1 py-5">
             <Outlet />
           </div>
         </div>

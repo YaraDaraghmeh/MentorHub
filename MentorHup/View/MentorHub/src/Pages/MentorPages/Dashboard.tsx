@@ -1,4 +1,4 @@
-// import DashboardMentor from "../../components/Dashboard/dashboard";
+import DashboardMentor from "../../components/Dashboard/dashboard";
 
 const Dashboard = () => {
   return (
@@ -6,8 +6,7 @@ const Dashboard = () => {
       className="flex-col w-full justify-start items-center overflow-hidden
     "
     >
-      <h1>gdkjhdfnvkl</h1>
-      {/* <DashboardMentor /> */}
+      <DashboardMentor isDark={false} />
     </div>
   );
 };
