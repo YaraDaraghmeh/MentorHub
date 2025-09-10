@@ -1,6 +1,7 @@
 import React from "react";
 import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
 import Eye from "./eyeicon";
+import { useTheme } from "../../Context/ThemeContext";
 
 type column = {
   header: string;
@@ -8,13 +9,13 @@ type column = {
 };
 
 type Listprops = {
-  isDark: boolean;
   data: any[];
   columns: column[];
 };
 
 // const Table = ({ isDark = true, data, columns }: Listprops) => {
-const Table = ({ isDark = false }) => {
+const Table = () => {
+  const { isDark } = useTheme();
   return (
     <div
       className={`inline-flex flex-col items-center rounded-2xl shadow-[-2px_5px_10px_1px_rgba(0,0,0,0.15)] overflow-hidden ${

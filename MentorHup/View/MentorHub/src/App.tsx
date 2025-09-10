@@ -44,7 +44,7 @@ function App() {
               path="/browsMentor"
               element={<PublicMentors isDark={isDark} />}
             />
-            <Route path="/contactUs" element={<ContactUs isDark={isDark} />} />
+            <Route path="/contactUs" element={<ContactUs  />} />
             <Route
               path="/browsMentor"
               element={<PublicMentors isDark={isDark} />}
@@ -68,7 +68,7 @@ function App() {
           >
             <Route
               path="/mentor/dashboard"
-              element={<Dashboard isDark={isDark} />}
+              element={<Dashboard  />}
             />
             <Route path="/mentor/chatting" element={<ChateUser />} />
           </Route>

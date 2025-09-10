@@ -2,13 +2,14 @@ import React from 'react';
 import  { motion} from 'framer-motion';
 import type {  Variants } from 'framer-motion';
 import BenefitCard from './BenefitCard';
+import { useTheme } from "../../Context/ThemeContext";
 
 interface BenefitsSectionProps {
   benefits: string[];
-  isDark: boolean;
 }
 
-const BenefitsSection: React.FC<BenefitsSectionProps> = ({ benefits, isDark }) => {
+const BenefitsSection: React.FC<BenefitsSectionProps> = ({ benefits }) => {
+  const { isDark } = useTheme();
   const sectionStyle = isDark ? { backgroundColor: '#06171c' } : { backgroundColor: '#96fbf1' };
 
   const cardVariants: Variants = {
@@ -54,7 +55,7 @@ const BenefitsSection: React.FC<BenefitsSectionProps> = ({ benefits, isDark }) =
               <BenefitCard
                 benefit={benefit}
                 index={index}
-                isDark={isDark}
+                
               />
             </motion.div>
           ))}

@@ -2,13 +2,14 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, MapPin, Clock, Users, Heart, Share2, Award } from 'lucide-react';
 import  type { Mentor } from '../../types/types';
+import { useTheme } from "../../Context/ThemeContext";
 
 interface MentorsGridProps {
-  isDark: boolean;
   mentors: Mentor[];
 }
 
-const MentorsGrid: React.FC<MentorsGridProps> = ({ isDark, mentors }) => {
+const MentorsGrid: React.FC<MentorsGridProps> = ({ mentors }) => {
+  const { isDark } = useTheme();
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {

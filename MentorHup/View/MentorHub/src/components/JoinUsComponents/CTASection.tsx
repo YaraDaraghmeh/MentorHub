@@ -1,11 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTheme } from "../../Context/ThemeContext";
 
-interface CTASectionProps {
-  isDark: boolean;
-}
-
-const CTASection: React.FC<CTASectionProps> = ({ isDark }) => {
+const CTASection: React.FC = () => {
+  const { isDark } = useTheme();
   return (
     <motion.section 
       className="px-4 py-16"
