@@ -51,18 +51,7 @@ const MentorsGrid: React.FC<MentorsGridProps> = ({ isDark, mentors }) => {
                   : 'bg-white border-gray-200 hover:shadow-blue-500/20'
               }`}
             >
-              {mentor.badge && (
-                <div className="absolute top-4 right-4 z-10">
-                  <span className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                    mentor.badge === 'Top Rated' 
-                      ? 'bg-yellow-100 text-yellow-800' 
-                      : 'bg-purple-100 text-purple-800'
-                  }`}>
-                    <Award className="inline h-3 w-3 mr-1" />
-                    {mentor.badge}
-                  </span>
-                </div>
-              )}
+              
               
               <div className="p-6">
                 {/* Header */}
@@ -99,10 +88,7 @@ const MentorsGrid: React.FC<MentorsGridProps> = ({ isDark, mentors }) => {
                   <span className={`text-sm font-medium ${isDark ? 'text-blue-400' : 'text-blue-600'}`}>
                     {mentor.company}
                   </span>
-                  <div className={`flex items-center text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                    <MapPin className="h-4 w-4 mr-1" />
-                    {mentor.location.split(',')[0]}
-                  </div>
+                  
                 </div>
 
                 {/* Rating and Reviews */}
@@ -121,10 +107,7 @@ const MentorsGrid: React.FC<MentorsGridProps> = ({ isDark, mentors }) => {
                       ? 'text-green-500' 
                       : isDark ? 'text-gray-400' : 'text-gray-500'
                   }`}>
-                    <div className={`w-2 h-2 rounded-full mr-2 ${
-                      mentor.isOnline ? 'bg-green-500' : 'bg-gray-400'
-                    }`} />
-                    {mentor.isOnline ? 'Online' : 'Offline'}
+                   
                   </div>
                 </div>
 
@@ -187,11 +170,7 @@ const MentorsGrid: React.FC<MentorsGridProps> = ({ isDark, mentors }) => {
                   </div>
                 </div>
 
-                {/* Response Time */}
-                <div className={`flex items-center text-sm mb-4 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
-                  <Clock className="h-4 w-4 mr-2" />
-                  Responds {mentor.responseTime}
-                </div>
+                
 
                 {/* Actions */}
                 <div className="flex space-x-3">
