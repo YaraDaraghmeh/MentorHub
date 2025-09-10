@@ -19,6 +19,9 @@ public class Booking
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
+    public string? MeetingUrl { get; set; }
+
+
 
     public Payment? Payment { get; set; }
     public AdminCommission? AdminCommission { get; set; }

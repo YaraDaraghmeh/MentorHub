@@ -76,7 +76,9 @@ public class StripeService : IStripeService
         var options = new RefundCreateOptions
         {
             PaymentIntent = paymentIntentId,
-            Reason = "requested_by_customer" // مثال على السبب
+            Reason = "requested_by_customer",
+            RefundApplicationFee = false, 
+            ReverseTransfer = true 
         };
 
         var refund = await refundService.CreateAsync(options);

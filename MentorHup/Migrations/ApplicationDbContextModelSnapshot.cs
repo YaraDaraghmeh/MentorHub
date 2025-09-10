@@ -134,6 +134,9 @@ namespace MentorHup.Migrations
                     b.Property<bool>("IsConfirmed")
                         .HasColumnType("bit");
 
+                    b.Property<string>("MeetingUrl")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("MenteeId")
                         .HasColumnType("int");
 

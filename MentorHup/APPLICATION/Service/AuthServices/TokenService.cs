@@ -24,12 +24,10 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         {
             var authClaims = new List<Claim>
             {
-                // doesn't work
-                // new Claim(JwtRegisteredClaimNames.Sub, user.Id), // sub claim
+               
 
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
-                // doesn't work
-                // new Claim("userId", user.Id), 
+               
 
                 new Claim(ClaimTypes.Email, user.Email!)
             };

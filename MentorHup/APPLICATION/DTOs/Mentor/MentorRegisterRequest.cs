@@ -16,5 +16,6 @@
             public decimal Price { get; set; }
             public List<int> SkillIds { get; set; } = new();
             public List<MentorAvailabilityRequest> Availabilities { get; set; } = new();
+
+        }
     }
-}

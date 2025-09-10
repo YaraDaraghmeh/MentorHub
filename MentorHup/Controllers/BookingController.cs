@@ -3,6 +3,7 @@ using MentorHup.APPLICATION.Responses;
 using MentorHup.APPLICATION.Service.Booking;
 using MentorHup.APPLICATION.Service.Strip;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -51,6 +52,7 @@ namespace MentorHup.Controllers
             var result = await bookingService.CancelBookingAsync(bookingId, appUserId, role);
 
             if (!result.Success) return BadRequest(result);
+
             return Ok(result);
         }
 

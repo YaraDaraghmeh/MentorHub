@@ -30,12 +30,9 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
         if (booking.StartTime <= DateTime.UtcNow.AddHours(1))
             return ApiResponse<string>.FailResponse("Cannot cancel less than 1 hour before session.");
 
-        booking.Status = BookingStatus.Cancelled;
-        booking.MentorAvailability.IsBooked = false;
         using var transaction = await context.Database.BeginTransactionAsync();
         try
         {
-            // إذا كان هناك دفعة وتمت بنجاح، نقوم بالـ refund
             if (booking.Payment != null && booking.Payment.Status == PaymentStatus.Succeeded)
             {
                 var refund = await stripeService.RefundPaymentAsync(booking.Payment.PaymentIntentId);
@@ -43,12 +40,10 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
                 if (refund.Status != "succeeded")
                     return ApiResponse<string>.FailResponse("Refund failed in Stripe.");
 
-                // تعديل حالة الدفع في قاعدة البيانات
                 booking.Payment.Status = PaymentStatus.Refunded;
                 booking.Payment.RefundedAt = DateTime.UtcNow;
             }
 
-            // تعديل حالة الحجز والتوافر
             booking.Status = BookingStatus.Cancelled;
             if (booking.MentorAvailability != null)
                 booking.MentorAvailability.IsBooked = false;

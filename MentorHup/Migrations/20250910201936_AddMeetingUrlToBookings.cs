@@ -5,20 +5,14 @@
 namespace MentorHup.Migrations
 {
     /// <inheritdoc />
-    public partial class Add_Image_To_Mentee__Mentor : Migration
+    public partial class AddMeetingUrlToBookings : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "ImageUrl",
-                table: "Mentors",
-                type: "nvarchar(max)",
-                nullable: true);
-
-            migrationBuilder.AddColumn<string>(
-                name: "ImageUrl",
-                table: "Mentees",
+                name: "MeetingUrl",
+                table: "Bookings",
                 type: "nvarchar(max)",
                 nullable: true);
         }
@@ -27,12 +21,8 @@ namespace MentorHup.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "ImageUrl",
-                table: "Mentors");
-
-            migrationBuilder.DropColumn(
-                name: "ImageUrl",
-                table: "Mentees");
+                name: "MeetingUrl",
+                table: "Bookings");
         }
     }
 }
