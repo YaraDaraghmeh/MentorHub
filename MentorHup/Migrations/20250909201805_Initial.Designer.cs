@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MentorHup.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250909201805_Initial")]
-    partial class Initial
+    [Migration("20250909200315_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

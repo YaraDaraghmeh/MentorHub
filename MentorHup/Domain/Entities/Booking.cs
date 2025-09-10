@@ -17,10 +17,20 @@ public class Booking
     public decimal Amount { get; set; } 
     public bool IsConfirmed { get; set; } = false; 
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public BookingStatus Status { get; set; } = BookingStatus.Pending;
+
 
     public Payment? Payment { get; set; }
     public AdminCommission? AdminCommission { get; set; }
 
     public Review? Review { get; set; }
 
+}
+
+public enum BookingStatus
+{
+    Pending,
+    Confirmed,
+    Cancelled,
+    Completed
 }

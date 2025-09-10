@@ -71,7 +71,8 @@ public class PaymentsWebhookController : ControllerBase
                 StartTime = availability.StartTime,
                 EndTime = availability.EndTime,
                 Amount = availability.Mentor.Price,
-                IsConfirmed = true
+                IsConfirmed = true,
+                Status = BookingStatus.Confirmed
             };
 
             booking.Payment = new Payment
@@ -79,7 +80,7 @@ public class PaymentsWebhookController : ControllerBase
                 Amount = booking.Amount,
                 Currency = "USD",
                 PaymentIntentId = session.PaymentIntentId,
-                Status = "Succeeded"
+                Status = PaymentStatus.Succeeded
             };
 
             booking.AdminCommission = new AdminCommission
