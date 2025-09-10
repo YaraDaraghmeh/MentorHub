@@ -34,7 +34,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
   return (
     <section className={`py-8 ${
       isDark ? 'bg-[#06171c] border-gray-700' : 'bg-[#96fbf1] border-gray-200'
-    } border-b sticky top-0 z-50 backdrop-blur-sm bg-opacity-90`}>
+    } border-b`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
