@@ -25,7 +25,13 @@ interface sideProps {
   setExpended: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
+const SideBar = ({
+  profile,
+  role,
+  expended,
+  setExpended,
+  isDark,
+}: sideProps) => {
   const menuItems = {
     admin: [
       {
@@ -85,7 +91,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
       >
         <nav className="flex flex-col flex-1">
           <span
-            className={`flex w-full px-6 text-white ${
+            className={`flex w-full px-6 text-white cursor-pointer ${
               expended ? " justify-end" : " pb-2 justify-center"
             }`}
             onClick={() => {
@@ -141,7 +147,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
                 <ListSide
                   key={index}
                   link={item.path}
-                  isDark={false}
+                  isDark={isDark}
                   expended={expended}
                 >
                   <item.icon className="w-6 h-6" />

@@ -58,10 +58,12 @@ function App() {
         {/* System Pages */}
         <Routes>
           <Route
-            element={<BodySystem isDark={isDark} toggleTheme={toggleTheme} />}
+            element={<BodySystem isDark={true} toggleTheme={toggleTheme} />}
           >
-            <Route path="/mentor/dashboard" element={<Dashboard />} />
-            {/* <Route path="mentee" element={<MenteeDashboard />} /> */}
+            <Route
+              path="/mentor/dashboard"
+              element={<Dashboard isDark={true} />}
+            />
           </Route>
         </Routes>
       </Router>
