@@ -2,7 +2,7 @@
 using System.Net;
 using System.Net.Mail;
 
-namespace MentorHup.Extensions
+namespace MentorHup.Infrastructure.EmailSender
 {
     public class EmailSender : IEmailSender
     {

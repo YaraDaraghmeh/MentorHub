@@ -8,6 +8,8 @@
         public int? Experiences { get; set; }
         public decimal? Price { get; set; }
         public string? StripeAccountId { get; set; }
-        public IFormFile? ImageForm { get; set; }
+
+        public List<int>? SkillIds { get; set; }
+        public List<MentorAvailabilityRequest>? Availabilities { get; set; }
     }
 }

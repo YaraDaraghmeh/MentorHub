@@ -24,7 +24,7 @@ namespace MentorHup.API.Controllers
         [ProducesResponseType(typeof(MentorResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status409Conflict)]
-        public async Task<IActionResult> Register([FromForm] MentorRegisterRequest request)
+        public async Task<IActionResult> Register([FromBody] MentorRegisterRequest request)
         {
             var result = await _mentorAuthService.RegisterAsync(request);
 
@@ -37,6 +37,20 @@ namespace MentorHup.API.Controllers
             }
 
             return Created(nameof(Register),  result.Mentor);
+        }
+
+        [HttpPost("upload-image")]
+        [Authorize] 
+        public async Task<IActionResult> UploadImage([FromForm] UploadImageRequest uploadImageRequest)
+        {
+            var result = await _mentorAuthService.UploadImageAsync(uploadImageRequest.Image);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(new { message = result.Errors });
+            }
+
+            return Ok(new { imageUrl = result.ImageUrl });
         }
 
 
@@ -86,7 +100,7 @@ namespace MentorHup.API.Controllers
 
         [HttpPatch("edit")]
         [Authorize]
-        public async Task<IActionResult> Edit([FromForm] MentorUpdateRequest mentorUpdateRequest)
+        public async Task<IActionResult> Edit([FromBody] MentorUpdateRequest mentorUpdateRequest)
         {
             var result = await _mentorAuthService.UpdateAsync(mentorUpdateRequest);
 

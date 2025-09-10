@@ -105,21 +105,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 StripeAccountId = request.StripeAccountId, 
             };
 
-            var request2 = httpContextAccessor.HttpContext.Request;
-            if (request.Image != null && request.Image.Length > 0)
-            {
-                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/mentors");
-                Directory.CreateDirectory(uploadsFolder); // create folder if does not exist
-                var uniqueFileName = $"{Guid.NewGuid()}_{request.Image.FileName}";
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using var fileStream = new FileStream(filePath, FileMode.Create);
-                await request.Image.CopyToAsync(fileStream);
-
-                var baseUrl = $"{request2.Scheme}://{request2.Host}";
-                mentor.ImageUrl = $"{baseUrl}/images/mentors/{uniqueFileName}"; // var mentor = new Mentor must be before this line
-            }
-
             _context.Mentors.Add(mentor);
             await _context.SaveChangesAsync();
 
@@ -194,6 +179,54 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             };
         }
 
+
+
+        public async Task<UploadImageResult> UploadImageAsync(IFormFile image)
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new UploadImageResult { IsSuccess = false, Errors = new[] { "User is not authenticated." } };
+            }
+
+            var mentor = await _context.Mentors.FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
+            if (mentor == null)
+            {
+                return new UploadImageResult { IsSuccess = false, Errors = new[] { "Mentor profile not found." } };
+            }
+
+            if (image != null && image.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/mentors");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // delete the old one from server (if exist)
+                if (!string.IsNullOrEmpty(mentor.ImageUrl))
+                {
+                    var oldFileName = Path.GetFileName(new Uri(mentor.ImageUrl).LocalPath);
+                    var oldFilePath = Path.Combine(uploadsFolder, oldFileName);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // upload new image
+                var uniqueFileName = $"{Guid.NewGuid()}_{image.FileName}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await image.CopyToAsync(fileStream);
+
+                var baseUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
+                mentor.ImageUrl = $"{baseUrl}/images/mentors/{uniqueFileName}";
+            }
+
+            await _context.SaveChangesAsync();
+
+            return new UploadImageResult { IsSuccess = true, ImageUrl = mentor.ImageUrl };
+        }
+
         public async Task<bool> ConfirmEmailAsync(string userId, string token)
         {
             var user = await _userManager.FindByIdAsync(userId);
@@ -260,16 +293,12 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
         public async Task<bool> UpdateAsync(MentorUpdateRequest request)
         {
-
             var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = await _context.Users
-                .Include(u => u.Mentor)
-                .FirstOrDefaultAsync(u => u.Id == userId);
 
-            if (user == null || user.Mentor == null)
-                return false;
-
-            var mentor = user.Mentor;
+            var mentor = await _context.Mentors
+                .Include(m => m.Availabilities)
+                .Include(m => m.MentorSkills)
+                .FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
 
             if (mentor == null)
                 return false;
@@ -292,33 +321,42 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             if (!string.IsNullOrEmpty(request.StripeAccountId))
                 mentor.StripeAccountId = request.StripeAccountId;
 
-
-            if (request.ImageForm != null && request.ImageForm.Length > 0)
+            if (request.SkillIds != null)
             {
-                var uploadsFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images/mentors");
-                Directory.CreateDirectory(uploadsFolder);
+                _context.MentorSkills.RemoveRange(mentor.MentorSkills);
 
-                // delete the old one from server (if exist)
-                if (!string.IsNullOrEmpty(mentor.ImageUrl))
+                foreach (var skillId in request.SkillIds)
                 {
-                    var oldFileName = Path.GetFileName(new Uri(mentor.ImageUrl).LocalPath);
-                    var oldFilePath = Path.Combine(uploadsFolder, oldFileName);
-                    if (System.IO.File.Exists(oldFilePath))
+                    var skillExists = await _context.Skills.AnyAsync(s => s.Id == skillId);
+                    if (!skillExists)
                     {
-                        System.IO.File.Delete(oldFilePath);
+                        return false;
                     }
+                    _context.MentorSkills.Add(new MentorSkill
+                    {
+                        MentorId = mentor.Id,
+                        SkillId = skillId
+                    });
                 }
-
-                // upload new image
-                var uniqueFileName = $"{Guid.NewGuid()}_{request.ImageForm.FileName}";
-                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
-
-                using var fileStream = new FileStream(filePath, FileMode.Create);
-                await request.ImageForm.CopyToAsync(fileStream);
-
-                var baseUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
-                mentor.ImageUrl = $"{baseUrl}/images/mentors/{uniqueFileName}";
             }
+
+            if (request.Availabilities != null)
+            {
+                _context.MentorAvailabilities.RemoveRange(mentor.Availabilities);
+
+                foreach (var availabilityDto in request.Availabilities)
+                {
+                    _context.MentorAvailabilities.Add(new MentorAvailability
+                    {
+                        MentorId = mentor.Id,
+                        StartTime = availabilityDto.StartTime,
+                        EndTime = availabilityDto.EndTime,
+                        DurationInMinutes = availabilityDto.DurationInMinutes,
+                        IsBooked = false
+                    });
+                }
+            }
+
 
             await _context.SaveChangesAsync();
             return true;
