@@ -45,6 +45,9 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isDark }) => {
         >
           <br/>
           <br/>
+          <br/>
+          <br/>
+          <br/>
           <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 ${accentClass}`}>
             Join Mentor Hub
           </h1>

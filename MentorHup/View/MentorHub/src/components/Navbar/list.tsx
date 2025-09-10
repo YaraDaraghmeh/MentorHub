@@ -10,7 +10,7 @@ type ListItemProps = {
 
 export default function ListItem({ link, children, onClick }: ListItemProps) {
   return (
-    <li className="flex-col items-center lg:p-3 md:p-2 lg:text-[14px] md:text-[13px]">
+    <li className="flex-col items-center lg:p-3 md:p-2 lg:text-[14px] md:text-[13px] list-nav">
       <NavLink
         to={link}
         onClick={onClick}

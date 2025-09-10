@@ -23,6 +23,10 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isDark }) => {
         <div className="absolute inset-0 bg-black opacity-10"></div>
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
           <div className="text-center">
+            <br/>
+          <br/>
+          <br/>
+          <br/>
             <motion.h1 
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -59,7 +63,14 @@ const HeroSection: React.FC<HeroSectionProps> = ({ isDark }) => {
             </motion.div>
           </div>
         </div>
+        <br/>
+          <br/>
+          <br/>
+          <br/><br/>
+          <br/>
+          
       </motion.section>
+
 
       {/* Stats Section */}
       
