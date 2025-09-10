@@ -10,6 +10,8 @@ import ChooseUser from "./components/Cards/ChooseUser";
 import SignUpMentee from "./Pages/PublicPages/SignUp/RegistrationMentee";
 import SignUpMentor from "./Pages/PublicPages/SignUp/RegistrationMetor";
 import JoinUsPage from "./Pages/PublicPages/JoinUsPage";
+import { ThemeProvider } from "../../MentorHub/src/Context/ThemeContext";
+
 // import SideBar from "./components/SideBar/SideBarDashboard";
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -20,6 +22,8 @@ function App() {
 
   return (
     <>
+        <ThemeProvider>
+
       <Router>
         {/* Public Pages */}
         <Routes>
@@ -52,6 +56,8 @@ function App() {
           <Route path="/dashboard" element={<h1>Dashboard</h1>} />
         </Routes>
       </Router>
+    </ThemeProvider>
+
     </>
   );
 }

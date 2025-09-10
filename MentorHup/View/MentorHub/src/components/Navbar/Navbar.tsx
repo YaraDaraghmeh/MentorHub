@@ -6,15 +6,14 @@ import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import { IoIosArrowForward } from "react-icons/io";
 import { IoClose, IoMenu } from "react-icons/io5";
 import { Link, NavLink, useNavigate } from "react-router-dom";
+import { useTheme } from "../../Context/ThemeContext";
 
-interface NavProps {
-  isDark?: boolean;
-  toggleTheme?: () => void;
-}
-
-const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
+const Nav = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+
+  // ✅ use context instead of props
+  const { isDark, toggle } = useTheme();
 
   const handleClick = () => {
     navigate("/login");
@@ -33,7 +32,7 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
       {/* logo */}
       <Link to="/" className="flex items-center">
         <img
-          className="cursor-pointer h-10 w-auto cursor-pointer object-contain"
+          className="cursor-pointer h-10 w-auto object-contain"
           src={logo}
         />
       </Link>
@@ -42,7 +41,9 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
       <div className="md:flex hidden md:w-auto items-center px-5 transition-all duration-300 z-50">
         <ul className="flex md:flex-row flex-col md:items-center justify-center lg:gap-[12px] md:gap-[4px] gap-1">
           {navLinks.map((link) => (
-            <ListItem link={link.path}>{link.title}</ListItem>
+            <ListItem key={link.path} link={link.path}>
+              {link.title}
+            </ListItem>
           ))}
         </ul>
       </div>
@@ -50,7 +51,7 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
       {/* theme & Sign in */}
       <div className="flex items-center justify-center self-stretch gap-3 p-2">
         <button
-          onClick={toggleTheme}
+          onClick={toggle}
           className="hidden md:flex flex-col items-center p-2 rounded-lg hover:bg-gray-700 transition-colors duration-200"
           aria-label="Toggle theme"
         >
@@ -84,7 +85,10 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
       >
         <ul className="flex flex-col items-center gap-[20px] py-6">
           {navLinks.map((link) => (
-            <li className="flex-col items-center md:p-2 lg:text-[14px] md:text-[13px] w-full">
+            <li
+              key={link.path}
+              className="flex-col items-center md:p-2 lg:text-[14px] md:text-[13px] w-full"
+            >
               <NavLink
                 to={link.path}
                 onClick={() => setOpen(false)}
@@ -99,7 +103,7 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
           <li className="flex items-center justify-center w-full py-4">
             <button
               onClick={() => {
-                toggleTheme?.();
+                toggle();
                 setOpen(false);
               }}
               className="flex items-center gap-2 p-2 rounded-lg hover:bg-gray-600 transition-colors duration-200"

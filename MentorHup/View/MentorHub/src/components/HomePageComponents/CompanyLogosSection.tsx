@@ -2,8 +2,10 @@ import "../../index.css";
 import { FaGoogle, FaMicrosoft } from "react-icons/fa6";
 import { SiIntel, SiMeta } from "react-icons/si";
 import { motion } from "framer-motion";
+import { useTheme } from "../../Context/ThemeContext";
 
-const CompanyLogosSection = ({ isDark = true }) => {
+const CompanyLogosSection = () => {
+  const { isDark } = useTheme();
   const companies = [
     {
       name: "Google",

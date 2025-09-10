@@ -2,8 +2,10 @@ import CardChat from "./cardChatting";
 import "./Chatting.css";
 import { IoMenu } from "react-icons/io5";
 import { BiSearch } from "react-icons/bi";
+import { useTheme } from "../../Context/ThemeContext";
 
-const ListOfChat = ({ isDark = false }) => {
+const ListOfChat = () => {
+  const { isDark } = useTheme();
   return (
     <div
       className={`shadow flex md:flex-col md:flex-nowrap flex-wrap flex-row md:h-full md:w-[400px] w-full h-[600px] justify-start items-start lg:gap-[24px] gap-3 px-[22px] py-[12px] rounded-[54px] overflow-hidden ${

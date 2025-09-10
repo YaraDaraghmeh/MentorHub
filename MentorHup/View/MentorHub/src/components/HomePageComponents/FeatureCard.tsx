@@ -1,5 +1,6 @@
 import React from "react";
 import VideoDisplay from "../HomePageComponents/VideoDisplay";
+import { useTheme } from "../../Context/ThemeContext";
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -8,7 +9,6 @@ interface FeatureCardProps {
   videoTitle?: string;
   videoSubtitle?: string;
   reverse?: boolean;
-  isDark?: boolean;
   index?: number;
 }
 
@@ -19,9 +19,9 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
   videoTitle,
   videoSubtitle,
   reverse = false,
-  isDark = false,
   index = 0,
 }) => {
+  const { isDark } = useTheme();
   const [isVisible, setIsVisible] = React.useState(false);
 
   React.useEffect(() => {
@@ -94,7 +94,6 @@ const FeatureCard: React.FC<FeatureCardProps> = ({
       <VideoDisplay
         title={videoTitle}
         subtitle={videoSubtitle}
-        isDark={isDark}
         delay={index}
       />
     </div>

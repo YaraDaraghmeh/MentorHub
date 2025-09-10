@@ -1,12 +1,10 @@
 import React from 'react';
+import { useTheme } from "../../Context/ThemeContext";
 
-interface SectionHeaderProps {
-  isDark?: boolean;
-}
-
-const SectionHeader: React.FC<SectionHeaderProps> = ({ isDark = false }) => {
+const SectionHeader: React.FC = () => {
   const [isVisible, setIsVisible] = React.useState(false);
-  
+  const { isDark } = useTheme();
+
   React.useEffect(() => {
     const timer = setTimeout(() => setIsVisible(true), 100);
     return () => clearTimeout(timer);

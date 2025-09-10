@@ -1,12 +1,14 @@
 import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
+import { useTheme } from "../../Context/ThemeContext";
 
 type listData = {
-  isDark: boolean;
+  
   message: string;
   picture?: string;
 };
 
-const MessageReceive = ({ isDark = true, message, picture }: listData) => {
+const MessageReceive = ({  message, picture }: listData) => {
+  const { isDark } = useTheme();
   return (
     <div className="w-full inline-flex flex-col h-auto flex-wrap justify-center items-start text-start gap-2">
       <div className="w-96 h-auto inline-flex justify-center items-start gap-3">

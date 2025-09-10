@@ -1,14 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useTheme } from "../../Context/ThemeContext";
 
 interface MentorHubAboutProps {
   isDark?: boolean;
 }
 
-const MentorHubAbout: React.FC<MentorHubAboutProps> = ({ isDark = true }) => {
+const MentorHubAbout: React.FC<MentorHubAboutProps> = () => {
   const [visibleElements, setVisibleElements] = useState<Set<string>>(new Set());
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const sectionRef = useRef<HTMLElement>(null);
+  const { isDark } = useTheme();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
