@@ -1,12 +1,9 @@
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import FormFiled from "../Form/FormFiled";
 import { StepperContext } from "../../Context/StepperContext";
-import { DayPicker } from "react-day-picker";
-import "react-day-picker/dist/style.css";
 
 const Available = () => {
   const { userData, setUserData } = useContext(StepperContext);
-  const [showCalendar, setShowCalendar] = useState(false);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -26,7 +23,7 @@ const Available = () => {
         onChange={handleChange}
         value={userData["startDate"] || ""}
         type="date"
-        label=""
+        label="Start Date"
         name="startDate"
         placeholder="1/11/2025"
       />
@@ -34,35 +31,18 @@ const Available = () => {
         onChange={handleChange}
         value={userData["endDate"] || ""}
         type="date"
-        label=""
+        label="End Date"
         name="endDate"
         placeholder="12/12/2025"
       />
-      <div className="w-full">
-        <input
-          onClick={() => setShowCalendar(!showCalendar)}
-          onChange={handleChange}
-          value={userData["startDate"] || ""}
-          name="startDate"
-          placeholder="1/11/2025"
-          type="text"
-          readOnly
-          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-        />
-        {/* Calender */}
-
-        {showCalendar && (
-          <DayPicker
-            mode="single"
-            selected={userData["startDate"] || ""}
-            onSelect={() => {
-              userData["startDate"] || "";
-              setShowCalendar(false);
-            }}
-            className="mt-2 "
-          />
-        )}
-      </div>
+      <FormFiled
+        onChange={handleChange}
+        value={userData["duration"] || ""}
+        type="text"
+        label="Duration"
+        name="duration"
+        placeholder="60 min"
+      />
     </div>
   );
 };

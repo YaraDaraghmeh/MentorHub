@@ -5,7 +5,7 @@ const Footer = ({ isDark = true }) => {
   return (
     <footer
       className={`relative flex w-full flex-shrink-0 self-stretch items-center justify-between flex-wrap 
-      ${isDark ? "bg-[var(--primary-dark)]" : "bg-[var(--primary-green-light)]"}
+      ${isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--primary-green-light)]"}
     `}
     >
       <div className="flex flex-row items-centers justify-center w-full gap-4">
