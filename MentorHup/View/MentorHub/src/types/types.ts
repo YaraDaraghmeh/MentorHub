@@ -32,3 +32,17 @@ export interface FilterState {
   selectedExperience: string;
   selectedRating: string;
 }
+
+export interface Position {
+  id: number;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  salary: string;
+  description: string;
+  requirements: string[];
+}
+export interface JoinUsPageProps {
+  isDark?: boolean;
+}
