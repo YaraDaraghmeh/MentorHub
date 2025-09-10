@@ -3,7 +3,7 @@
   color: var(--secondary-light);
 }
 
-.active {
+.list-nav .active {
   border-bottom: 2px solid var(--secondary-dark);
 }
 .activeMobile {

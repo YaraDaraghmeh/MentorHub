@@ -13,7 +13,7 @@ type ListInfo = {
 const Chatting = ({  name, picture }: ListInfo) => {
   const { isDark } = useTheme();
   return (
-    <div className="shadow flex md:flex-col flex-row md:w-[793px] w-full h-full flex-wrap justify-start items-start hidden md:block overflow-hidden rounded-[54px]">
+    <div className="shadow col-span-2 justify-start items-start lg:block hidden overflow-hidden rounded-[54px]">
       {/* Header */}
       <div
         className={`flex h-24 px-[21px] py-2 rounded-tl-[53px] rounded-tr-[53px] border-b border-[var(--primary-green-light)] justify-between items-center ${
@@ -42,7 +42,7 @@ const Chatting = ({  name, picture }: ListInfo) => {
 
       {/* body chat */}
       <div
-        className={`flex flex-col flex-wrap w-full h-[600px] gap-[8px] ${
+        className={`flex flex-col flex-wrap w-full h-[500px] gap-[8px] ${
           isDark ? "bg-[var(--primary-light)]" : "bg-[var(--white)]"
         }`}
       >

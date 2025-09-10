@@ -88,12 +88,21 @@ input[type="date"] {
   outline: none;
 }
 
-.scrollDark {
-  scrollbar-color: var(--secondary-light);
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 0px;
 }
-.scrollLi {
-  scrollbar-color: var(--primary);
-  /* background: transparent; */
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-light);
+  border-radius: 9999px;
 }
 
 .bg-dark {

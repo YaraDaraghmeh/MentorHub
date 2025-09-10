@@ -21,10 +21,17 @@ interface sideProps {
   profile: profile;
   role: UserRole;
   isDark: boolean;
+  expended: boolean;
+  setExpended: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideBar = ({ profile, role }: sideProps) => {
-  const [expended, setExpended] = useState(true);
+const SideBar = ({
+  profile,
+  role,
+  expended,
+  setExpended,
+  isDark,
+}: sideProps) => {
   const menuItems = {
     admin: [
       {
@@ -62,6 +69,7 @@ const SideBar = ({ profile, role }: sideProps) => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setExpended(false);
+        setIsMobile(true);
       } else {
         setExpended(true);
       }
@@ -84,7 +92,7 @@ const SideBar = ({ profile, role }: sideProps) => {
       >
         <nav className="flex flex-col flex-1">
           <span
-            className={`flex w-full px-6 text-white ${
+            className={`flex w-full px-6 text-white cursor-pointer ${
               expended ? " justify-end" : " pb-2 justify-center"
             }`}
             onClick={() => {
@@ -140,7 +148,7 @@ const SideBar = ({ profile, role }: sideProps) => {
                 <ListSide
                   key={index}
                   link={item.path}
-                  isDark={false}
+                  isDark={isDark}
                   expended={expended}
                 >
                   <item.icon className="w-6 h-6" />
@@ -167,7 +175,7 @@ const SideBar = ({ profile, role }: sideProps) => {
       {/* Mobile */}
       {isMobile && expended && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-70 z-10"
+          className="fixed inset-0 bg-[#a4a2a2] bg-opacity-50 z-10"
           onClick={() => setExpended(false)}
         />
       )}

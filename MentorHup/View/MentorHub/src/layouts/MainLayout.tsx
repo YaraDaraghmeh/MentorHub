@@ -8,15 +8,9 @@ type listLayout = {
   toggleTheme: () => void;
 };
 
-const userProfile = {
-  name: "Sara Sayed Ahmad",
-  email: "sara@example.com",
-};
-
 const MainLayout = ({ isDark, toggleTheme }: listLayout) => {
   return (
     <>
-      {/* <SideBar profile={userProfile} role="admin" isDark={false} /> */}
       <Nav isDark={isDark} toggleTheme={toggleTheme} />
       <Outlet />
       <Footer isDark={isDark} />
