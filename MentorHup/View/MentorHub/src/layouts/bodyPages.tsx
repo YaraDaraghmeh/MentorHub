@@ -2,6 +2,7 @@ import { useState } from "react";
 import SideBar from "../components/SideBar/SideBarDashboard";
 import { BiSearch } from "react-icons/bi";
 import { Outlet } from "react-router-dom";
+import { IoNotifications } from "react-icons/io5";
 
 type listLayout = {
   isDark: boolean;
@@ -24,7 +25,7 @@ const BodySystem = ({ isDark }: listLayout) => {
       <SideBar
         profile={userProfile}
         role="mentor"
-        isDark={false}
+        isDark={true}
         expended={isSidebarOpen}
         setExpended={setIsSidebarOpen}
       />
@@ -75,6 +76,8 @@ const BodySystem = ({ isDark }: listLayout) => {
                 <BiSearch className="w-full h-full" />
               </div>
             </div>
+
+            <IoNotifications className="lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px]" />
           </div>
 
           {/* Main content */}
