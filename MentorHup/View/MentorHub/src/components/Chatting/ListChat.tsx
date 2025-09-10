@@ -6,7 +6,7 @@ import { BiSearch } from "react-icons/bi";
 const ListOfChat = ({ isDark = false }) => {
   return (
     <div
-      className={`shadow flex md:flex-col md:flex-nowrap flex-wrap flex-row md:h-full md:w-[400px] w-full h-[600px] justify-start items-start lg:gap-[24px] gap-3 px-[22px] py-[12px] rounded-[54px] overflow-hidden ${
+      className={`shadow col-span-1 md:h-full h-full justify-start items-start lg:gap-[24px] gap-3 px-[22px] py-[12px] rounded-[54px] overflow-hidden ${
         isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--secondary-light)]"
       }`}
     >
@@ -39,11 +39,9 @@ const ListOfChat = ({ isDark = false }) => {
 
       {/* List Chatting */}
       <div
-        className={`w-full h-full overflow-y-scroll scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent flex-col flex self-stretch justify-start items-start gap-2
+        className={`w-full h-full pb-2 flex-col flex self-stretch justify-start items-start gap-2 overflow-y-auto scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent 
          ${
-           isDark
-             ? "scrollDark bg-[var(--primary-rgba)]"
-             : "scrollLi bg-[var(--secondary-light)]"
+           isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--secondary-light)]"
          }`}
       >
         <CardChat
@@ -51,42 +49,42 @@ const ListOfChat = ({ isDark = false }) => {
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={true}
+          isDark={isDark}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={true}
+          isDark={isDark}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={true}
+          isDark={isDark}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={true}
+          isDark={isDark}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={true}
+          isDark={isDark}
         />
         <CardChat
           name="Mr Jon"
           time="9:30 AM"
           message="Thanks for your understanding"
           picture=" "
-          isDark={true}
+          isDark={isDark}
         />
       </div>
     </div>

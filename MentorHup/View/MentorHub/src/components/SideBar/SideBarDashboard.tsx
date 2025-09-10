@@ -69,6 +69,7 @@ const SideBar = ({
     const handleResize = () => {
       if (window.innerWidth < 768) {
         setExpended(false);
+        setIsMobile(true);
       } else {
         setExpended(true);
       }
@@ -174,7 +175,7 @@ const SideBar = ({
       {/* Mobile */}
       {isMobile && expended && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-70 z-10"
+          className="fixed inset-0 bg-[#a4a2a2] bg-opacity-50 z-10"
           onClick={() => setExpended(false)}
         />
       )}

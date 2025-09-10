@@ -40,7 +40,7 @@ const DashboardMentor = ({ isDark }: list) => {
             icon={state.icon}
             value={state.value}
             // bgColor={state.color}
-            isDark={true}
+            isDark={isDark}
           />
         ))}
       </div>
@@ -65,21 +65,21 @@ const DashboardMentor = ({ isDark }: list) => {
             date="12/11/2025"
             picture={picture}
             time="12:00 AM"
-            isDark={true}
+            isDark={isDark}
           />
           <CardLabel
             name="Mr Jone"
             date="12/11/2025"
             picture={picture}
             time="12:00 AM"
-            isDark={true}
+            isDark={isDark}
           />
           <CardLabel
             name="Mr Jone"
             date="12/11/2025"
             picture={picture}
             time="12:00 AM"
-            isDark={true}
+            isDark={isDark}
           />
         </div>
       </div>
