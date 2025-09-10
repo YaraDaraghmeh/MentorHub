@@ -21,10 +21,11 @@ interface sideProps {
   profile: profile;
   role: UserRole;
   isDark: boolean;
+  expended: boolean;
+  setExpended: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideBar = ({ profile, role }: sideProps) => {
-  const [expended, setExpended] = useState(true);
+const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
   const menuItems = {
     admin: [
       {
