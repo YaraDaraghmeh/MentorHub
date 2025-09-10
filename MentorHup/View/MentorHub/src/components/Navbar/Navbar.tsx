@@ -55,7 +55,7 @@ const Nav = ({ isDark = false, toggleTheme }: NavProps) => {
           aria-label="Toggle theme"
         >
           {isDark ? (
-            <BsSunFill className="lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px] text-yellow-400" />
+            <BsSunFill className="lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px] text-gray-300" />
           ) : (
             <BsMoonFill className="lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px] text-gray-300" />
           )}
