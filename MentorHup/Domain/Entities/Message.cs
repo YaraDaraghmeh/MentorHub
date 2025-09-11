@@ -11,5 +11,5 @@
 
         public string ReceiverId { get; set; } = null!;
         public ApplicationUser Receiver { get; set; } = null!;
-    }
+    }   
 }

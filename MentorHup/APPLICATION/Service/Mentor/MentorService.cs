@@ -1,12 +1,17 @@
 ﻿using MentorHup.APPLICATION.Common;
 using MentorHup.APPLICATION.DTOs.Mentor;
+using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace MentorHup.APPLICATION.Service.Mentor
 {
-    public class MentorService(ApplicationDbContext context) : IMentorService
+    public class MentorService(ApplicationDbContext context , IHttpContextAccessor httpContextAccessor,
+        IWebHostEnvironment webHostEnvironment , IWebHostEnvironment _webHostEnvironment) : IMentorService
     {
         public async Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(
             int pageSize,
@@ -50,7 +55,9 @@ namespace MentorHup.APPLICATION.Service.Mentor
                     Price = m.Price,
                     Field = m.Field,
                     Skills = m.MentorSkills.Select(ms => ms.Skill.SkillName).ToList(),
-                    Availabilities = m.Availabilities.Where(a => !a.IsBooked).Select(a => new MentorAvailabilityRequest
+                    Availabilities = m.Availabilities
+                       .Where(a => !a.IsBooked && a.StartTime > DateTime.UtcNow)
+                       .Select(a => new MentorAvailabilityRequest
                     {
                         DurationInMinutes = a.DurationInMinutes,
                         StartTime = a.StartTime,
@@ -61,6 +68,123 @@ namespace MentorHup.APPLICATION.Service.Mentor
                 .ToListAsync();
 
             return new PageResult<MentorOverviewDto>(items , totalCount , pageSize , pageNumber);
+        }
+
+        public async Task<bool> UpdateAsync(MentorUpdateRequest request)
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            var mentor = await context.Mentors
+                .Include(m => m.Availabilities)
+                .Include(m => m.MentorSkills)
+                .FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
+
+            if (mentor == null)
+                return false;
+
+            if (!string.IsNullOrEmpty(request.Name))
+                mentor.Name = request.Name;
+
+            if (!string.IsNullOrEmpty(request.Field))
+                mentor.Field = request.Field;
+
+            if (!string.IsNullOrEmpty(request.Description))
+                mentor.Description = request.Description;
+
+            if (request.Experiences.HasValue)
+                mentor.Experiences = request.Experiences.Value;
+
+            if (request.Price.HasValue)
+                mentor.Price = request.Price.Value;
+
+            if (!string.IsNullOrEmpty(request.StripeAccountId))
+                mentor.StripeAccountId = request.StripeAccountId;
+
+            if (request.SkillIds != null)
+            {
+                context.MentorSkills.RemoveRange(mentor.MentorSkills);
+
+                foreach (var skillId in request.SkillIds)
+                {
+                    var skillExists = await context.Skills.AnyAsync(s => s.Id == skillId);
+                    if (!skillExists)
+                    {
+                        return false;
+                    }
+                    context.MentorSkills.Add(new MentorSkill
+                    {
+                        MentorId = mentor.Id,
+                        SkillId = skillId
+                    });
+                }
+            }
+
+            if (request.Availabilities != null)
+            {
+                context.MentorAvailabilities.RemoveRange(mentor.Availabilities);
+
+                foreach (var availabilityDto in request.Availabilities)
+                {
+                    context.MentorAvailabilities.Add(new MentorAvailability
+                    {
+                        MentorId = mentor.Id,
+                        StartTime = availabilityDto.StartTime,
+                        EndTime = availabilityDto.EndTime,
+                        DurationInMinutes = availabilityDto.DurationInMinutes,
+                        IsBooked = false
+                    });
+                }
+            }
+
+
+            await context.SaveChangesAsync();
+            return true;
+        }
+
+        public async Task<UploadImageResult> UploadImageAsync(IFormFile image)
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new UploadImageResult { IsSuccess = false, Errors = new[] { "User is not authenticated." } };
+            }
+
+            var mentor = await context.Mentors.FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
+            if (mentor == null)
+            {
+                return new UploadImageResult { IsSuccess = false, Errors = new[] { "Mentor profile not found." } };
+            }
+
+            if (image != null && image.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "images/mentors");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // delete the old one from server (if exist)
+                if (!string.IsNullOrEmpty(mentor.ImageUrl))
+                {
+                    var oldFileName = Path.GetFileName(new Uri(mentor.ImageUrl).LocalPath);
+                    var oldFilePath = Path.Combine(uploadsFolder, oldFileName);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // upload new image
+                var uniqueFileName = $"{Guid.NewGuid()}_{image.FileName}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await image.CopyToAsync(fileStream);
+
+                var baseUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
+                mentor.ImageUrl = $"{baseUrl}/images/mentors/{uniqueFileName}";
+            }
+
+            await context.SaveChangesAsync();
+
+            return new UploadImageResult { IsSuccess = true, ImageUrl = mentor.ImageUrl };
         }
     }
 }

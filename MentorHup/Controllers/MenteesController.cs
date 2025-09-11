@@ -1,9 +1,11 @@
 ﻿using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.APPLICATION.Service.AuthServices;
+using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Billing;
 
 namespace MentorHup.APPLICATION.Controllers
 {
@@ -13,11 +15,13 @@ namespace MentorHup.APPLICATION.Controllers
     {
         private readonly IMenteeAuthService _menteeAuthService;
         private readonly IMentorService _mentorService;
+        private readonly IMenteeService menteeService;
 
-        public MenteesController(IMenteeAuthService menteeAuthService , IMentorService mentorService)
+        public MenteesController(IMenteeAuthService menteeAuthService , IMentorService mentorService , IMenteeService menteeService)
         {
             _menteeAuthService = menteeAuthService;
             _mentorService = mentorService;
+            this.menteeService = menteeService;
         }
 
         [HttpPost("register")]
@@ -66,15 +70,15 @@ namespace MentorHup.APPLICATION.Controllers
         }
 
         [HttpPatch("edit")]
-        [Authorize]
+        [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> Edit([FromForm] MenteeUpdateRequest menteeUpdateRequest)
         {
-            var result = await _menteeAuthService.UpdateAsync(menteeUpdateRequest);
+            var result = await menteeService.UpdateAsync(menteeUpdateRequest);
 
             if(!result)
-                return BadRequest(result);
+                return BadRequest(new { message = "Failed to update mentee." });
 
-            return Ok(result);
+            return NoContent();
         }
 
 

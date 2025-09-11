@@ -40,10 +40,10 @@ namespace MentorHup.API.Controllers
         }
 
         [HttpPost("upload-image")]
-        [Authorize] 
+        [Authorize(Roles = "Mentor")] 
         public async Task<IActionResult> UploadImage([FromForm] UploadImageRequest uploadImageRequest)
         {
-            var result = await _mentorAuthService.UploadImageAsync(uploadImageRequest.Image);
+            var result = await _mentorService.UploadImageAsync(uploadImageRequest.Image);
 
             if (!result.IsSuccess)
             {
@@ -81,7 +81,7 @@ namespace MentorHup.API.Controllers
         }
 
         [HttpGet()]
-        [Authorize(Roles = "Mentee")]
+        [Authorize(Roles = "Mentee,Admin")]
         [ProducesResponseType(typeof(List<MentorOverviewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] PaginationDto dto)
@@ -100,15 +100,16 @@ namespace MentorHup.API.Controllers
 
 
         [HttpPatch("edit")]
-        [Authorize]
+        [Authorize(Roles = "Mentor")]
+
         public async Task<IActionResult> Edit([FromBody] MentorUpdateRequest mentorUpdateRequest)
         {
-            var result = await _mentorAuthService.UpdateAsync(mentorUpdateRequest);
+            var result = await _mentorService.UpdateAsync(mentorUpdateRequest);
 
             if (!result)
-                return BadRequest(result);
+                return BadRequest(new { message = "Failed to update Mentor." });
 
-            return Ok(result);
+            return NoContent();
         }
 
 

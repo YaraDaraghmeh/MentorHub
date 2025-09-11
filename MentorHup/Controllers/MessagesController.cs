@@ -6,7 +6,7 @@ using System.Security.Claims;
 
 [ApiController]
 [Route("api/messages")]
-[Authorize(Roles = "Mentor,Mentee")]
+[Authorize(Roles = "Mentor,Mentee,Admin")]
 public class MessagesController : ControllerBase
 {
     private readonly IMessageService _messageService;

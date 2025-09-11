@@ -3,9 +3,9 @@ using MentorHup.APPLICATION.DTOs.Mentor;
 
 namespace MentorHup.APPLICATION.Validators.Mentor
 {
-    public class MentorRegisterRequestValidator: AbstractValidator<MentorRegisterRequest>
+    public class MentorUpdateRequestValidator : AbstractValidator<MentorUpdateRequest>
     {
-        public MentorRegisterRequestValidator()
+        public MentorUpdateRequestValidator()
         {
             RuleFor(x => x.Name)
                 .NotEmpty().WithMessage("Name is required")
@@ -15,13 +15,6 @@ namespace MentorHup.APPLICATION.Validators.Mentor
                 .NotEmpty().WithMessage("Description is required")
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters");
 
-            RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Email is required")
-                .EmailAddress().WithMessage("Email is invalid");
-
-            RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Password is required")
-                .MinimumLength(8).WithMessage("Password must be at least 8 characters");
 
             RuleFor(x => x.Experiences)
                 .GreaterThan(0).WithMessage("Experiences must be positive && Greater than 0");
@@ -58,7 +51,6 @@ namespace MentorHup.APPLICATION.Validators.Mentor
             RuleFor(x => x.StripeAccountId)
                 .NotEmpty().WithMessage("StripeAccountId is required")
                 .MaximumLength(100).WithMessage("StripeAccountId must not exceed 100 characters");
-
         }
     }
 }
