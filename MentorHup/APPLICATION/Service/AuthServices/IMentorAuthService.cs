@@ -7,7 +7,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         Task<MentorLoginRegistrationResult> RegisterAsync(MentorRegisterRequest request);
         Task<bool> ConfirmEmailAsync(string userId, string token);
         Task<MentorLoginRegistrationResult> LoginAsync(MentorLoginRequest request);
-
     }
 
 }

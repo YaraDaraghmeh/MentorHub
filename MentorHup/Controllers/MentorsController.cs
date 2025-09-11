@@ -4,6 +4,7 @@ using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Mentor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace MentorHup.API.Controllers
 {
@@ -110,6 +111,21 @@ namespace MentorHup.API.Controllers
                 return BadRequest(new { message = "Failed to update Mentor." });
 
             return NoContent();
+        }
+
+        [HttpGet("dashboard")]
+        [Authorize(Roles = "Mentor")]
+        [ProducesResponseType(typeof(MentorDashboardDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetDashboard()
+        {
+            var mentorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(mentorId))
+                return Unauthorized(new { Success = false, Message = "Invalid user" });
+
+            var dashboardData = await _mentorService.GetMentorDashboardAsync(mentorId);
+
+            return Ok(dashboardData);
         }
 
 

@@ -14,5 +14,7 @@ public interface IMentorService
 
     Task<UploadImageResult> UploadImageAsync(IFormFile image);
 
+    Task<MentorDashboardDto> GetMentorDashboardAsync(string mentorId);
+
 
 }

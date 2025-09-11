@@ -186,5 +186,32 @@ namespace MentorHup.APPLICATION.Service.Mentor
 
             return new UploadImageResult { IsSuccess = true, ImageUrl = mentor.ImageUrl };
         }
+
+        public async Task<MentorDashboardDto> GetMentorDashboardAsync(string mentorId)
+        {
+            var totalMentees = await context.Bookings
+                .Where(b => b.Mentor.ApplicationUserId == mentorId)
+                .Select(b => b.MenteeId)
+                .Distinct()
+                .CountAsync();
+
+            var totalReviews = await context.Reviews
+                .CountAsync(r => r.Booking.Mentor.ApplicationUserId == mentorId);
+
+            var totalEarnings = await context.Bookings
+                .Where(b => b.Mentor.ApplicationUserId == mentorId && b.Status == BookingStatus.Confirmed)
+                .SumAsync(b => (decimal?)b.Amount) ?? 0;
+
+            var upcomingBookings = await context.Bookings
+                .CountAsync(b => b.Mentor.ApplicationUserId == mentorId && b.StartTime > DateTime.UtcNow);
+
+            return new MentorDashboardDto
+            {
+                TotalMentees = totalMentees,
+                TotalReviews = totalReviews,
+                TotalEarnings = totalEarnings,
+                UpcomingBookings = upcomingBookings
+            };
+        }
     }
 }
