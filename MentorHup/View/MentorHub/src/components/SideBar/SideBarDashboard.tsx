@@ -9,7 +9,7 @@ import { HiChatAlt2 } from "react-icons/hi";
 import { AiOutlineLogin } from "react-icons/ai";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
-import { useTheme } from "../../Context/ThemeContext";
+import { NavLink } from "react-router-dom";
 
 interface profile {
   name: string;
@@ -21,17 +21,11 @@ type UserRole = "admin" | "mentor" | "mentee";
 interface sideProps {
   profile: profile;
   role: UserRole;
-  isDark: boolean;
   expended: boolean;
   setExpended: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const SideBar = ({
-  profile,
-  role,
-  expended,
-  setExpended,
-}: sideProps) => {
+const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
   const menuItems = {
     admin: [
       {
@@ -72,6 +66,7 @@ const SideBar = ({
         setIsMobile(true);
       } else {
         setExpended(true);
+        setIsMobile(false);
       }
     };
 
@@ -145,12 +140,7 @@ const SideBar = ({
             {/* list nav */}
             <ul className={`w-full flex flex-col gap-3`}>
               {menuItems[role].map((item, index) => (
-                <ListSide
-                  key={index}
-                  link={item.path}
-
-                  expended={expended}
-                >
+                <ListSide key={index} link={item.path} expended={expended}>
                   <item.icon className="w-6 h-6" />
                   {expended ? item.title : ""}
                 </ListSide>
@@ -159,14 +149,15 @@ const SideBar = ({
 
             {/* setting / logout */}
             <div className={expended ? "p-4" : "p-0"}>
-              <button
-                className={`w-full flex items-center gap-3 cursor-pointer hover:text-[var(--secondary)] transition ${
+              <NavLink
+                className={`w-full flex items-center gap-3 cursor-pointer hover:text-[var(--secondary)] transition-all ${
                   expended ? "justify-start pl-3" : "justify-center pl-2"
                 }`}
+                to={"/login"}
               >
                 <AiOutlineLogin className="w-6 h-6" />
                 <span className="ml-2">{expended ? "Logout" : ""}</span>
-              </button>
+              </NavLink>
             </div>
           </div>
         </nav>
