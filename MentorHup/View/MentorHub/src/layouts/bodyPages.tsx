@@ -3,19 +3,17 @@ import SideBar from "../components/SideBar/SideBarDashboard";
 import { BiSearch } from "react-icons/bi";
 import { Outlet } from "react-router-dom";
 import { IoNotifications } from "react-icons/io5";
-
-type listLayout = {
-  isDark: boolean;
-  toggleTheme: () => void;
-};
+import { useTheme } from "../Context/ThemeContext";
 
 const userProfile = {
   name: " Sara Sayed Ahmad",
   email: "sara@example.com",
 };
 
-const BodySystem = ({ isDark }: listLayout) => {
+const BodySystem = () => {
+  const { isDark } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
   return (
     <div
       className={`flex min-h-screen gap-5 w-full ${
@@ -25,7 +23,6 @@ const BodySystem = ({ isDark }: listLayout) => {
       <SideBar
         profile={userProfile}
         role="mentor"
-        isDark={false}
         expended={isSidebarOpen}
         setExpended={setIsSidebarOpen}
       />
