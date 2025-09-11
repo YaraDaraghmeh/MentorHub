@@ -5,12 +5,11 @@ import MessageSend from "./MessageSend";
 import { useTheme } from "../../Context/ThemeContext";
 
 type ListInfo = {
-  
   name: string;
   picture?: string;
 };
 
-const Chatting = ({  name, picture }: ListInfo) => {
+const Chatting = ({ name, picture }: ListInfo) => {
   const { isDark } = useTheme();
   return (
     <div className="shadow col-span-2 justify-start items-start lg:block hidden overflow-hidden rounded-[54px]">
@@ -51,24 +50,16 @@ const Chatting = ({  name, picture }: ListInfo) => {
           className={`flex flex-col-reverse flex-1 overflow-y-auto scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent text-[var(--secondary-light)] gap-5 p-4
             ${isDark ? "scrollDark" : "scrollLi"}`}
         >
-          <MessageSend
-          
-            message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
-          />
+          <MessageSend message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet." />
 
           <MessageReceive
-            
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
             picture=""
           />
 
-          <MessageSend
-            
-            message="Lorem ipsum dolor sit amet, consectetur adipiscing elit 😊✔️"
-          />
+          <MessageSend message="Lorem ipsum dolor sit amet, consectetur adipiscing elit 😊✔️" />
 
           <MessageReceive
-            
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
             picture=""
           />

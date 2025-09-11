@@ -11,16 +11,10 @@ type ListItemProps = {
   onClick?: MouseEventHandler<HTMLAnchorElement>;
 };
 
-const ListSide = ({
-  link,
-  children,
-  expended,
-  onClick,
-}: ListItemProps) => {
+const ListSide = ({ link, children, expended, onClick }: ListItemProps) => {
   const location = useLocation();
   const isActive = location.pathname === link;
   const { isDark } = useTheme();
-
 
   return (
     <li

@@ -11,12 +11,11 @@ import SignUpMentee from "./Pages/PublicPages/SignUp/RegistrationMentee";
 import SignUpMentor from "./Pages/PublicPages/SignUp/RegistrationMetor";
 import JoinUsPage from "./Pages/PublicPages/JoinUsPage";
 import { ThemeProvider } from "../../MentorHub/src/Context/ThemeContext";
-
-// import SideBar from "./components/SideBar/SideBarDashboard";
 import BodySystem from "./layouts/bodyPages";
-// import DashboardMentor from "./components/Dashboard/dashboard";
 import Dashboard from "./components/Dashboard/dashboard";
 import ChateUser from "./Pages/MentorPages/Chatting";
+import Booking from "./Pages/MentorPages/Booking";
+
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -26,56 +25,50 @@ function App() {
 
   return (
     <>
-        <ThemeProvider>
-
-      <Router>
-        {/* Public Pages */}
-        <Routes>
-          <Route
-            element={<MainLayout isDark={isDark} toggleTheme={toggleTheme} />}
-          >
-            <Route path="/" element={<HomePage isDark={isDark} />} />
-            <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
+      <ThemeProvider>
+        <Router>
+          {/* Public Pages */}
+          <Routes>
             <Route
-              path="/browsMentor"
-              element={<PublicMentors isDark={isDark} />}
-            />
-            <Route
-              path="/browsMentor"
-              element={<PublicMentors isDark={isDark} />}
-            />
-            <Route path="/contactUs" element={<ContactUs  />} />
-            <Route
-              path="/browsMentor"
-              element={<PublicMentors isDark={isDark} />}
-            />
-            <Route path="/joinUs" element={<JoinUsPage isDark={isDark} />} />
-          </Route>
-        </Routes>
+              element={<MainLayout isDark={isDark} toggleTheme={toggleTheme} />}
+            >
+              <Route path="/" element={<HomePage isDark={isDark} />} />
+              <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
+              <Route
+                path="/browsMentor"
+                element={<PublicMentors isDark={isDark} />}
+              />
+              <Route
+                path="/browsMentor"
+                element={<PublicMentors isDark={isDark} />}
+              />
+              <Route path="/contactUs" element={<ContactUs />} />
+              <Route
+                path="/browsMentor"
+                element={<PublicMentors isDark={isDark} />}
+              />
+              <Route path="/joinUs" element={<JoinUsPage isDark={isDark} />} />
+            </Route>
+          </Routes>
 
-        {/* Login & Registration */}
-        <Routes>
-          <Route path="/login" element={<LoginUser />} />
-          <Route path="/registration" element={<ChooseUser />} />
-          <Route path="/SignUp-mentee" element={<SignUpMentee />} />
-          <Route path="/SignUp-mentor" element={<SignUpMentor />} />
-        </Routes>
+          {/* Login & Registration */}
+          <Routes>
+            <Route path="/login" element={<LoginUser />} />
+            <Route path="/registration" element={<ChooseUser />} />
+            <Route path="/SignUp-mentee" element={<SignUpMentee />} />
+            <Route path="/SignUp-mentor" element={<SignUpMentor />} />
+          </Routes>
 
-        {/* System Pages */}
-        <Routes>
-          <Route
-            element={<BodySystem isDark={isDark} toggleTheme={toggleTheme} />}
-          >
-            <Route
-              path="/mentor/dashboard"
-              element={<Dashboard  />}
-            />
-            <Route path="/mentor/chatting" element={<ChateUser />} />
-          </Route>
-        </Routes>
-      </Router>
-    </ThemeProvider>
-
+          {/* System Pages */}
+          <Routes>
+            <Route element={<BodySystem />}>
+              <Route path="/mentor/dashboard" element={<Dashboard />} />
+              <Route path="/mentor/chatting" element={<ChateUser />} />
+              <Route path="/mentor/booking" element={<Booking />} />
+            </Route>
+          </Routes>
+        </Router>
+      </ThemeProvider>
     </>
   );
 }
