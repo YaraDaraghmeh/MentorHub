@@ -1,4 +1,5 @@
 ﻿using MentorHup.APPLICATION.DTOs.Booking;
+using MentorHup.APPLICATION.DTOs.Pagination;
 using MentorHup.APPLICATION.Responses;
 using MentorHup.APPLICATION.Service.Booking;
 using MentorHup.APPLICATION.Service.Strip;
@@ -55,6 +56,27 @@ namespace MentorHup.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet()]
+        [Authorize(Roles = "Mentee,Mentor,Admin")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> GetMyBookings([FromQuery]PaginationBookingDto dto)
+        {
+            var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(appUserId))
+                return Unauthorized(new { Success = false, Message = "Invalid user" });
+
+            string role;
+            if (User.IsInRole("Mentee")) role = "Mentee";
+            else if (User.IsInRole("Mentor")) role = "Mentor";
+            else  role = "Admin";
+
+            var bookings = await bookingService.GetBookingsForUserAsync(appUserId, role, dto.PageNumber, dto.PageSize);
+
+            return Ok(bookings);
+        }
+
 
 
     }

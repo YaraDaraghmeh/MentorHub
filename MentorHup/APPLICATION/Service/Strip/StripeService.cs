@@ -78,7 +78,7 @@ public class StripeService : IStripeService
             PaymentIntent = paymentIntentId,
             Reason = "requested_by_customer",
             RefundApplicationFee = false, 
-            ReverseTransfer = true 
+            ReverseTransfer = false
         };
 
         var refund = await refundService.CreateAsync(options);

@@ -1,4 +1,5 @@
-﻿using MentorHup.APPLICATION.DTOs.Booking;
+﻿using MentorHup.APPLICATION.Common;
+using MentorHup.APPLICATION.DTOs.Booking;
 using MentorHup.APPLICATION.Responses;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.Domain.Entities;
@@ -94,4 +95,42 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
             MentorStripeAccountId = availability.Mentor.StripeAccountId
         };
     }
+
+    public async Task<PageResult<BookingOverviewDto>> GetBookingsForUserAsync(
+        string appUserId,
+        string role,
+        int pageNumber,
+        int pageSize)
+    {
+        var query = context.Bookings
+            .Include(b => b.Mentor)
+            .Include(b => b.Mentee)
+            .AsQueryable();
+
+        if (role == "Mentee")
+            query = query.Where(b => b.Mentee.ApplicationUserId == appUserId);
+        else if (role == "Mentor")
+            query = query.Where(b => b.Mentor.ApplicationUserId == appUserId);
+        
+        var totalCount = await query.CountAsync();
+        var items =  await query
+            .OrderByDescending(b => b.StartTime)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(b => new BookingOverviewDto
+            {
+                BookingId = b.Id,
+                MentorName = b.Mentor.Name,
+                MenteeName = b.Mentee.Name,
+                StartTime = b.StartTime,
+                EndTime = b.EndTime,
+                Amount = b.Amount,
+                Status = b.Status == BookingStatus.Confirmed ? "Confirmed" : "Cancelled",
+                MeetingUrl = b.MeetingUrl
+            })
+            .ToListAsync();
+
+        return new PageResult<BookingOverviewDto>(items, totalCount, pageSize, pageNumber);
+    }
+
 }
