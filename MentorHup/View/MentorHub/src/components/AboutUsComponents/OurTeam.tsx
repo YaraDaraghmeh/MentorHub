@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useTheme } from "../../Context/ThemeContext";
 
 interface TeamMember {
   name: string;
@@ -6,16 +7,14 @@ interface TeamMember {
   image: string;
 }
 
-interface MentorHubTeamProps {
-  isDark?: boolean;
-}
 
-const MentorHubTeam: React.FC<MentorHubTeamProps> = ({ isDark = true }) => {
+
+const MentorHubTeam: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
   const [touchStart, setTouchStart] = useState(0);
   const [touchEnd, setTouchEnd] = useState(0);
-
+  const { isDark } = useTheme();
   const teamMembers: TeamMember[] = [
     { 
       name: "Sarah Ahmed", 

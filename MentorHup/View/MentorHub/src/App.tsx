@@ -10,6 +10,9 @@ import ChooseUser from "./components/Cards/ChooseUser";
 import SignUpMentee from "./Pages/PublicPages/SignUp/RegistrationMentee";
 import SignUpMentor from "./Pages/PublicPages/SignUp/RegistrationMetor";
 import JoinUsPage from "./Pages/PublicPages/JoinUsPage";
+import { ThemeProvider } from "../../MentorHub/src/Context/ThemeContext";
+
+// import SideBar from "./components/SideBar/SideBarDashboard";
 import BodySystem from "./layouts/bodyPages";
 // import DashboardMentor from "./components/Dashboard/dashboard";
 import Dashboard from "./components/Dashboard/dashboard";
@@ -23,6 +26,8 @@ function App() {
 
   return (
     <>
+        <ThemeProvider>
+
       <Router>
         {/* Public Pages */}
         <Routes>
@@ -39,7 +44,7 @@ function App() {
               path="/browsMentor"
               element={<PublicMentors isDark={isDark} />}
             />
-            <Route path="/contactUs" element={<ContactUs isDark={isDark} />} />
+            <Route path="/contactUs" element={<ContactUs  />} />
             <Route
               path="/browsMentor"
               element={<PublicMentors isDark={isDark} />}
@@ -63,12 +68,14 @@ function App() {
           >
             <Route
               path="/mentor/dashboard"
-              element={<Dashboard isDark={isDark} />}
+              element={<Dashboard  />}
             />
             <Route path="/mentor/chatting" element={<ChateUser />} />
           </Route>
         </Routes>
       </Router>
+    </ThemeProvider>
+
     </>
   );
 }

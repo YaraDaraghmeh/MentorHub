@@ -2,14 +2,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, MapPin, DollarSign } from 'lucide-react';
 import  type { Position } from '../../types/types';
+import { useTheme } from "../../Context/ThemeContext";
 
 interface PositionCardProps {
   position: Position;
   index: number;
-  isDark: boolean;
 }
 
-const PositionCard: React.FC<PositionCardProps> = ({ position, index, isDark }) => {
+const PositionCard: React.FC<PositionCardProps> = ({ position, index }) => {
+  const { isDark } = useTheme();
   const cardClass = isDark ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200";
   const accentClass = isDark ? "text-cyan-400" : "text-teal-800";
   const iconColorClass = isDark ? "text-cyan-300" : "text-teal-700";

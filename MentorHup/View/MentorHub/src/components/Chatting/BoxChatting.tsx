@@ -2,14 +2,16 @@ import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import MessageReceive from "./MessageReceive";
 import MessageSend from "./MessageSend";
+import { useTheme } from "../../Context/ThemeContext";
 
 type ListInfo = {
-  isDark: boolean;
+  
   name: string;
   picture?: string;
 };
 
-const Chatting = ({ isDark = true, name, picture }: ListInfo) => {
+const Chatting = ({  name, picture }: ListInfo) => {
+  const { isDark } = useTheme();
   return (
     <div className="shadow col-span-2 justify-start items-start lg:block hidden overflow-hidden rounded-[54px]">
       {/* Header */}
@@ -50,23 +52,23 @@ const Chatting = ({ isDark = true, name, picture }: ListInfo) => {
             ${isDark ? "scrollDark" : "scrollLi"}`}
         >
           <MessageSend
-            isDark={isDark}
+          
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
           />
 
           <MessageReceive
-            isDark={isDark}
+            
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
             picture=""
           />
 
           <MessageSend
-            isDark={isDark}
+            
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit 😊✔️"
           />
 
           <MessageReceive
-            isDark={isDark}
+            
             message="Lorem ipsum dolor sit amet, consectetur adipiscing elit, Lorem ipsum dolor sit amet."
             picture=""
           />

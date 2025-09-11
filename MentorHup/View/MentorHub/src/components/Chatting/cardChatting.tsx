@@ -1,5 +1,6 @@
 import { useState } from "react";
 import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
+import { useTheme } from "../../Context/ThemeContext";
 
 type ListInfo = {
   picture?: string;
@@ -9,8 +10,9 @@ type ListInfo = {
   isDark: boolean;
 };
 
-const CardChat = ({ isDark, picture, name, time, message }: ListInfo) => {
+const CardChat = ({ picture, name, time, message }: ListInfo) => {
   const [active, setActive] = useState(false);
+  const { isDark } = useTheme();
 
   return (
     <div

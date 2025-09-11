@@ -9,6 +9,7 @@ import { HiChatAlt2 } from "react-icons/hi";
 import { AiOutlineLogin } from "react-icons/ai";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
+import { useTheme } from "../../Context/ThemeContext";
 
 interface profile {
   name: string;
@@ -30,7 +31,6 @@ const SideBar = ({
   role,
   expended,
   setExpended,
-  isDark,
 }: sideProps) => {
   const menuItems = {
     admin: [
@@ -149,7 +149,7 @@ const SideBar = ({
                 <ListSide
                   key={index}
                   link={item.path}
-                  isDark={isDark}
+
                   expended={expended}
                 >
                   <item.icon className="w-6 h-6" />

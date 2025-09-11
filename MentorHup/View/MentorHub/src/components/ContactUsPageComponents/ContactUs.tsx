@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useTheme } from "../../Context/ThemeContext";
+
 import {
   Mail,
   MessageCircle,
@@ -7,11 +9,10 @@ import {
   AlertCircle,
 } from "lucide-react";
 
-interface ContactUsProps {
-  isDark?: boolean;
-}
 
-const ContactUs: React.FC<ContactUsProps> = ({ isDark = false }) => {
+
+const ContactUs: React.FC  = () => {
+  const { isDark } = useTheme();
   const [formData, setFormData] = useState({
     subject: "",
     email: "",

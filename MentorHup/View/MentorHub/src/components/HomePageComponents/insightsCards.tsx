@@ -1,9 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { FaStar, FaCheckCircle } from 'react-icons/fa';
+import { useTheme } from "../../Context/ThemeContext";
 
 export interface AnalyticsCardProps {
-  isDark: boolean;
+
   icon: React.ReactNode;
   title: string;
   metrics?: {
@@ -20,7 +21,6 @@ export interface AnalyticsCardProps {
 }
 
 const AnalyticsCard: React.FC<AnalyticsCardProps> = ({ 
-  isDark, 
   icon, 
   title, 
   metrics, 
@@ -28,7 +28,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   recommendation,
   delay = 0 
 }) => {
-
+  const { isDark } = useTheme();
   return (
     <motion.div
       initial="hidden"

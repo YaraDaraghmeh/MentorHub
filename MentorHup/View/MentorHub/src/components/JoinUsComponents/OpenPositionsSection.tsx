@@ -2,13 +2,15 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import PositionCard from './PositionCard';
 import  type { Position } from '../../types/types';
+import { useTheme } from "../../Context/ThemeContext";
 
 interface OpenPositionsSectionProps {
   positions: Position[];
-  isDark: boolean;
 }
 
-const OpenPositionsSection: React.FC<OpenPositionsSectionProps> = ({ positions, isDark }) => {
+const OpenPositionsSection: React.FC<OpenPositionsSectionProps> = ({ positions }) => {
+  const { isDark } = useTheme();
+
   return (
     <motion.section 
       className="px-4 py-16"
@@ -31,7 +33,7 @@ const OpenPositionsSection: React.FC<OpenPositionsSectionProps> = ({ positions, 
               key={position.id}
               position={position}
               index={index}
-              isDark={isDark}
+              
             />
           ))}
         </div>

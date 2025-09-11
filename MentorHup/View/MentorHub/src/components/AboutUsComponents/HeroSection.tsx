@@ -1,12 +1,11 @@
 import React, { useRef, useEffect } from 'react';
+import { useTheme } from "../../Context/ThemeContext";
 
-interface MentorHubHeroProps {
-  isDark?: boolean;
-}
 
-const MentorHubHero: React.FC<MentorHubHeroProps> = ({ isDark = true }) => {
+
+const MentorHubHero: React.FC = () => {
   const heroRef = useRef<HTMLDivElement>(null);
-
+  const { isDark } = useTheme();
   useEffect(() => {
     const hero = heroRef.current;
     if (!hero) return;

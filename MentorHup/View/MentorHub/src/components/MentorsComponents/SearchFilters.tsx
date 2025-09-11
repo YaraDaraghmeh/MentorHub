@@ -2,9 +2,9 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Search, Filter, ChevronDown } from 'lucide-react';
 import type { FilterState } from '../../types/types';
+import { useTheme } from "../../Context/ThemeContext";
 
 interface SearchFiltersProps {
-  isDark: boolean;
   filters: FilterState;
   onFilterChange: (filters: Partial<FilterState>) => void;
   showFilters: boolean;
@@ -13,7 +13,6 @@ interface SearchFiltersProps {
 }
 
 const SearchFilters: React.FC<SearchFiltersProps> = ({
-  isDark,
   filters,
   onFilterChange,
   showFilters,
@@ -30,6 +29,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
     "Finance Interviews",
     "Behavioral Interviews"
   ];
+  const { isDark } = useTheme();
 
   return (
     <section className={`py-8 ${

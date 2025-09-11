@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import "./TestemotionalSection.css";
+import { useTheme } from "../../Context/ThemeContext";
 
 interface Testimonial {
   id: number;
@@ -13,12 +14,10 @@ interface Testimonial {
 interface TestimonialCardProps {
   testimonial: Testimonial;
   isActive: boolean;
-  isDark: boolean;
+  
 }
 
-interface TestimonialsSectionProps {
-  isDark?: boolean;
-}
+
 
 const testimonials: Testimonial[] = [
   {
@@ -68,7 +67,8 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive, isDark }) => {
+const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive }) => {
+  const { isDark } = useTheme();
   const cardBgClass = isDark
     ? "border-gray-600"
     : "border-gray-200";
@@ -120,7 +120,8 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive
   );
 };
 
-const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ isDark = false }) => {
+const TestimonialsSection: React.FC = () => {
+  const { isDark } = useTheme();
   const [activeIndex, setActiveIndex] = useState(0);
   const intervalRef = useRef<number | null>(null);
 
@@ -200,7 +201,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ isDark = fals
                     <TestimonialCard
                       testimonial={testimonial}
                       isActive={index === activeIndex}
-                      isDark={isDark}
+                      
                     />
                   </div>
                 </div>
@@ -239,7 +240,7 @@ const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({ isDark = fals
           <TestimonialCard
             testimonial={testimonials[activeIndex]}
             isActive={true}
-            isDark={isDark}
+            
           />
         </div>
 

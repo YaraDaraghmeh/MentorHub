@@ -1,12 +1,11 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Play } from 'lucide-react';
+import { useTheme } from "../../Context/ThemeContext";
 
-interface HeroSectionProps {
-  isDark: boolean;
-}
+const HeroSection: React.FC = () => {
+  const { isDark } = useTheme();
 
-const HeroSection: React.FC<HeroSectionProps> = ({ isDark }) => {
   return (
     <>
       {/* Hero Section */}

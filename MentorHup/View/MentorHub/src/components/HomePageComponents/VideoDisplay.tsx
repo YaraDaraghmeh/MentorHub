@@ -1,18 +1,18 @@
 import React from "react";
+import { useTheme } from "../../Context/ThemeContext";
 
 interface VideoDisplayProps {
   title?: string;
   subtitle?: string;
-  isDark?: boolean;
   delay?: number;
 }
 
 const VideoDisplay: React.FC<VideoDisplayProps> = ({
   title,
   subtitle,
-  isDark = false,
   delay = 0,
 }) => {
+  const { isDark } = useTheme();
   return (
     <div 
       className={`${isDark ? '!bg-[#2C313A]' : '!bg-[#1B2A30]'} rounded-xl p-4 sm:p-6 lg:p-8 flex flex-col items-center justify-center min-h-[180px] sm:min-h-[200px] lg:min-h-[220px] relative overflow-hidden transition-all duration-500 hover:scale-105 shadow-lg transform`}
