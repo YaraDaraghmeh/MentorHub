@@ -72,6 +72,7 @@ const SideBar = ({
         setIsMobile(true);
       } else {
         setExpended(true);
+        setIsMobile(false);
       }
     };
 
