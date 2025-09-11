@@ -1,6 +1,9 @@
 # Visual Studio temporary files
+<<<<<<< HEAD
+=======
 MentorHup/appsettings.json
 appsettings.Development.json
+>>>>>>> d579c16de83ff73b20932ba75762ef7d2b1c5b51
 .vs/
 bin/
 obj/

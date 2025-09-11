@@ -4,7 +4,6 @@ using MentorHup.APPLICATION.Responses;
 using MentorHup.APPLICATION.Service.Booking;
 using MentorHup.APPLICATION.Service.Strip;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
