@@ -5,6 +5,7 @@ import  type { Testimonial } from '../../types/types';
 import { useTheme } from "../../Context/ThemeContext";
 
 const ContentSections: React.FC = () => {
+  
   const { isDark } = useTheme();
   const testimonials: Testimonial[] = [
     {
@@ -33,6 +34,7 @@ const ContentSections: React.FC = () => {
     }
   ];
 
+  
   return (
     <>
       {/* How It Works Section */}

@@ -39,7 +39,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
         <div className="flex flex-col space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h2 className="text-2xl font-bold">Browse Mentors</h2>
+              <h2 className={`text-2xl font-bold  ${isDark ? '!text-gray-300' : '!text-gray-600'}`}>Browse Mentors</h2>
               <p className={`mt-1 text-sm ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
                 {filteredCount} mentors available
               </p>
