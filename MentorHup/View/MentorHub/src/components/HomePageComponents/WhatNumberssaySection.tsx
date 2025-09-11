@@ -4,12 +4,10 @@ import { BiAnalyse } from 'react-icons/bi';
 import { HiLightBulb } from 'react-icons/hi';
 import { MdRecommend } from 'react-icons/md';
 import AnalyticsCard from '../HomePageComponents/insightsCards';
+import { useTheme } from "../../Context/ThemeContext";
 
-interface AnalyticsDashboardProps {
-  isDark: boolean;
-}
-
-const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ isDark }) => {
+const AnalyticsDashboard: React.FC = () => {
+  const { isDark } = useTheme();
   const backgroundVariants = {
     hidden: { opacity: 0 },
     visible: { opacity: 1, transition: { duration: 0.8 } }
@@ -67,7 +65,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ isDark }) => {
         {/* Displaying one by one */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           <AnalyticsCard
-            isDark={isDark}
+            
             icon={<BiAnalyse size={24} />}
             title="Real-time Analysis"
             metrics={[
@@ -80,7 +78,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ isDark }) => {
           />
 
           <AnalyticsCard
-            isDark={isDark}
+        
             icon={<HiLightBulb size={24} />}
             title="Key Insights"
             insights={[
@@ -92,7 +90,7 @@ const AnalyticsDashboard: React.FC<AnalyticsDashboardProps> = ({ isDark }) => {
           />
 
           <AnalyticsCard
-            isDark={isDark}
+          
             icon={<MdRecommend size={24} />}
             title="Recommendation"
             recommendation={{

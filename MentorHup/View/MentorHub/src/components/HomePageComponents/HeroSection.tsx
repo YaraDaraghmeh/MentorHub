@@ -1,9 +1,11 @@
 import Typewriter from "typewriter-effect";
 import image from "../../assets/Home.png";
 import { useNavigate } from "react-router-dom";
+import { useTheme } from "../../Context/ThemeContext";
 
-const HeroSection = ({ isDark }: { isDark: boolean }) => {
+const HeroSection = () => {
   const navigate = useNavigate();
+  const { isDark } = useTheme();
 
   const handleClick = () => {
     navigate("/login");

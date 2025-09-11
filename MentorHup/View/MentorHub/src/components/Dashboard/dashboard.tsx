@@ -7,12 +7,11 @@ import {
 import CardDash from "../Cards/CardDashboard";
 import CardLabel from "../Cards/CardLabel";
 import picture from "../../assets/avatar-profile.png";
+import { useTheme } from "../../Context/ThemeContext";
 
-type list = {
-  isDark: boolean;
-};
 
-const DashboardMentor = ({ isDark }: list) => {
+const DashboardMentor = () => {
+  const { isDark } = useTheme();
   const state = [
     { title: "Mentees", value: "12", icon: <BsFillPeopleFill />, color: "" },
     {

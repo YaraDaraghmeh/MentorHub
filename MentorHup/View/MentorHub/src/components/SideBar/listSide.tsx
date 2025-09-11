@@ -2,10 +2,10 @@ import { type MouseEventHandler } from "react";
 import type React from "react";
 import { NavLink, useLocation } from "react-router-dom";
 import clsx from "clsx";
+import { useTheme } from "../../Context/ThemeContext";
 
 type ListItemProps = {
   expended: boolean;
-  isDark: boolean;
   children: React.ReactNode;
   link: string;
   onClick?: MouseEventHandler<HTMLAnchorElement>;
@@ -14,12 +14,13 @@ type ListItemProps = {
 const ListSide = ({
   link,
   children,
-  isDark,
   expended,
   onClick,
 }: ListItemProps) => {
   const location = useLocation();
   const isActive = location.pathname === link;
+  const { isDark } = useTheme();
+
 
   return (
     <li

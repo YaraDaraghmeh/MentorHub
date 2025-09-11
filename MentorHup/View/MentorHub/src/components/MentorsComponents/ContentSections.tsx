@@ -2,12 +2,10 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Search, BookOpen, Target, Star, TrendingUp } from 'lucide-react';
 import  type { Testimonial } from '../../types/types';
+import { useTheme } from "../../Context/ThemeContext";
 
-interface ContentSectionsProps {
-  isDark: boolean;
-}
-
-const ContentSections: React.FC<ContentSectionsProps> = ({ isDark }) => {
+const ContentSections: React.FC = () => {
+  const { isDark } = useTheme();
   const testimonials: Testimonial[] = [
     {
       id: 1,

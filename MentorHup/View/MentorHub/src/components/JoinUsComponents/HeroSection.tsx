@@ -1,12 +1,10 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Star, Briefcase } from 'lucide-react';
+import { useTheme } from "../../Context/ThemeContext";
 
-interface HeroSectionProps {
-  isDark: boolean;
-}
-
-const HeroSection: React.FC<HeroSectionProps> = ({ isDark }) => {
+const HeroSection: React.FC = () => {
+  const { isDark } = useTheme();
   const accentClass = isDark ? "text-[#56e39f]" : "text-teal-800";
   const iconColorClass = isDark ? "text-[#56e39f]" : "text-teal-700";
   const iconBgClass = isDark ? "bg-cyan-900 bg-opacity-30" : "bg-teal-200";

@@ -1,19 +1,20 @@
 import React, { useState } from 'react';
 import { FiPlay, FiUsers, FiSearch, FiFilter, FiBriefcase, FiStar, FiMoreHorizontal, FiDownload } from 'react-icons/fi';
+import { useTheme } from "../../Context/ThemeContext";
 
 interface WalkthroughCardProps {
-  isDark?: boolean;
   videoUrl?: string | null;
 }
 
 interface PlatformWalkthroughProps {
-  isDark?: boolean;
+  
   videoUrl?: string | null;
 }
 
 
 
-const WalkthroughCard: React.FC<WalkthroughCardProps> = ({ isDark = false, videoUrl = null }) => {
+const WalkthroughCard: React.FC<WalkthroughCardProps> = ({  videoUrl = null }) => {
+  const { isDark } = useTheme();
   const [isPlaying, setIsPlaying] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -268,7 +269,8 @@ const WalkthroughCard: React.FC<WalkthroughCardProps> = ({ isDark = false, video
   );
 };
 
-const PlatformWalkthrough: React.FC<PlatformWalkthroughProps> = ({ isDark = false, videoUrl = null }) => {
+const PlatformWalkthrough: React.FC<PlatformWalkthroughProps> = ({  videoUrl = null }) => {
+  const { isDark } = useTheme();
   return (
     <div 
       className={`
@@ -297,7 +299,7 @@ const PlatformWalkthrough: React.FC<PlatformWalkthroughProps> = ({ isDark = fals
 
         <div className="mb-8 md:mb-16">
           <WalkthroughCard 
-            isDark={isDark} 
+            
             videoUrl={videoUrl}
           />
         </div>

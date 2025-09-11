@@ -1,7 +1,10 @@
 import "./Footer.css";
 import { FaCopyright } from "react-icons/fa";
+import { useTheme } from "../../Context/ThemeContext";
 
-const Footer = ({ isDark = true }) => {
+const Footer = () => {
+  const { isDark } = useTheme();
+
   return (
     <footer
       className={`relative flex w-full flex-shrink-0 self-stretch items-center justify-between flex-wrap 

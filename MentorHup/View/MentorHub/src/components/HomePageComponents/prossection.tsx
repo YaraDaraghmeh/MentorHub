@@ -2,12 +2,12 @@ import React from 'react';
 import { Mic, Users, MessageSquare } from 'lucide-react';
 import FeatureCard from './FeatureCard';
 import SectionHeader from './SectionHeader';
+import { useTheme } from "../../Context/ThemeContext";
 
 
-
-const LiveSessionsLanding = ({ isDark = false }: { isDark?: boolean }) => {
+const LiveSessionsLanding = () => {
   const [mounted, setMounted] = React.useState(false);
-
+  const { isDark } = useTheme();
   React.useEffect(() => {
     setMounted(true);
   }, []);
@@ -50,7 +50,7 @@ const LiveSessionsLanding = ({ isDark = false }: { isDark?: boolean }) => {
      
       
               <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16 xl:py-20 max-w-7xl">
-          <SectionHeader isDark={isDark} />
+          <SectionHeader  />
         
         <div className="space-y-8 sm:space-y-12 lg:space-y-16">
           {features.map((feature, index) => (
@@ -61,7 +61,7 @@ const LiveSessionsLanding = ({ isDark = false }: { isDark?: boolean }) => {
               description={feature.description}
               videoTitle={feature.videoTitle}
               reverse={feature.reverse}
-              isDark={isDark}
+              
               index={index}
             />
           ))}
