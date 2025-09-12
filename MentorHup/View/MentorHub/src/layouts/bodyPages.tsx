@@ -66,9 +66,10 @@ const BodySystem = () => {
                   : "outline-[var(--System-Gray-200)] text-[var(--System-Gray-400)] bg-white"
               }`}
             >
-              <div className="justify-start text-base font-medium  leading-normal">
-                Search...
-              </div>
+              <input
+                className="justify-start text-base font-medium  leading-normal"
+                placeholder="Search..."
+              />
               <div className="w-5 h-5">
                 <BiSearch className="w-full h-full" />
               </div>

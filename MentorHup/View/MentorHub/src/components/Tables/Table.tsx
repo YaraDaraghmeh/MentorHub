@@ -1,6 +1,4 @@
 import React from "react";
-// import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
-// import Eye from "./eyeicon";
 import { useTheme } from "../../Context/ThemeContext";
 
 type column<T> = {
