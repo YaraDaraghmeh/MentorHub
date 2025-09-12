@@ -1,24 +1,30 @@
 import React from "react";
-import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
-import Eye from "./eyeicon";
+// import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
+// import Eye from "./eyeicon";
 import { useTheme } from "../../Context/ThemeContext";
 
-type column = {
+type column<T> = {
   header: string;
-  render: (row: any) => React.ReactNode;
+  accessor: keyof T;
+  render?: (row: T) => React.ReactNode;
 };
 
-type Listprops = {
-  data: any[];
-  columns: column[];
+type Listprops<T> = {
+  titleTable: string;
+  data: T[];
+  columns: column<T>[];
 };
 
-// const Table = ({ isDark = true, data, columns }: Listprops) => {
-const Table = () => {
+function Table<T extends { id: number | string }>({
+  titleTable,
+  data,
+  columns,
+}: Listprops<T>) {
   const { isDark } = useTheme();
+
   return (
     <div
-      className={`inline-flex flex-col items-center rounded-2xl shadow-[-2px_5px_10px_1px_rgba(0,0,0,0.15)] overflow-hidden ${
+      className={`flex flex-col items-center rounded-2xl shadow-[-2px_5px_10px_1px_rgba(0,0,0,0.15)] overflow-hidden ${
         isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--secondary-light)]"
       }`}
     >
@@ -28,7 +34,7 @@ const Table = () => {
             isDark ? "text-[var(--secondary-light)]" : "text-[bg-dark]"
           }`}
         >
-          Users
+          {titleTable}
         </h2>
         <input
           className={`self-stretch h-9 p-3.5 rounded-2xl placeholder-[var(--gray-light)] outline outline-1 outline-offset-[-1px] inline-flex justify-start items-center overflow-hidden ${
@@ -39,150 +45,64 @@ const Table = () => {
           placeholder="Search..."
         />
       </div>
+
       <table
-        className={`inline-flex flex-col items-center w-full ${
+        className={`w-full table-fixed border-collapse ${
           isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--secondary-light)]"
         }`}
       >
         <thead
-          className={`self-stretch p-3.5 inline-flex overflow-hidden w-full justify-center items-center ${
+          className={`${
             isDark
               ? "bg-[var(--primary-light)]"
               : "bg-[var(--primary-green-light)]"
           }`}
         >
-          <tr className="inline-flex w-full justify-between items-center gap-4">
-            {}
-            <th
-              className={`justify-center text-base font-semibold px-4 ${
-                isDark
-                  ? "text-[var(--gray-light)]"
-                  : "text-[var(----primary-light)]"
-              }`}
-            >
-              User Name
-            </th>
-            <th
-              className={`justify-center text-base font-semibold px-4 ${
-                isDark
-                  ? "text-[var(--gray-light)]"
-                  : "text-[var(----primary-light)]"
-              }`}
-            >
-              Role
-            </th>
-            <th
-              className={`justify-center text-base font-semibold px-4 ${
-                isDark
-                  ? "text-[var(--gray-light)]"
-                  : "text-[var(----primary-light)]"
-              }`}
-            >
-              Email
-            </th>
-            <th
-              className={`justify-center text-base font-semibold px-4 ${
-                isDark
-                  ? "text-[var(--gray-light)]"
-                  : "text-[var(----primary-light)]"
-              }`}
-            >
-              Status
-            </th>
-            <th
-              className={`justify-center text-base font-semibold px-4 ${
-                isDark
-                  ? "text-[var(--gray-light)]"
-                  : "text-[var(----primary-light)]"
-              }`}
-            >
-              Effective
-            </th>
-            <th
-              className={`justify-center text-base font-semibold px-4 ${
-                isDark
-                  ? "text-[var(--gray-light)]"
-                  : "text-[var(----primary-light)]"
-              }`}
-            >
-              Actions
-            </th>
+          <tr>
+            {columns.map((col, i) => (
+              <th
+                key={i}
+                className={`px-4 py-2 text-center text-base font-semibold ${
+                  isDark
+                    ? "text-[var(--gray-light)]"
+                    : "text-[var(--primary-dark)]"
+                }`}
+              >
+                {col.header}
+              </th>
+            ))}
           </tr>
         </thead>
-        {/* body */}
+
         <tbody
-          className={`self-stretch h-[468px] inline-flex flex-col overflow-hidden w-full justify-start items-start ${
+          className={`${
             isDark
               ? "text-[var(--primary-green-light)]"
               : "text-[var(--primary-rgba)]"
-          }`}
+          }}`}
         >
-          <tr
-            className={`inline-flex w-full h-20 p-3 border-b justify-between items-center gap-1 ${
-              isDark
-                ? "border-[var(--gray-dark)]"
-                : "border-[var(--gray-light)]"
-            }`}
-          >
-            <td className="w-[13rem] py-1 gap-3 inline-flex justify-center items-center overflow-hidden">
-              <div className="w-14 h-14 rounded-full">
-                <img
-                  src={pictureProfile}
-                  className="w-full h-full"
-                  alt={pictureProfile}
-                />
-              </div>
-              Sara Sayed Ahmad
-            </td>
-            <td className="w-32 py-1 inline-flex justify-center items-center overflow-hidden">
-              Mentor
-            </td>
-            <td className="w-[14rem] py-1 inline-flex justify-center items-center overflow-hidden">
-              example@yaho.com
-            </td>
-            <td className="w-[9rem] py-1 inline-flex justify-center items-center overflow-hidden">
-              Active
-            </td>
-            <td className="w-[16rem] py-1 inline-flex justify-center items-center overflow-hidden">
-              example@y
-            </td>
-            <td className="w-32 py-1 gap-3 inline-flex justify-center items-center overflow-hidden">
-              <Eye />
-            </td>
-          </tr>
+          {data.map((row) => (
+            <tr
+              key={row.id}
+              className={`h-20 border-b ${
+                isDark
+                  ? "border-[var(--gray-dark)] text-[var(--primary-green-light)]"
+                  : "border-[var(--gray-light)] text-[var(--primary-rgba)]"
+              }`}
+            >
+              {columns.map((col, i) => (
+                <td key={i} className="px-4 py-2 text-center">
+                  {col.render
+                    ? col.render(row)
+                    : (row[col.accessor] as React.ReactNode)}
+                </td>
+              ))}
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
   );
-};
+}
 
 export default Table;
-
-// <table className="">
-{
-  /* head */
-}
-{
-  /* <thead>
-        <tr>
-          {columns.map((col, i) => (
-            <th key={i}>{col.header}</th>
-          ))}
-        </tr>
-      </thead> */
-}
-{
-  /* body */
-}
-{
-  /* <tbody>
-        {data.map((row, i) => (
-          <tr key={i}>
-            {columns.map((col, j) => (
-              <td key={j}>{col.render(row)}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table> */
-}
