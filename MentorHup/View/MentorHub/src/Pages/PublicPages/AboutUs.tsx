@@ -3,18 +3,17 @@ import HeroSection from '../../components/AboutUsComponents/HeroSection';
 import CompanyLogosSection from '../../components/HomePageComponents/CompanyLogosSection';
 import AboutSectionCards from '../../components/AboutUsComponents/AboutSectionCards';
 import OurTeam from '../../components/AboutUsComponents/OurTeam';
-interface HomePageProps {
-  isDark?: boolean;
-}
+import { useTheme } from "../../Context/ThemeContext";
 
-const AboutUsPage: React.FC<HomePageProps> = ({ isDark = false }) => {
+const AboutUsPage: React.FC = () => {
+  const { isDark } = useTheme();
 
   return (
     <>
-    <HeroSection isDark={isDark} />
-    <AboutSectionCards isDark={isDark} />
-    <OurTeam isDark={isDark} />
-    <CompanyLogosSection isDark={isDark} />
+    <HeroSection  />
+    <AboutSectionCards />
+    <OurTeam  />
+    <CompanyLogosSection />
    </>
       
   

@@ -4,8 +4,10 @@ import OpenPositionsSection from '../../components/JoinUsComponents/OpenPosition
 import BenefitsSection from '../../components/JoinUsComponents/BenefitsSection';
 import CTASection from '../../components/JoinUsComponents/CTASection';
 import  type { JoinUsPageProps, Position } from '../../types/types';
+import { useTheme } from "../../Context/ThemeContext";
 
-const JoinUsPage: React.FC<JoinUsPageProps> = ({ isDark = false }) => {
+const JoinUsPage: React.FC<JoinUsPageProps> = () => {
+  const { isDark } = useTheme();
   const openPositions: Position[] = [
     {
       id: 1,
@@ -84,10 +86,10 @@ const JoinUsPage: React.FC<JoinUsPageProps> = ({ isDark = false }) => {
 
   return (
     <div style={containerStyle} className="min-h-screen">
-      <HeroSection isDark={isDark} />
-      <OpenPositionsSection positions={openPositions} isDark={isDark} />
-      <BenefitsSection benefits={benefits} isDark={isDark} />
-      <CTASection isDark={isDark} />
+      <HeroSection />
+      <OpenPositionsSection positions={openPositions} />
+      <BenefitsSection benefits={benefits} />
+      <CTASection />
     </div>
   );
 };
