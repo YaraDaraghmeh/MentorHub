@@ -32,22 +32,22 @@ function App() {
             <Route
               element={<MainLayout isDark={isDark} toggleTheme={toggleTheme} />}
             >
-              <Route path="/" element={<HomePage isDark={isDark} />} />
-              <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
+              <Route path="/" element={<HomePage  />} />
+              <Route path="/about" element={<AboutUsPage />} />
               <Route
                 path="/browsMentor"
-                element={<PublicMentors isDark={isDark} />}
+                element={<PublicMentors />}
               />
               <Route
                 path="/browsMentor"
-                element={<PublicMentors isDark={isDark} />}
+                element={<PublicMentors />}
               />
               <Route path="/contactUs" element={<ContactUs />} />
               <Route
                 path="/browsMentor"
-                element={<PublicMentors isDark={isDark} />}
+                element={<PublicMentors />}
               />
-              <Route path="/joinUs" element={<JoinUsPage isDark={isDark} />} />
+              <Route path="/joinUs" element={<JoinUsPage />} />
             </Route>
           </Routes>
 
