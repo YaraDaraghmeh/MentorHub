@@ -5,25 +5,24 @@ import LiveSessionsLanding from "../../components/HomePageComponents/prossection
 import WhatNumberssaySection from "../../components/HomePageComponents/WhatNumberssaySection";
 import PlatformWalkthrough from "../../components/HomePageComponents/WalkThrough";
 import TestimonialsSection from "../../components/HomePageComponents/Testemotional";
+import { useTheme } from "../../Context/ThemeContext";
 
-interface HomePageProps {
-  isDark?: boolean;
-}
 
-const HomePage: React.FC<HomePageProps> = ({ isDark = false }) => {
+const HomePage: React.FC = () => {
+  const { isDark: themeIsDark } = useTheme();
   return (
     <>
-      <HeroSection isDark={isDark} />
-      <CompanyLogosSection isDark={isDark} />
-      <WhatNumberssaySection isDark={isDark} />
-      <LiveSessionsLanding isDark={isDark} />
+      <HeroSection  />
+      <CompanyLogosSection />
+      <WhatNumberssaySection />
+      <LiveSessionsLanding  />
       <PlatformWalkthrough
-        isDark={isDark}
+      
         videoUrl={
           "https://www.youtube.com/embed/Y9-0Jj3avRg?si=A-35oqff_ahFSrqo"
         }
       />
-      <TestimonialsSection isDark={isDark} />
+      <TestimonialsSection />
     </>
   );
 };

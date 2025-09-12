@@ -4,12 +4,9 @@ import SearchFilters from '../../components/MentorsComponents/SearchFilters';
 import MentorsGrid from '../../components/MentorsComponents/MentorsGrid';
 import ContentSections from '../../components/MentorsComponents/ContentSections';
 import type { Mentor, FilterState } from '../../types/types';
-
-interface PublicMentorsProps {
-  isDark?: boolean;
-}
-
-const PublicMentors: React.FC<PublicMentorsProps> = ({ isDark = false }) => {
+import { useTheme } from "../../Context/ThemeContext";
+const PublicMentors: React.FC = () => {
+  const { isDark } = useTheme();
   const [filters, setFilters] = useState<FilterState>({
     searchTerm: '',
     selectedSpecialty: 'all',
@@ -155,17 +152,17 @@ const PublicMentors: React.FC<PublicMentorsProps> = ({ isDark = false }) => {
         ? 'bg-[#06171c] text-white' 
         : 'bg-[#96fbf1] text-gray-900'
     }`}>
-      <HeroSection isDark={isDark} />
+      <HeroSection />
       <SearchFilters 
-        isDark={isDark}
+      
         filters={filters}
         onFilterChange={handleFilterChange}
         showFilters={showFilters}
         onToggleFilters={() => setShowFilters(!showFilters)}
         filteredCount={filteredMentors.length}
       />
-      <MentorsGrid isDark={isDark} mentors={filteredMentors} />
-      <ContentSections isDark={isDark} />
+      <MentorsGrid mentors={filteredMentors} />
+      <ContentSections />
     </div>
   );
 };
