@@ -13,6 +13,7 @@ import JoinUsPage from "./Pages/PublicPages/JoinUsPage";
 import { ThemeProvider } from "../../MentorHub/src/Context/ThemeContext";
 import BodySystem from "./layouts/bodyPages";
 import Dashboard from "./components/Dashboard/dashboard";
+import DashboardAd from "./Pages/AdminPages/Dashboard";
 import ChateUser from "./Pages/MentorPages/Chatting";
 import Booking from "./Pages/MentorPages/Booking";
 
@@ -32,22 +33,31 @@ function App() {
             <Route
               element={<MainLayout isDark={isDark} toggleTheme={toggleTheme} />}
             >
-              <Route path="/" element={<HomePage isDark={isDark} />} />
-              <Route path="/about" element={<AboutUsPage isDark={isDark} />} />
+<<<<<<< HEAD
+              <Route path="/" element={<HomePage />} />
+              <Route path="/about" element={<AboutUsPage />} />
+              <Route path="/browsMentor" element={<PublicMentors />} />
+              <Route path="/browsMentor" element={<PublicMentors />} />
+              <Route path="/contactUs" element={<ContactUs />} />
+              <Route path="/browsMentor" element={<PublicMentors />} />
+=======
+              <Route path="/" element={<HomePage  />} />
+              <Route path="/about" element={<AboutUsPage />} />
               <Route
                 path="/browsMentor"
-                element={<PublicMentors isDark={isDark} />}
+                element={<PublicMentors />}
               />
               <Route
                 path="/browsMentor"
-                element={<PublicMentors isDark={isDark} />}
+                element={<PublicMentors />}
               />
               <Route path="/contactUs" element={<ContactUs />} />
               <Route
                 path="/browsMentor"
-                element={<PublicMentors isDark={isDark} />}
+                element={<PublicMentors />}
               />
-              <Route path="/joinUs" element={<JoinUsPage isDark={isDark} />} />
+>>>>>>> 11cad5a30d1941e2af42758d68c7f0ecac67bef2
+              <Route path="/joinUs" element={<JoinUsPage />} />
             </Route>
           </Routes>
 
@@ -65,6 +75,7 @@ function App() {
               <Route path="/mentor/dashboard" element={<Dashboard />} />
               <Route path="/mentor/chatting" element={<ChateUser />} />
               <Route path="/mentor/booking" element={<Booking />} />
+              <Route path="/admin/dashboard" element={<DashboardAd />} />
             </Route>
           </Routes>
         </Router>
