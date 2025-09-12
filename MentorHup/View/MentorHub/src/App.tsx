@@ -15,6 +15,8 @@ import BodySystem from "./layouts/bodyPages";
 import Dashboard from "./components/Dashboard/dashboard";
 import ChateUser from "./Pages/MentorPages/Chatting";
 import Booking from "./Pages/MentorPages/Booking";
+import  BrowseMentor from "./Pages/MenteePages/BrowseMonetor";
+import MenteeDashboard from "./Pages/MenteePages/BrowseMonetor";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -65,6 +67,14 @@ function App() {
               <Route path="/mentor/dashboard" element={<Dashboard />} />
               <Route path="/mentor/chatting" element={<ChateUser />} />
               <Route path="/mentor/booking" element={<Booking />} />
+            </Route>
+          </Routes>
+          <Routes>
+            <Route element={<BodySystem />}>
+              <Route path="/mentee/main" element={<BrowseMentor />} />
+              <Route path="/mentee/dashboard" element={<MenteeDashboard />} />
+              <Route path="/mentee/chatting" element={<MenteeDashboard />} />
+              <Route path="/mentee/booking" element={<MenteeDashboard />} />
             </Route>
           </Routes>
         </Router>
