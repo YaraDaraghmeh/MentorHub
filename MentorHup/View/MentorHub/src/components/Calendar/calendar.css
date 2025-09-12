@@ -64,8 +64,12 @@
   background-color: #cfd8e6;
 }
 
+.rbc-toolbar-label {
+  margin: 4px;
+}
+
 /* ===== Light Mode ===== */
-.calendar-light .rbc-toolbar .rbc-btn-group button {
+.calendar-light .rbc-btn-group button {
   background: var(--accent);
   color: var(--secondary-light); /* gray-800 */
   border: 1px solid #d1d5db; /* gray-300 */
