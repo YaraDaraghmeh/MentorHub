@@ -1,9 +1,9 @@
-import DashboardMentor from "../../components/Dashboard/dashboard";
+import DashboardAdmin from "../../components/Dashboard/dashboardAdmin";
 
 const Dashboard = () => {
   return (
     <div className="flex-col w-full justify-start items-center overflow-hidden">
-      <DashboardMentor />
+      <DashboardAdmin />
     </div>
   );
 };

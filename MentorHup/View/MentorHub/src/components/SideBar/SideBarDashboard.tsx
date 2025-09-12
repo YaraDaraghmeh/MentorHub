@@ -166,7 +166,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
       {/* Mobile */}
       {isMobile && expended && (
         <div
-          className="fixed inset-0 bg-[#a4a2a2] bg-opacity-50 z-10"
+          className="fixed inset-0 bg-[#a4a2a2] !bg-opacity-50 z-10"
           onClick={() => setExpended(false)}
         />
       )}
