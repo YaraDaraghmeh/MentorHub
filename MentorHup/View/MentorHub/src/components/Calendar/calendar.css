@@ -1,0 +1,112 @@
+.rbc-toolbar button {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.calendar-light .rbc-month-view .rbc-day-bg,
+.calendar-light .rbc-month-view .rbc-row-bg + .rbc-row-bg,
+.calendar-light .rbc-time-content > * + * > *,
+.calendar-light .rbc-time-content > .rbc-timeslot-group,
+.calendar-light .rbc-header {
+  border-color: #d1d5db !important; /* gray-300 */
+}
+
+.rbc-day-slot .rbc-time-slot {
+  border: 0 !important;
+}
+.rbc-time-view .rbc-row {
+  min-height: auto !important;
+}
+
+/* ===== Dark Mode ===== */
+.calendar-dark .rbc-month-view .rbc-day-bg,
+.calendar-dark .rbc-month-view .rbc-row-bg + .rbc-row-bg,
+.calendar-dark .rbc-time-content > * + * > *,
+.calendar-dark .rbc-time-content > .rbc-timeslot-group,
+.calendar-dark .rbc-header {
+  border-color: #4b5563 !important;
+}
+
+.calendar-dark .rbc-month-view {
+  border-color: #4b5563 !important;
+}
+.calendar-dark .rbc-month-header,
+.rbc-header {
+  border-left: 1px solid #4b5563 !important;
+}
+.calendar-dark .rbc-time-header.rbc-overflowing {
+  border-right: #4b5563 !important;
+}
+.calendar-dark .rbc-timeslot-group {
+  border-bottom: 1px solid #4b5563 !important;
+}
+
+.calendar-dark .rbc-off-range-bg {
+  background-color: var(--System-Gray-300);
+  color: #4b5563;
+}
+.calendar-dark .rbc-time-view {
+  border-color: #4b5563 !important;
+}
+.calendar-dark .rbc-time-header-content {
+  border-color: #4b5563 !important;
+}
+.calendar-dark .rbc-time-content {
+  border-color: #4b5563 !important;
+}
+
+.calendar-dark .rbc-toolbar-label {
+  color: var(--secondary);
+}
+
+/* day */
+.calendar-dark .rbc-today {
+  background-color: #cfd8e6;
+}
+
+.rbc-toolbar-label {
+  margin: 4px;
+}
+
+/* ===== Light Mode ===== */
+.calendar-light .rbc-btn-group button {
+  background: var(--accent);
+  color: var(--secondary-light); /* gray-800 */
+  border: 1px solid #d1d5db; /* gray-300 */
+  padding: 4px 8px;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.calendar-light .rbc-toolbar-label {
+  color: var(--secondary-dark);
+}
+
+.calendar-light .rbc-toolbar .rbc-btn-group button:hover {
+  background: #f3f4f6;
+  color: var(--primary);
+}
+
+.calendar-light .rbc-toolbar .rbc-btn-group button.rbc-active {
+  background: var(--primary-rgba); /* blue-500 */
+  color: white;
+  border-color: oklch(60% 0.118 184.704);
+}
+
+/* ===== Dark Mode ===== */
+.calendar-dark .rbc-toolbar .rbc-btn-group button {
+  background: #56e39f;
+  color: var(--primary);
+  border: 1px solid var(--green-dark); /* gray-600 */
+}
+
+.calendar-dark .rbc-toolbar .rbc-btn-group button:hover {
+  background: var(--secondary-dark);
+  color: white;
+}
+
+.calendar-dark .rbc-toolbar .rbc-btn-group button.rbc-active {
+  background: var(--primary); /* blue-500 */
+  color: white;
+  border-color: oklch(60% 0.118 184.704);
+}
