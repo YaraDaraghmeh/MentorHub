@@ -1,36 +1,53 @@
+
 import Table from "./Table";
 import data from "./dataTable.json";
 import Eye from "./eyeicon";
 
+interface BookingData {
+  id: number;
+  name: string;
+  date: string;
+  duration: string;
+  status: string;
+  image: string;
+}
+
 const TableBooking = () => {
-  const colums = [
+  const columns = [
     {
+      id: "name",
       header: "Name Mentee",
-      accessor: "name",
-      render: (row: any) => {
-        return (
-          <div className="flex items-center gap-3 justify-start text-start">
-            <div className="w-12 h-12">
-              <img
-                src={row.image}
-                className="w-full h-full rounded-full"
-                alt="profile"
-              />
-            </div>
-            {row.name}
+      accessor: "name" as keyof BookingData,
+      render: (row: BookingData) => (
+        <div className="flex items-center gap-3 justify-start text-start">
+          <div className="w-12 h-12">
+            <img
+              src={row.image}
+              className="w-full h-full rounded-full"
+              alt="profile"
+            />
           </div>
-        );
-      },
+          {row.name}
+        </div>
+      ),
     },
-    { header: "Date & time", accessor: "date" },
-    // { header: "Topic", accessor: "topic" },
-    { header: "Duration", accessor: "duration" },
+    { 
+      id: "date",
+      header: "Date & time", 
+      accessor: "date" as keyof BookingData 
+    },
+    { 
+      id: "duration",
+      header: "Duration", 
+      accessor: "duration" as keyof BookingData 
+    },
     {
+      id: "status",
       header: "Status",
-      accessor: "status",
-      render: (row: any) => (
+      accessor: "status" as keyof BookingData,
+      render: (row: BookingData) => (
         <span
-          className={`font-sembold p-2 rounded-full text-white ${
+          className={`font-semibold p-2 rounded-full text-white ${
             row.status === "Confirmed"
               ? "bg-[var(--secondary-dark)]"
               : "bg-[var(--red-light)]"
@@ -41,11 +58,14 @@ const TableBooking = () => {
       ),
     },
     {
+      id: "actions",
       header: "Action",
-      accessor: "id",
-      render: () => (
+      render: (row: BookingData) => (
         <div className="flex justify-center items-center">
-          <Eye className="w-5 h-5 cursor-pointer" />
+          <Eye 
+            className="w-5 h-5 cursor-pointer" 
+            onClick={() => console.log('View details for:', row.id)}
+          />
         </div>
       ),
     },
@@ -53,7 +73,11 @@ const TableBooking = () => {
 
   return (
     <div className="py-7 w-full">
-      <Table titleTable="Booking" data={data} columns={colums} />
+      <Table<BookingData> 
+        titleTable="Booking" 
+        data={data} 
+        columns={columns} 
+      />
     </div>
   );
 };
