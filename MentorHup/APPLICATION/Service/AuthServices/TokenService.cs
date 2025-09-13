@@ -7,7 +7,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace MentorHup.APPLICATION.Service
+namespace MentorHup.APPLICATION.Service.AuthServices
 {
     public class TokenService : ITokenService
     {
@@ -24,7 +24,13 @@ namespace MentorHup.APPLICATION.Service
         {
             var authClaims = new List<Claim>
             {
+                // doesn't work
+                // new Claim(JwtRegisteredClaimNames.Sub, user.Id), // sub claim
+
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
+                // doesn't work
+                // new Claim("userId", user.Id), 
+
                 new Claim(ClaimTypes.Email, user.Email!)
             };
 

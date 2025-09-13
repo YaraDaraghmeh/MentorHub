@@ -1,7 +1,11 @@
 ﻿using MentorHup.APPLICATION.Dtos.Mentee;
-using MentorHup.APPLICATION.Service;
+using MentorHup.APPLICATION.Service.AuthServices;
+using MentorHup.APPLICATION.Service.Mentee;
+using MentorHup.APPLICATION.Service.Mentor;
+using MentorHup.Domain.Entities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Stripe.Billing;
 
 namespace MentorHup.APPLICATION.Controllers
 {
@@ -10,25 +14,46 @@ namespace MentorHup.APPLICATION.Controllers
     public class MenteesController : ControllerBase
     {
         private readonly IMenteeAuthService _menteeAuthService;
+        private readonly IMentorService _mentorService;
+        private readonly IMenteeService menteeService;
 
-        public MenteesController(IMenteeAuthService menteeAuthService)
+        public MenteesController(IMenteeAuthService menteeAuthService , IMentorService mentorService , IMenteeService menteeService)
         {
             _menteeAuthService = menteeAuthService;
+            _mentorService = mentorService;
+            this.menteeService = menteeService;
         }
 
         [HttpPost("register")]
         [AllowAnonymous]
-        [ProducesResponseType(typeof(MenteeResponse),StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(MenteeResponse),StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<MenteeRegisterResult>> Register([FromBody] MenteeRegisterRequest request)
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<MenteeRegisterResult>> Register([FromForm] MenteeRegisterRequest request)
         {
             var result = await _menteeAuthService.RegisterAsync(request);
 
             if (!result.IsSuccess)
-                return BadRequest(new { message = "User registration failed", errors = result.Errors });
+            {
+                if (result.Errors!.Contains("Email is already registered."))
+                    return Conflict(new { message = result.Errors });
 
-            return Ok(result.Mentee);
+                return BadRequest(new { message = result.Errors });
+            }
+            return StatusCode(StatusCodes.Status201Created, result.Mentee);
         }
+
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var success = await _menteeAuthService.ConfirmEmailAsync(userId, token);
+
+            if (!success)
+                return BadRequest(new { message = "Email confirmation failed." });
+
+            return Ok(new { message = "Email confirmed successfully." });
+        }
+
 
         [HttpPost("login")]
         [AllowAnonymous]
@@ -44,17 +69,19 @@ namespace MentorHup.APPLICATION.Controllers
             return Ok(result);
         }
 
-        [HttpGet("profile")]
+        [HttpPatch("edit")]
         [Authorize(Roles = "Mentee")]
-        [ProducesResponseType(StatusCodes.Status200OK)]   
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)] 
-        [ProducesResponseType(StatusCodes.Status403Forbidden)]
-        public IActionResult GetProfile()
+        public async Task<IActionResult> Edit([FromForm] MenteeUpdateRequest menteeUpdateRequest)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-            var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
+            var result = await menteeService.UpdateAsync(menteeUpdateRequest);
 
-            return Ok(new { UserId = userId, Email = email });
+            if(!result)
+                return BadRequest(new { message = "Failed to update mentee." });
+
+            return NoContent();
         }
+
+
+
     }
 }

@@ -1,11 +1,17 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
-using MentorHup.APPLICATION.Service;
+using MentorHup.APPLICATION.Service.AuthServices;
+using MentorHup.APPLICATION.Service.Booking;
+using MentorHup.APPLICATION.Service.Dashboard;
+using MentorHup.APPLICATION.Service.Mentee;
+using MentorHup.APPLICATION.Service.Mentor;
+using MentorHup.APPLICATION.Service.Message;
+using MentorHup.APPLICATION.Service.Review;
+using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
-using MentorHup.Domain.Entities;
-using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
@@ -36,7 +42,25 @@ namespace MentorHup.Extensions
                 .AddFluentValidationAutoValidation();
 
             services.AddScoped<IMenteeAuthService, MenteeAuthService>();
+            services.AddScoped<IMentorAuthService, MentorAuthService>();
             services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IMentorService, MentorService>();
+            services.AddScoped<IStripeService, StripeService>();
+            services.AddScoped<IBookingService, BookingService>();
+            services.AddScoped<IMessageService, MessageService>();
+            services.AddScoped<IReviewService, ReviewService>();
+            services.AddScoped<IMenteeService, MenteeService>();
+
+            services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddScoped<IWeeklyDashboardService, WeeklyDashboardService>();
+
+            // for reset password
+            services.Configure<DataProtectionTokenProviderOptions>(opt =>
+                opt.TokenLifespan = TimeSpan.FromMinutes(30)); // 30 min then it will expired
+
+
 
             services.AddSwaggerGen(c =>
             {
