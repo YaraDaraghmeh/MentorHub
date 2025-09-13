@@ -6,7 +6,7 @@ namespace MentorHup.APPLICATION.Service.Booking
 {
     public interface IBookingService
     {
-        Task<BookingSessionData> PrepareBookingForCheckoutAsync(CreateBookingDto dto);
+        Task<BookingSessionData> PrepareBookingForCheckoutAsync(CreateBookingDto dto, string appUserId);
         Task<ApiResponse<string>> CancelBookingAsync(int bookingId, string userId, string role);
         Task<PageResult<BookingOverviewDto>> GetBookingsForUserAsync(string appUserId,
             string role

@@ -68,9 +68,10 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
     }
 
 
-    public async Task<BookingSessionData> PrepareBookingForCheckoutAsync(CreateBookingDto dto)
+    public async Task<BookingSessionData> PrepareBookingForCheckoutAsync(CreateBookingDto dto, string appUserId)
     {
-        var mentee = await context.Mentees.FirstOrDefaultAsync(m => m.Id == dto.MenteeId);
+        var mentee = await context.Mentees
+        .FirstOrDefaultAsync(m => m.ApplicationUserId == appUserId);
         if (mentee == null) throw new ArgumentException("Mentee not found.");
 
         var availability = await context.MentorAvailabilities
@@ -84,7 +85,7 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
 
         return new BookingSessionData
         {
-            MenteeId = dto.MenteeId,
+            MenteeId = mentee.Id,
             MentorId = availability.MentorId,
             MentorAvailabilityId = dto.MentorAvailabilityId,
             Amount = availability.Mentor.Price,

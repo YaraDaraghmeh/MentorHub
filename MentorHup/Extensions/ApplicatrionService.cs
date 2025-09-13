@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Booking;
+using MentorHup.APPLICATION.Service.Dashboard;
 using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.APPLICATION.Service.Message;
@@ -52,6 +53,8 @@ namespace MentorHup.Extensions
             services.AddScoped<IMenteeService, MenteeService>();
 
             services.AddTransient<IEmailSender, EmailSender>();
+
+            services.AddScoped<IWeeklyDashboardService, WeeklyDashboardService>();
 
             // for reset password
             services.Configure<DataProtectionTokenProviderOptions>(opt =>

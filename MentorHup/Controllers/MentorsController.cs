@@ -120,6 +120,7 @@ namespace MentorHup.API.Controllers
         public async Task<IActionResult> GetDashboard()
         {
             var mentorId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(mentorId))
                 return Unauthorized(new { Success = false, Message = "Invalid user" });
 
