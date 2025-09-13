@@ -33,30 +33,12 @@ function App() {
             <Route
               element={<MainLayout isDark={isDark} toggleTheme={toggleTheme} />}
             >
-<<<<<<< HEAD
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutUsPage />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/contactUs" element={<ContactUs />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
-=======
-              <Route path="/" element={<HomePage  />} />
-              <Route path="/about" element={<AboutUsPage />} />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
-              <Route path="/contactUs" element={<ContactUs />} />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
->>>>>>> 11cad5a30d1941e2af42758d68c7f0ecac67bef2
               <Route path="/joinUs" element={<JoinUsPage />} />
             </Route>
           </Routes>
