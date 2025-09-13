@@ -16,6 +16,8 @@ import Dashboard from "./components/Dashboard/dashboard";
 import DashboardAd from "./Pages/AdminPages/Dashboard";
 import ChateUser from "./Pages/MentorPages/Chatting";
 import Booking from "./Pages/MentorPages/Booking";
+import  BrowseMentor from "./Pages/MenteePages/BrowseMonetor";
+import MenteeDashboard from "./Pages/MenteePages/BrowseMonetor";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -33,30 +35,12 @@ function App() {
             <Route
               element={<MainLayout isDark={isDark} toggleTheme={toggleTheme} />}
             >
-<<<<<<< HEAD
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutUsPage />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/contactUs" element={<ContactUs />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
-=======
-              <Route path="/" element={<HomePage  />} />
-              <Route path="/about" element={<AboutUsPage />} />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
-              <Route path="/contactUs" element={<ContactUs />} />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
->>>>>>> 11cad5a30d1941e2af42758d68c7f0ecac67bef2
               <Route path="/joinUs" element={<JoinUsPage />} />
             </Route>
           </Routes>
@@ -76,6 +60,14 @@ function App() {
               <Route path="/mentor/chatting" element={<ChateUser />} />
               <Route path="/mentor/booking" element={<Booking />} />
               <Route path="/admin/dashboard" element={<DashboardAd />} />
+            </Route>
+          </Routes>
+          <Routes>
+            <Route element={<BodySystem />}>
+              <Route path="/mentee/main" element={<BrowseMentor />} />
+              <Route path="/mentee/dashboard" element={<MenteeDashboard />} />
+              <Route path="/mentee/chatting" element={<MenteeDashboard />} />
+              <Route path="/mentee/booking" element={<MenteeDashboard />} />
             </Route>
           </Routes>
         </Router>

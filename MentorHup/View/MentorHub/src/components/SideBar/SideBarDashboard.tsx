@@ -10,7 +10,7 @@ import { AiOutlineLogin } from "react-icons/ai";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
-
+import { HiHome } from "react-icons/hi";
 interface profile {
   name: string;
   email: string;
@@ -47,12 +47,18 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
       { icon: HiChatAlt2, title: "Chatting", path: "/mentor/chatting" },
     ],
     mentee: [
+
+      {
+        icon: HiHome,
+        title: "Main",
+        path: "/mentee/main",
+      },
       {
         icon: RiDashboardHorizontalLine,
         title: "Dashboard",
         path: "/mentee/dashboard",
       },
-      { icon: IoPeople, title: "Mentors", path: "/mentee/dashboard" },
+      { icon: IoPeople, title: "Mentors", path: "/mentee/dashboard1" },
       { icon: HiMiniCalendar, title: "Booking", path: "/mentee/booking" },
       { icon: HiChatAlt2, title: "Chatting", path: "/mentee/chatting" },
     ],

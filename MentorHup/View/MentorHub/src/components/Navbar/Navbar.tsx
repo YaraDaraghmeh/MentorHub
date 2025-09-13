@@ -12,7 +12,6 @@ const Nav = () => {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
 
-  // ✅ use context instead of props
   const { isDark, toggle } = useTheme();
 
   const handleClick = () => {
