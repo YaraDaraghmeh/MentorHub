@@ -42,6 +42,21 @@ function App() {
               <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/contactUs" element={<ContactUs />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
+              <Route path="/" element={<HomePage  />} />
+              <Route path="/about" element={<AboutUsPage />} />
+              <Route
+                path="/browsMentor"
+                element={<PublicMentors />}
+              />
+              <Route
+                path="/browsMentor"
+                element={<PublicMentors />}
+              />
+              <Route path="/contactUs" element={<ContactUs />} />
+              <Route
+                path="/browsMentor"
+                element={<PublicMentors />}
+              />
               <Route path="/joinUs" element={<JoinUsPage />} />
             </Route>
           </Routes>

@@ -5,6 +5,15 @@ import data from "./dataUsers.json";
 import { useState } from "react";
 import ConfirmModal from "../Modal/ModalConfirm";
 
+interface UserData {
+  id: number;
+  name: string;
+  role: string;
+  email: string;
+  status: string;
+  image: string;
+}
+
 const TableUser = () => {
   const { isDark } = useTheme();
   const [showModal, setShowModal] = useState(false);
@@ -15,8 +24,9 @@ const TableUser = () => {
 
   const colums = [
     {
+      id: "name",
       header: "Name",
-      accessor: "name",
+      accessor: "name" as keyof UserData,
       render: (row: any) => {
         return (
           <div className="flex items-center gap-3 justify-start text-start">
@@ -33,13 +43,15 @@ const TableUser = () => {
       },
     },
     {
+      id: "role",
       header: "Role",
-      accessor: "role",
+      accessor: "role" as keyof UserData,
     },
-    { header: "Email", accessor: "email" },
+    { id: "email", header: "Email", accessor: "email" as keyof UserData },
     {
+      id: "status",
       header: "Active",
-      accessor: "status",
+      accessor: "status" as keyof UserData,
       render: (row: any) => (
         <>
           <button
@@ -66,8 +78,9 @@ const TableUser = () => {
       ),
     },
     {
+      id: "id",
       header: "Action",
-      accessor: "id",
+      accessor: "id" as keyof UserData,
       render: () => (
         <div className="flex justify-center items-center">
           <Eye className="w-5 h-5 cursor-pointer" />
