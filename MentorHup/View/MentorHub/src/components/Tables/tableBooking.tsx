@@ -23,7 +23,6 @@ const TableBooking = () => {
       },
     },
     { header: "Date & time", accessor: "date" },
-    // { header: "Topic", accessor: "topic" },
     { header: "Duration", accessor: "duration" },
     {
       header: "Status",

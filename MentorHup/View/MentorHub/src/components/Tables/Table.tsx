@@ -52,7 +52,7 @@ function Table<T extends { id: number | string }>({
         <thead
           className={`${
             isDark
-              ? "bg-[var(--primary-light)]"
+              ? "bg-[var(--green-medium)]"
               : "bg-[var(--primary-green-light)]"
           }`}
         >
@@ -77,7 +77,7 @@ function Table<T extends { id: number | string }>({
             isDark
               ? "text-[var(--primary-green-light)]"
               : "text-[var(--primary-rgba)]"
-          }}`}
+          }`}
         >
           {data.map((row) => (
             <tr
