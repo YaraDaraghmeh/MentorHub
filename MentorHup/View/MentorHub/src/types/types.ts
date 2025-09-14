@@ -1,3 +1,4 @@
+// src/types/types.ts
 export interface Mentor {
   id: number;
   name: string;
@@ -43,6 +44,31 @@ export interface Position {
   description: string;
   requirements: string[];
 }
-export interface JoinUsPageProps {
-  isDark?: boolean;
+
+export interface BookingModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mentor: Mentor | null;
+  isDark: boolean;
+}
+
+export interface MentorsGridProps {
+  mentors: Mentor[];
+  onBookSession?: (mentor: Mentor) => void;
+}
+
+export interface SessionType {
+  value: string;
+  label: string;
+  price: number;
+}
+
+export interface BookingData {
+  mentorId: number;
+  date: string;
+  time: string;
+  sessionType: string;
+  duration: string;
+  total: number;
+  notes: string;
 }

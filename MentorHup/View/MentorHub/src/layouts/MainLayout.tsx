@@ -3,17 +3,14 @@ import Nav from "../components/Navbar/Navbar";
 import Footer from "../components/Footer/Footer";
 //import SideBar from "../components/SideBar/SideBarDashboard";
 
-type listLayout = {
-  isDark: boolean;
-  toggleTheme: () => void;
-};
 
-const MainLayout = ({ isDark, toggleTheme }: listLayout) => {
+
+const MainLayout = () => {
   return (
     <>
-      <Nav isDark={isDark} toggleTheme={toggleTheme} />
+      <Nav />
       <Outlet />
-      <Footer isDark={isDark} />
+      <Footer />
     </>
   );
 };

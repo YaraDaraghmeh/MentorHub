@@ -17,7 +17,7 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
   const options = {
     chart: { id: "revenue-chart", toolbar: { show: false } },
     xaxis: {
-      categories: data.map((s) => s.label),
+      categories: data.map((item) => item.label),
       labels: {
         show: true,
         rotate: -45,
@@ -28,12 +28,12 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
         minHeight: undefined,
         maxHeight: 120,
         style: {
-          colors: data.map((s) =>
-            isDark ? "var(--secondary-light" : "var(--primary-dark)"
+          colors: data.map(() =>
+            isDark ? "var(--secondary-light)" : "var(--primary-dark)"
           ),
           fontSize: "14px",
           fontWeight: 400,
-          cssClass: "apexcharts-yaxis-label",
+          cssClass: "apexcharts-xaxis-label",
         },
         offsetX: 0,
         offsetY: 0,
@@ -43,11 +43,11 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
       labels: {
         show: true,
         showDuplicates: false,
-        align: "right",
+        align: "right" as const,
         minWidth: 0,
         maxWidth: 160,
         style: {
-          colors: [isDark ? "var(--secondary-light" : "var(--primary-dark)"],
+          colors: [isDark ? "var(--secondary-light)" : "var(--primary-dark)"],
           fontSize: "14px",
           fontWeight: 400,
           cssClass: "apexcharts-yaxis-label",
@@ -57,14 +57,14 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
         rotate: 0,
       },
     },
-    stroke: { curve: "smooth", width: 3 },
-    colors: [isDark ? "#56e39f" : "#1e874e"], // 475467
+    stroke: { curve: "smooth" as const, width: 3 },
+    colors: [isDark ? "#56e39f" : "#1e874e"],
     markers: { size: 5 },
     tooltip: { enabled: true },
     grid: { show: false },
   };
 
-  const series = [{ name: "Value", data: data.map((s) => s.value) }];
+  const series = [{ name: "Value", data: data.map((item) => item.value) }];
 
   return (
     <Chart

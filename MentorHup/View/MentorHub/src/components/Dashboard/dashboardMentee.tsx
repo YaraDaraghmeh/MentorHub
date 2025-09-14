@@ -1,18 +1,17 @@
 import { BsFillCalendar2CheckFill, BsFillBookmarkFill } from "react-icons/bs";
 import { useTheme } from "../../Context/ThemeContext";
-import CardDash from "../../components/Cards/CardDashboard";
+import CardDash from "../Cards/CardDashboard";
 import { MdOutlineSchedule, MdOutlineCheckCircle } from "react-icons/md";
 import { FaUserTie, FaClock } from "react-icons/fa";
 import { BiTask } from "react-icons/bi";
-import BarChartDash from "../../components/Charts/BarChart";
-import Table from "../../components/Tables/Table";
-import data from "../../components/Tables/dataTable.json";
-import Eye from "../../components/Tables/eyeicon";
-import { useNavigate } from "react-router-dom";
+import ApxChartDash from "../Charts/ApexChart";
+import BarChartDash from "../Charts/BarChart";
+import Table from "../Tables/Table";
+import data from "../Tables/dataTable.json";
+import Eye from "../Tables/eyeicon";
 
 const DashboardMentee = () => {
   const { isDark } = useTheme();
-  const navigate = useNavigate();
 
   const state = [
     {
@@ -41,7 +40,7 @@ const DashboardMentee = () => {
     },
   ];
 
-
+  // Progress over weeks - mentee's learning journey
   const learningProgress = [
     { label: "Week 1", value: 2 },
     { label: "Week 2", value: 4 },
@@ -51,7 +50,13 @@ const DashboardMentee = () => {
     { label: "Week 6", value: 6 },
   ];
 
- 
+  // Session types distribution
+  const sessionTypes = [
+    { label: "Technical Skills", value: 35 },
+    { label: "Career Guidance", value: 25 },
+    { label: "Project Review", value: 20 },
+    { label: "Interview Prep", value: 20 },
+  ];
 
   const columns = [
     {
@@ -103,14 +108,13 @@ const DashboardMentee = () => {
     },
   ];
 
-  const handleNavigation = (path: string) => {
-    navigate(path);
-  };
-
   return (
     <>
       {/* Welcome Section */}
       <div className="mb-6">
+        <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+          Welcome back to your learning journey! 🚀
+        </h1>
         <p className={`mt-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
           Track your progress and manage your mentoring sessions
         </p>
@@ -131,48 +135,37 @@ const DashboardMentee = () => {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
-        <button 
-          onClick={() => handleNavigation('/mentee/main')}
-          className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg transition-colors"
-        >
+        <button className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg transition-colors">
           <MdOutlineSchedule className="w-6 h-6 mx-auto mb-2" />
           <span className="text-sm">Book Session</span>
         </button>
-        <button 
-          onClick={() => handleNavigation('/mentee/goals')}
-          className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg transition-colors"
-        >
+        <button className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg transition-colors">
           <BiTask className="w-6 h-6 mx-auto mb-2" />
           <span className="text-sm">View Goals</span>
         </button>
-        <button 
-          onClick={() => handleNavigation('/mentee/resources')}
-          className="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-lg transition-colors"
-        >
+        <button className="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-lg transition-colors">
           <BsFillBookmarkFill className="w-6 h-6 mx-auto mb-2" />
           <span className="text-sm">Resources</span>
         </button>
-        <button 
-          onClick={() => handleNavigation('/mentee/main')}
-          className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-lg transition-colors"
-        >
+        <button className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-lg transition-colors">
           <FaClock className="w-6 h-6 mx-auto mb-2" />
           <span className="text-sm">Schedule</span>
         </button>
       </div>
 
       {/*Charts  */}
-      <div className="py-6">
-        <div className="flex justify-center">
-          <div className="w-full max-w-4xl">
-            <BarChartDash data={learningProgress} />
-          </div>
+      <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6 py-6">
+        <div className="col-span-2">
+          <BarChartDash data={learningProgress} />
+        </div>
+        <div className="col-span-1">
+          <ApxChartDash data={sessionTypes} />
         </div>
       </div>
 
-      {/* Table Sessions */}
+      {/* Table Booking */}
       <div className="py-7 w-full">
-        <Table titleTable="My Booked Sessions" data={data} columns={columns} />
+        <Table titleTable="My Sessions" data={data} columns={columns} />
       </div>
     </>
   );

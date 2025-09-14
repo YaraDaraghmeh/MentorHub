@@ -67,7 +67,7 @@ const CalendarBook = () => {
   }, []);
 
   const [currentDate, setCurrentDate] = useState(new Date());
-  const [view, setView] = useState<Views>(Views.MONTH);
+  const [view, setView] = useState< Views >(Views.MONTH);
 
   return (
     <div

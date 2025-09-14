@@ -45,7 +45,7 @@ const DashboardAdmin = () => {
     { label: "Week 3", value: 6 },
     { label: "Week 4", value: 8 },
     { label: "Week 5", value: 5 },
-    { label: "Week 5", value: 3 },
+    { label: "Week 6", value: 3 },
   ];
 
   const users = [
@@ -53,10 +53,10 @@ const DashboardAdmin = () => {
     { label: "Mentees", value: 44 },
   ];
 
-  const colums = [
+  const columns = [
     {
       header: "Name Mentee",
-      accessor: "name",
+      accessor: "name" as const,
       render: (row: any) => {
         return (
           <div className="flex items-center gap-3 justify-start text-start">
@@ -72,14 +72,14 @@ const DashboardAdmin = () => {
         );
       },
     },
-    { header: "Date & time", accessor: "date" },
-    { header: "Duration", accessor: "duration" },
+    { header: "Date & time", accessor: "date" as const },
+    { header: "Duration", accessor: "duration" as const },
     {
       header: "Status",
-      accessor: "status",
+      accessor: "status" as const,
       render: (row: any) => (
         <span
-          className={`font-sembold p-2 rounded-full text-white ${
+          className={`font-semibold p-2 rounded-full text-white ${
             row.status === "Confirmed"
               ? "bg-[var(--secondary-dark)]"
               : "bg-[var(--red-light)]"
@@ -91,7 +91,7 @@ const DashboardAdmin = () => {
     },
     {
       header: "Action",
-      accessor: "id",
+      accessor: "id" as const,
       render: () => (
         <div className="flex justify-center items-center">
           <Eye className="w-5 h-5 cursor-pointer" />
@@ -127,7 +127,7 @@ const DashboardAdmin = () => {
 
       {/* Table Booking */}
       <div className="py-7 w-full">
-        <Table titleTable="Booking" data={data} columns={colums} />
+        <Table titleTable="Booking" data={data} columns={columns} />
       </div>
     </>
   );
