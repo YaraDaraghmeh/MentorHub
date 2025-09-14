@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+#root {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 100vh;
+}
+
+:root {
+  --primary: #06171c;
+  --primary-rgba: #071b21; /* background */
+
+  --primary-light: #1b2a30;
+  --primary-dark: #000e12;
+
+  --secondary-light: #f4f9f9;
+  --secondary: #56e39f;
+  --secondary-dark: #27b467;
+
+  --accent: #00a896;
+
+  --gray-dark: #4c515a;
+  --gray-light: #bfbfbf;
+  --gray-lighter: #eaecf0;
+  --gray-medium: #475467;
+
+  --green-dark: #1e874e;
+  --green-medium: #2c313a;
+  --red-light: #cd1635;
+
+  --white: #fff;
+  --System-Gray-200: #eae9ed;
+  --System-Gray-300: #d0d5dd;
+  --System-Gray-400: #98a2b3;
+  --System-Gray-500: #878199;
+  --System-Gray-700: #374151;
+
+  --black: #000;
+  --Philippine: #8c8c8c;
+
+  --blue-medium: #174291;
+
+  --primary-green-light: #96fbf1;
+  --aqua-green: #0adec9;
+  --dark-desaturated-cyan-green: #2a5a55;
+
+  --teal-950: #0a272f;
+  --cyan-800: #1c6b82;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", sans-serif;
+  text-align: center;
+  box-sizing: border-box;
+}
+
+input:focus {
+  outline: none;
+}
+
+select {
+  height: 52px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 2px solid var(--System-Gray-200);
+  background: var(--white);
+}
+
+input[type="date"]:invalid::-webkit-datetime-edit {
+  color: var(--System-Gray-200);
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  position: absolute;
+  right: 10px;
+}
+
+input[type="date"] {
+  background: url("calendar-icon.svg") no-repeat right 10px center;
+  background-size: 20px;
+}
+
+.search:focus {
+  border: 2px solid blue; /* Add a custom border */
+  box-shadow: 0 0 5px rgba(0, 0, 255, 0.5); /* Add a subtle shadow */
+  outline: none;
+}
+
+/* Thin scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 0px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background-color: var(--secondary-light);
+  border-radius: 9999px;
+}
+
+.bg-dark {
+  background-color: var(--primary);
+}
+
+.text-dark {
+  color: var(--secondary-light);
+}
+
+button {
+  cursor: pointer;
+}
