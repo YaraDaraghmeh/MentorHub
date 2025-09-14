@@ -1,0 +1,15 @@
+footer {
+  border-top: 1px solid var(--primary-light);
+  font-size: 14px;
+  height: 233px;
+}
+
+footer div div {
+  width: 20rem;
+}
+
+footer div .copyright {
+  color: var(--secondary-dark);
+  position: relative;
+  font-size: 20px;
+}

@@ -3,6 +3,8 @@ using FluentValidation.AspNetCore;
 using MentorHup.APPLICATION.Service.Admin;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Booking;
+using MentorHup.APPLICATION.Service.Conversation;
+using MentorHup.APPLICATION.Service.Dashboard;
 using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.APPLICATION.Service.Message;
@@ -21,7 +23,7 @@ using System.Text;
 
 namespace MentorHup.Extensions
 {
-    public static partial class ApplicatrionService
+    public static partial class ApplicationService
     {
 
         public static void ConfigureCors(this IServiceCollection services)
@@ -54,8 +56,9 @@ namespace MentorHup.Extensions
             services.AddScoped<IMenteeService, MenteeService>();
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IProfileService, ProfileService>();
-
+            services.AddScoped<IConversationService, ConversationService>();
             services.AddTransient<IEmailSender, EmailSender>();
+            services.AddScoped<IWeeklyDashboardService, WeeklyDashboardService>();
 
             // for reset password
             services.Configure<DataProtectionTokenProviderOptions>(opt =>

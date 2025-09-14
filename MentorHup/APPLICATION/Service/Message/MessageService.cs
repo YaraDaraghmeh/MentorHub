@@ -25,6 +25,14 @@ public class MessageService : IMessageService
         _context.Messages.Add(message);
         await _context.SaveChangesAsync();
 
+        var sender = await _context.Users
+        .Include(u => u.Mentor)
+        .Include(u => u.Mentee)
+        .FirstOrDefaultAsync(u => u.Id == senderId);
+
+        string senderName = sender?.Mentor?.Name ?? sender?.Mentee?.Name ?? "Admin";
+        string? senderAvatar = sender?.Mentor?.ImageUrl ?? sender?.Mentee?.ImageUrl;
+
         return new MessageDto
         {
             Id = message.Id,
@@ -32,7 +40,10 @@ public class MessageService : IMessageService
             SenderId = message.SenderId,
             ReceiverId = message.ReceiverId,
             SentAt = message.SentAt,
-            IsRead = message.IsRead
+            IsRead = message.IsRead,
+            SenderName = senderName,
+            SenderAvatar = senderAvatar
+
         };
     }
 
@@ -41,6 +52,8 @@ public class MessageService : IMessageService
         var messages =  await _context.Messages
             .Where(m => (m.SenderId == userId && m.ReceiverId == otherUserId) ||
                         (m.SenderId == otherUserId && m.ReceiverId == userId))
+            .Include(m => m.Sender.Mentor)   
+            .Include(m => m.Sender.Mentee)
             .OrderBy(m => m.SentAt)
             .ToListAsync();
 
@@ -50,14 +63,22 @@ public class MessageService : IMessageService
         }
         await _context.SaveChangesAsync();
 
-        return messages.Select(m => new MessageDto
+        return messages.Select(m =>
         {
-            Id = m.Id,
-            Content = m.Content,
-            SenderId = m.SenderId,
-            ReceiverId = m.ReceiverId,
-            SentAt = m.SentAt,
-            IsRead = m.IsRead
+            string senderName = m.Sender.Mentor?.Name ?? m.Sender.Mentee?.Name ?? "Admin";
+            string? senderAvatar = m.Sender.Mentor?.ImageUrl ?? m.Sender.Mentee?.ImageUrl;
+
+            return new MessageDto
+            {
+                Id = m.Id,
+                Content = m.Content,
+                SenderId = m.SenderId,
+                ReceiverId = m.ReceiverId,
+                SentAt = m.SentAt,
+                IsRead = m.IsRead,
+                SenderName = senderName,
+                SenderAvatar = senderAvatar
+            };
         }).ToList();
     }
 
@@ -71,5 +92,7 @@ public class MessageService : IMessageService
         }
         return message;
     }
+
+
 
 }

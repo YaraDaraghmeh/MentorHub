@@ -7,12 +7,10 @@ namespace MentorHup.APPLICATION.Validators.Mentor
     {
         public MentorUpdateRequestValidator()
         {
-            RuleFor(x => x.Name)
-                .NotEmpty().WithMessage("Name is required")
+            RuleFor(x => x.Name)           
                 .Length(2, 100).WithMessage("Name must be between 2 and 100 characters");
 
             RuleFor(x => x.Description)
-                .NotEmpty().WithMessage("Description is required")
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters");
 
 
@@ -22,11 +20,8 @@ namespace MentorHup.APPLICATION.Validators.Mentor
             RuleFor(x => x.Price)
                 .GreaterThanOrEqualTo(0).WithMessage("Price must be positive ");
 
-            RuleFor(x => x.SkillIds)
-                .NotEmpty().WithMessage("At least one skill is required");
 
             RuleFor(x => x.Field)
-                .NotEmpty().WithMessage("Field is required")
                 .MaximumLength(100).WithMessage("Field must not exceed 100 characters");
 
 
@@ -49,7 +44,6 @@ namespace MentorHup.APPLICATION.Validators.Mentor
                 });
 
             RuleFor(x => x.StripeAccountId)
-                .NotEmpty().WithMessage("StripeAccountId is required")
                 .MaximumLength(100).WithMessage("StripeAccountId must not exceed 100 characters");
         }
     }

@@ -25,7 +25,11 @@ namespace MentorHup.Controllers
         {
             try
             {
-                var bookingEntity = await bookingService.PrepareBookingForCheckoutAsync(dto);
+                var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (string.IsNullOrEmpty(appUserId))
+                    return Unauthorized(new { Success = false, Message = "Invalid user" });
+
+                var bookingEntity = await bookingService.PrepareBookingForCheckoutAsync(dto, appUserId);
 
                 var sessionUrl = await stripeService.CreateCheckoutSessionAsync(bookingEntity);
 
@@ -63,6 +67,7 @@ namespace MentorHup.Controllers
         public async Task<IActionResult> GetMyBookings([FromQuery]PaginationBookingDto dto)
         {
             var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (string.IsNullOrEmpty(appUserId))
                 return Unauthorized(new { Success = false, Message = "Invalid user" });
 
