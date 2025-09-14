@@ -58,7 +58,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             var user = new ApplicationUser
             {
                 UserName = request.Name,
-                Email = request.Email
+                Email = request.Email,
             };
 
 
@@ -182,8 +182,40 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 .Include(u => u.Mentee)
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
+            if (user == null)
             {
+                return new MenteeLoginResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Invalid email or password" }
+                };
+            }
+
+            // تحقق من القفل
+            if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow)
+            {
+                return new MenteeLoginResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Your account is blocked. Please contact admin." }
+                };
+            }
+
+            if (!await _userManager.CheckPasswordAsync(user, request.Password))
+            {
+                if (user.LockoutEnabled)
+                {
+                    await _userManager.AccessFailedAsync(user);
+                    if (await _userManager.IsLockedOutAsync(user))
+                    {
+                        return new MenteeLoginResult
+                        {
+                            IsSuccess = false,
+                            Errors = new[] { "Your account is blocked due to multiple failed login attempts." }
+                        };
+                    }
+                }
+
                 return new MenteeLoginResult
                 {
                     IsSuccess = false,
@@ -200,6 +232,10 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 };
             }
 
+            // when login successfully, reset access faild count to 0
+            if (user.LockoutEnabled)
+                await _userManager.ResetAccessFailedCountAsync(user);
+
             var token = await _tokenService.CreateTokenAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
 
@@ -211,8 +247,9 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Id = user.Mentee!.Id,
                     Name = user.Mentee.Name,
                     Gender = user.Mentee.Gender,
+                    ImageLink = user.Mentee.ImageUrl,
                     Email = user.Email!,
-                    Roles = roles.ToList() ,
+                    Roles = roles.ToList(),
                     AccessToken = token,
                     Expires = DateTime.UtcNow.AddHours(3)
                 }

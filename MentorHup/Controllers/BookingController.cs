@@ -68,8 +68,6 @@ namespace MentorHup.Controllers
         {
             var appUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-
-
             if (string.IsNullOrEmpty(appUserId))
                 return Unauthorized(new { Success = false, Message = "Invalid user" });
 

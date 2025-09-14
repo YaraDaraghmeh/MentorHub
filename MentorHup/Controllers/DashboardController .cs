@@ -1,4 +1,5 @@
-﻿using MentorHup.APPLICATION.DTOs.Booking;
+﻿using MentorHup.APPLICATION.Dtos.Mentee;
+using MentorHup.APPLICATION.DTOs.Booking;
 using MentorHup.APPLICATION.Service.Dashboard;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,9 @@ public class DashboardController : ControllerBase
 
     [HttpGet("weekly-bookings")]
     [Authorize(Roles = "Admin,Mentor,Mentee")]
+    [ProducesResponseType(typeof(List<WeeklyBookingDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<ActionResult<List<WeeklyBookingDto>>> GetWeeklyBookings([FromQuery] int weeks = 8)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);

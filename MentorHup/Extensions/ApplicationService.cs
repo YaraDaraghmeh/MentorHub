@@ -1,11 +1,14 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using MentorHup.APPLICATION.Service.Admin;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Booking;
+using MentorHup.APPLICATION.Service.Conversation;
 using MentorHup.APPLICATION.Service.Dashboard;
 using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.APPLICATION.Service.Message;
+using MentorHup.APPLICATION.Service.Profile;
 using MentorHup.APPLICATION.Service.Review;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
@@ -20,7 +23,7 @@ using System.Text;
 
 namespace MentorHup.Extensions
 {
-    public static partial class ApplicatrionService
+    public static partial class ApplicationService
     {
 
         public static void ConfigureCors(this IServiceCollection services)
@@ -51,9 +54,10 @@ namespace MentorHup.Extensions
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IMenteeService, MenteeService>();
-
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IProfileService, ProfileService>();
+            services.AddScoped<IConversationService, ConversationService>();
             services.AddTransient<IEmailSender, EmailSender>();
-
             services.AddScoped<IWeeklyDashboardService, WeeklyDashboardService>();
 
             // for reset password
@@ -78,26 +82,23 @@ namespace MentorHup.Extensions
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header,
-            },
-            new List<string>()
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
             });
-
-
-
 
         }
 

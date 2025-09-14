@@ -3,7 +3,6 @@ using MentorHup.Domain.Entities;
 using MentorHup.Exceptions;
 using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
-using MentorHup.Infrastructure.Mapping;
 using MentorHup.Infrastructure.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -34,6 +33,11 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequiredLength = 8;
 
     options.SignIn.RequireConfirmedEmail = true; // Must confirm his/her email after regestration before login
+
+
+    options.Lockout.AllowedForNewUsers = true; // activate blocking
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(365 * 100); // lifetime blocking
+    options.Lockout.MaxFailedAccessAttempts = 5; // max number attempts logining into account before default blocking
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();

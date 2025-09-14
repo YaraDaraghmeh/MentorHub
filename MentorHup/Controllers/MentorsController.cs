@@ -82,7 +82,7 @@ namespace MentorHup.API.Controllers
         }
 
         [HttpGet()]
-        [Authorize(Roles = "Mentee,Admin")]
+        [Authorize(Roles = "Mentee")]
         [ProducesResponseType(typeof(List<MentorOverviewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] PaginationDto dto)

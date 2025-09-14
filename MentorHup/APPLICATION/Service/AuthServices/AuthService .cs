@@ -39,8 +39,52 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     .Include(u => u.Mentor)
                     .FirstOrDefaultAsync(u => u.Email == request.Email);
 
-                if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
-                    return null;
+                if (user == null)
+                    return new LoginResponse
+                    {
+                        IsSuccess = false,
+                        Errors = new[] { "Invalid email or password." }
+                    };
+
+                // check for blocking
+                if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow)
+                    return new LoginResponse
+                    {
+                        IsSuccess = false,
+                        Errors = new[] { "Your account is blocked. Please contact admin." }
+                    };
+
+                if (!await _userManager.CheckPasswordAsync(user, request.Password))
+                {
+                    if (user.LockoutEnabled)
+                    {
+                        await _userManager.AccessFailedAsync(user);
+                        if (await _userManager.IsLockedOutAsync(user))
+                            return new LoginResponse
+                            {
+                                IsSuccess = false,
+                                Errors = new[] { "Your account is blocked due to multiple failed login attempts." }
+                            };
+                    }
+
+                    return new LoginResponse
+                    {
+                        IsSuccess = false,
+                        Errors = new[] { "Invalid email or password." }
+                    };
+                }
+              
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                    return new LoginResponse
+                    {
+                        IsSuccess = false,
+                        Errors = new[] { "Please confirm your email before logging in." }
+                    };
+
+                // when login successfully, reset access faild count to 0
+                if (user.LockoutEnabled)
+                    await _userManager.ResetAccessFailedCountAsync(user);
+
 
                 var accessToken = await _tokenService.CreateTokenAsync(user);
 

@@ -2,7 +2,6 @@
 using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace MentorHup.Infrastructure.Mapping
 {
