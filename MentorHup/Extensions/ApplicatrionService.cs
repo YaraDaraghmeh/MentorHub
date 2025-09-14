@@ -2,6 +2,7 @@
 using FluentValidation.AspNetCore;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Booking;
+using MentorHup.APPLICATION.Service.Conversation;
 using MentorHup.APPLICATION.Service.Dashboard;
 using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
@@ -51,6 +52,7 @@ namespace MentorHup.Extensions
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IMenteeService, MenteeService>();
+            services.AddScoped<IConversationService, ConversationService>();
 
             services.AddTransient<IEmailSender, EmailSender>();
 

@@ -77,6 +77,7 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
         var availability = await context.MentorAvailabilities
             .Include(a => a.Mentor)
             .FirstOrDefaultAsync(ma => ma.Id == dto.MentorAvailabilityId);
+
         if (availability == null) throw new ArgumentException("Mentor availability not found.");
 
         var isAlreadyBooked = await context.Bookings

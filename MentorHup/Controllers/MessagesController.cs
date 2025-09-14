@@ -1,4 +1,5 @@
 ﻿using MentorHup.APPLICATION.DTOs.DTOs;
+using MentorHup.APPLICATION.Service.Conversation;
 using MentorHup.APPLICATION.Service.Message;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -7,14 +8,9 @@ using System.Security.Claims;
 [ApiController]
 [Route("api/messages")]
 [Authorize(Roles = "Mentor,Mentee,Admin")]
-public class MessagesController : ControllerBase
+public class MessagesController(IConversationService _conversationService , IMessageService _messageService) : ControllerBase
 {
-    private readonly IMessageService _messageService;
-
-    public MessagesController(IMessageService messageService)
-    {
-        _messageService = messageService;
-    }
+    
 
     [HttpGet("{otherUserId}")]
     [ProducesResponseType(typeof(IEnumerable<MessageDto>), 200)]
@@ -41,5 +37,18 @@ public class MessagesController : ControllerBase
         var message = await _messageService.SendMessageAsync(senderId, dto);
 
         return Ok(message);
+    }
+
+    [HttpGet("conversations")]
+    public async Task<IActionResult> GetConversations()
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (userId == null)
+            return Unauthorized();
+
+        var conversations = await _conversationService.GetConversationsListAsync(userId);
+
+        return Ok(conversations);
     }
 }
