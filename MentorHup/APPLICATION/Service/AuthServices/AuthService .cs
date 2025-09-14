@@ -139,7 +139,11 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
             public async Task<ResetPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request)
             {
-                var user = await _userManager.FindByEmailAsync(request.Email);
+
+                var user = await _userManager.Users
+                .IgnoreQueryFilters() // because of apply query filter in ApplicationDbContext line 124 (to ignore soft deleted users)
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+
                 if (user == null)
                     return new ResetPasswordResponse { Success = false, Message = "User not found." };
 
@@ -148,39 +152,39 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 var httpRequest = httpContextAccessor.HttpContext.Request;
                 var resetUrl = $"{httpRequest.Scheme}://{httpRequest.Host}/api/auth/reset-password?email={request.Email}&token={encodedToken}";
 
-            var html = $@"
-            <!DOCTYPE html>
-            <html>
-            <head>
-              <meta charset='utf-8' />
-              <title>Reset your MentorHub password</title>
-            </head>
-            <body style='font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;'>
-              <div style='max-width:600px;margin:0 auto;background:#fff;padding:24px;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.06);'>
-                <h2 style='color:#111827'>Reset your MentorHub password</h2>
-                <p style='color:#374151'>Hi {System.Net.WebUtility.HtmlEncode(user.UserName)},</p>
-                <p style='color:#374151'>
-                  We received a request to reset your password. Click the button below to choose a new password.
-                </p>
-                <p style='text-align:center;margin:28px 0;'>
-                  <a href='{resetUrl}' style='display:inline-block;padding:12px 22px;background:#4f46e5;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;'>
-                    Reset password
-                  </a>
-                </p>
-                <p style='color:#374151'>
-                  This password reset link is valid for <strong>30 minutes</strong> and can only be used <strong>once</strong>.
-                </p>
-                <p style='color:#374151'>
-                  If you didn't request a password reset, you can ignore this email — your password will stay the same.
-                </p>
-                <hr style='margin:20px 0;border:none;border-top:1px solid #e6e9ee' />
-                <p style='font-size:12px;color:#9ca3af'>&copy; {DateTime.UtcNow.Year} MentorHub</p>
-              </div>
-            </body>
-            </html>";
+                var html = $@"
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <meta charset='utf-8' />
+                  <title>Reset your MentorHub password</title>
+                </head>
+                <body style='font-family: Arial, sans-serif; background:#f4f6f8; padding:20px;'>
+                  <div style='max-width:600px;margin:0 auto;background:#fff;padding:24px;border-radius:8px;box-shadow:0 2px 12px rgba(0,0,0,0.06);'>
+                    <h2 style='color:#111827'>Reset your MentorHub password</h2>
+                    <p style='color:#374151'>Hi {System.Net.WebUtility.HtmlEncode(user.UserName)},</p>
+                    <p style='color:#374151'>
+                      We received a request to reset your password. Click the button below to choose a new password.
+                    </p>
+                    <p style='text-align:center;margin:28px 0;'>
+                      <a href='{resetUrl}' style='display:inline-block;padding:12px 22px;background:#4f46e5;color:#fff;text-decoration:none;border-radius:6px;font-weight:600;'>
+                        Reset password
+                      </a>
+                    </p>
+                    <p style='color:#374151'>
+                      This password reset link is valid for <strong>30 minutes</strong> and can only be used <strong>once</strong>.
+                    </p>
+                    <p style='color:#374151'>
+                      If you didn't request a password reset, you can ignore this email — your password will stay the same.
+                    </p>
+                    <hr style='margin:20px 0;border:none;border-top:1px solid #e6e9ee' />
+                    <p style='font-size:12px;color:#9ca3af'>&copy; {DateTime.UtcNow.Year} MentorHub</p>
+                  </div>
+                </body>
+                </html>";
 
 
-            await emailSender.SendEmailAsync(request.Email, "Reset your MentorHub password", html);
+                await emailSender.SendEmailAsync(request.Email, "Reset your MentorHub password", html);
 
                 return new ResetPasswordResponse { Success = true, Message = "Password reset link sent to email." };
             }
@@ -188,7 +192,10 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
             public async Task<ResetPasswordResponse> ResetPasswordAsync(ResetPasswordRequest request)
             {
-                var user = await _userManager.FindByEmailAsync(request.Email);
+                var user = await _userManager.Users
+                .IgnoreQueryFilters() // because of apply query filter in ApplicationDbContext line 124 (to ignore soft deleted users)
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == request.Email.ToLower());
+                
                 if (user == null)
                 {
                     return new ResetPasswordResponse { Success = false, Message = "User not found." };
