@@ -14,10 +14,7 @@ interface Testimonial {
 interface TestimonialCardProps {
   testimonial: Testimonial;
   isActive: boolean;
-  
 }
-
-
 
 const testimonials: Testimonial[] = [
   {
@@ -67,11 +64,12 @@ const testimonials: Testimonial[] = [
   },
 ];
 
-const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive }) => {
+const TestimonialCard: React.FC<TestimonialCardProps> = ({
+  testimonial,
+  isActive,
+}) => {
   const { isDark } = useTheme();
-  const cardBgClass = isDark
-    ? "border-gray-600"
-    : "border-gray-200";
+  const cardBgClass = isDark ? "border-gray-600" : "border-gray-200";
 
   const textClass = isDark ? "text-gray-200" : "text-gray-800";
 
@@ -79,7 +77,9 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive
     return Array.from({ length: 5 }, (_, i) => (
       <span
         key={i}
-        className={`text-2xl ${i < rating ? "text-yellow-400" : "text-gray-400"}`}
+        className={`text-2xl ${
+          i < rating ? "text-yellow-400" : "text-gray-400"
+        }`}
       >
         {i < rating ? "★" : "☆"}
       </span>
@@ -92,11 +92,13 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive
         isActive ? "opacity-100 scale-100" : "opacity-40 scale-90"
       }`}
       style={{
-        backgroundColor: isDark ? "#06171c" : "#96FBF1"
+        backgroundColor: isDark ? "#06171c" : "#96FBF1",
       }}
     >
       <div className="flex flex-col h-full">
-        <div className="mb-6 flex justify-start">{renderStars(testimonial.rating)}</div>
+        <div className="mb-6 flex justify-start">
+          {renderStars(testimonial.rating)}
+        </div>
 
         <p className={`${textClass} text-lg mb-6 flex-grow italic`}>
           "{testimonial.content}"
@@ -110,7 +112,11 @@ const TestimonialCard: React.FC<TestimonialCardProps> = ({ testimonial, isActive
           />
           <div>
             <h4 className={`${textClass} font-bold`}>{testimonial.author}</h4>
-            <p className={`${isDark ? "text-gray-400" : "text-gray-600"} text-sm`}>
+            <p
+              className={`${
+                isDark ? "text-gray-400" : "text-gray-600"
+              } text-sm`}
+            >
               {testimonial.position}
             </p>
           </div>
@@ -161,10 +167,9 @@ const TestimonialsSection: React.FC = () => {
 
   return (
     <section
-      className="py-16 transition-colors duration-300"
-      style={{
-        backgroundColor: isDark ? "#06171c" : "#96fbf1"
-      }}
+      className={`py-16 transition-colors duration-300 ${
+        isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--primary-green-light)]"
+      }`}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -183,16 +188,19 @@ const TestimonialsSection: React.FC = () => {
           </p>
         </div>
 
-      
         <div className="hidden md:block relative max-w-5xl mx-auto">
           <div className="overflow-hidden">
-            <div className="flex transition-all duration-500" style={{ transform: `translateX(-${activeIndex * 100}%)` }}>
+            <div
+              className="flex transition-all duration-500"
+              style={{ transform: `translateX(-${activeIndex * 100}%)` }}
+            >
               {testimonials.map((testimonial, index) => (
                 <div
                   key={testimonial.id}
                   className="w-full flex-shrink-0 flex justify-center"
                 >
-                  <div className="w-full max-w-2xl transition-all duration-500"
+                  <div
+                    className="w-full max-w-2xl transition-all duration-500"
                     style={{
                       opacity: index === activeIndex ? 1 : 0.7,
                       scale: index === activeIndex ? 1 : 0.95,
@@ -201,7 +209,6 @@ const TestimonialsSection: React.FC = () => {
                     <TestimonialCard
                       testimonial={testimonial}
                       isActive={index === activeIndex}
-                      
                     />
                   </div>
                 </div>
@@ -214,7 +221,7 @@ const TestimonialsSection: React.FC = () => {
             className="absolute top-1/2 left-0 -translate-y-1/2 -translate-x-6 md:-translate-x-12 flex items-center justify-center w-10 h-10 rounded-full shadow-lg text-2xl z-10 transition-all duration-300 hover:scale-110"
             style={{
               backgroundColor: isDark ? "#1a2332" : "#ffffff",
-              color: isDark ? "#ffffff" : "#0a1419"
+              color: isDark ? "#ffffff" : "#0a1419",
             }}
             onClick={handlePrev}
             aria-label="Previous testimonial"
@@ -226,7 +233,7 @@ const TestimonialsSection: React.FC = () => {
             className="absolute top-1/2 right-0 -translate-y-1/2 translate-x-6 md:translate-x-12 flex items-center justify-center w-10 h-10 rounded-full shadow-lg text-2xl z-10 transition-all duration-300 hover:scale-110"
             style={{
               backgroundColor: isDark ? "#1a2332" : "#ffffff",
-              color: isDark ? "#ffffff" : "#0a1419"
+              color: isDark ? "#ffffff" : "#0a1419",
             }}
             onClick={handleNext}
             aria-label="Next testimonial"
@@ -235,29 +242,27 @@ const TestimonialsSection: React.FC = () => {
           </button>
         </div>
 
-        
         <div className="md:hidden">
           <TestimonialCard
             testimonial={testimonials[activeIndex]}
             isActive={true}
-            
           />
         </div>
 
-        
         <div className="flex justify-center mt-8 gap-2">
           {testimonials.map((_, index) => (
             <button
               key={index}
               className="w-3 h-3 rounded-full transition-all duration-300 hover:scale-125"
               style={{
-                backgroundColor: index === activeIndex
-                  ? isDark
-                    ? "#ffffff"
-                    : "#0a1419"
-                  : isDark
-                  ? "#4a5568"
-                  : "#ffffff"
+                backgroundColor:
+                  index === activeIndex
+                    ? isDark
+                      ? "#ffffff"
+                      : "#0a1419"
+                    : isDark
+                    ? "#4a5568"
+                    : "#ffffff",
               }}
               onClick={() => handleDotClick(index)}
               aria-label={`Go to testimonial ${index + 1}`}

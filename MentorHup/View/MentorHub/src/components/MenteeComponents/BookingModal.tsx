@@ -1,27 +1,62 @@
-import React, { useState } from 'react';
-import { X, Calendar, Clock, DollarSign, Star, MapPin, CheckCircle } from 'lucide-react';
-import type {  BookingModalProps,Mentor } from '../../types/types';
+import React, { useState } from "react";
+import {
+  X,
+  Calendar,
+  Clock,
+  DollarSign,
+  Star,
+  MapPin,
+  CheckCircle,
+} from "lucide-react";
+import type { BookingModalProps, Mentor } from "../../types/types";
 
-const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) => {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
-  const [sessionType, setSessionType] = useState('interview-prep');
-  const [duration, setDuration] = useState('60');
-  const [additionalNotes, setAdditionalNotes] = useState('');
+const BookingModal = ({
+  isOpen,
+  onClose,
+  mentor,
+  isDark,
+}: BookingModalProps) => {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [sessionType, setSessionType] = useState("interview-prep");
+  const [duration, setDuration] = useState("60");
+  const [additionalNotes, setAdditionalNotes] = useState("");
   const [step, setStep] = useState(1);
 
   if (!isOpen || !mentor) return null;
 
   const sessionTypes = [
-    { value: 'interview-prep', label: 'Interview Preparation', price: mentor.hourlyRate },
-    { value: 'resume-review', label: 'Resume Review', price: mentor.hourlyRate * 0.8 },
-    { value: 'career-guidance', label: 'Career Guidance', price: mentor.hourlyRate * 0.9 },
-    { value: 'mock-interview', label: 'Mock Interview', price: mentor.hourlyRate * 1.1 }
+    {
+      value: "interview-prep",
+      label: "Interview Preparation",
+      price: mentor.hourlyRate,
+    },
+    {
+      value: "resume-review",
+      label: "Resume Review",
+      price: mentor.hourlyRate * 0.8,
+    },
+    {
+      value: "career-guidance",
+      label: "Career Guidance",
+      price: mentor.hourlyRate * 0.9,
+    },
+    {
+      value: "mock-interview",
+      label: "Mock Interview",
+      price: mentor.hourlyRate * 1.1,
+    },
   ];
 
   const availableTimes = [
-    '09:00 AM', '10:00 AM', '11:00 AM', '01:00 PM', 
-    '02:00 PM', '03:00 PM', '04:00 PM', '05:00 PM'
+    "09:00 AM",
+    "10:00 AM",
+    "11:00 AM",
+    "01:00 PM",
+    "02:00 PM",
+    "03:00 PM",
+    "04:00 PM",
+    "05:00 PM",
   ];
 
   const getNextWeekDates = () => {
@@ -31,19 +66,21 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
       const date = new Date(today);
       date.setDate(today.getDate() + i);
       dates.push({
-        value: date.toISOString().split('T')[0],
-        label: date.toLocaleDateString('en-US', { 
-          weekday: 'short', 
-          month: 'short', 
-          day: 'numeric' 
-        })
+        value: date.toISOString().split("T")[0],
+        label: date.toLocaleDateString("en-US", {
+          weekday: "short",
+          month: "short",
+          day: "numeric",
+        }),
       });
     }
     return dates;
   };
 
   const calculateTotal = () => {
-    const sessionPrice = sessionTypes.find(type => type.value === sessionType)?.price || mentor.hourlyRate;
+    const sessionPrice =
+      sessionTypes.find((type) => type.value === sessionType)?.price ||
+      mentor.hourlyRate;
     const durationMultiplier = parseInt(duration) / 60;
     return Math.round(sessionPrice * durationMultiplier);
   };
@@ -54,44 +91,47 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
 
   const handleConfirm = () => {
     // Here you would typically send the booking data to your backend
-    console.log('Booking confirmed:', {
+    console.log("Booking confirmed:", {
       mentorId: mentor.id,
       date: selectedDate,
       time: selectedTime,
       sessionType,
       duration,
       total: calculateTotal(),
-      notes: additionalNotes
+      notes: additionalNotes,
     });
     onClose();
     setStep(1);
     // Reset form
-    setSelectedDate('');
-    setSelectedTime('');
-    setSessionType('interview-prep');
-    setDuration('60');
-    setAdditionalNotes('');
+    setSelectedDate("");
+    setSelectedTime("");
+    setSessionType("interview-prep");
+    setDuration("60");
+    setAdditionalNotes("");
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-      <div className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${
-        isDark ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'
-      }`}>
-        
+      <div
+        className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${
+          isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        }`}
+      >
         {/* Header */}
-        <div className={`sticky top-0 flex items-center justify-between p-6 border-b ${
-          isDark ? 'border-gray-700 bg-gray-800' : 'border-gray-200 bg-white'
-        }`}>
+        <div
+          className={`sticky top-0 flex items-center justify-between p-6 border-b ${
+            isDark ? "border-gray-700 bg-gray-800" : "border-gray-200 bg-white"
+          }`}
+        >
           <h2 className="text-2xl font-bold">
-            {step === 1 ? 'Book a Session' : 'Confirm Booking'}
+            {step === 1 ? "Book a Session" : "Confirm Booking"}
           </h2>
           <button
             onClick={onClose}
             className={`p-2 rounded-full transition-colors ${
-              isDark 
-                ? 'hover:bg-gray-700 text-gray-400 hover:text-white' 
-                : 'hover:bg-gray-100 text-gray-500 hover:text-gray-700'
+              isDark
+                ? "hover:bg-gray-700 text-gray-400 hover:text-white"
+                : "hover:bg-gray-100 text-gray-500 hover:text-gray-700"
             }`}
           >
             <X size={24} />
@@ -103,18 +143,28 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
             // Step 1: Booking Form
             <>
               {/* Mentor Info */}
-              <div className={`p-4 rounded-xl mb-6 ${
-                isDark ? 'bg-gray-700' : 'bg-gray-50'
-              }`}>
+              <div
+                className={`p-4 rounded-xl mb-6 ${
+                  isDark ? "bg-gray-700" : "bg-gray-50"
+                }`}
+              >
                 <div className="flex items-center space-x-4">
-                  <div className={`w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold ${
-                    isDark ? 'bg-blue-600 text-white' : 'bg-blue-100 text-blue-600'
-                  }`}>
+                  <div
+                    className={`w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold ${
+                      isDark
+                        ? "bg-blue-600 text-white"
+                        : "bg-blue-100 text-blue-600"
+                    }`}
+                  >
                     {mentor.avatar}
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold">{mentor.name}</h3>
-                    <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                    <p
+                      className={`${
+                        isDark ? "text-gray-300" : "text-gray-600"
+                      }`}
+                    >
                       {mentor.title} at {mentor.company}
                     </p>
                     <div className="flex items-center space-x-4 mt-2 text-sm">
@@ -140,19 +190,21 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                 <div className="space-y-6">
                   {/* Session Type */}
                   <div>
-                    <label className="block text-sm font-medium mb-3">Session Type</label>
+                    <label className="block text-sm font-medium mb-3">
+                      Session Type
+                    </label>
                     <div className="space-y-2">
                       {sessionTypes.map((type) => (
                         <label
                           key={type.value}
                           className={`flex items-center justify-between p-3 rounded-lg border cursor-pointer transition-colors ${
                             sessionType === type.value
-                              ? isDark 
-                                ? 'border-blue-500 bg-blue-900/20' 
-                                : 'border-blue-500 bg-blue-50'
-                              : isDark 
-                                ? 'border-gray-600 hover:border-gray-500' 
-                                : 'border-gray-200 hover:border-gray-300'
+                              ? isDark
+                                ? "border-blue-500 bg-blue-900/20"
+                                : "border-blue-500 bg-blue-50"
+                              : isDark
+                              ? "border-gray-600 hover:border-gray-500"
+                              : "border-gray-200 hover:border-gray-300"
                           }`}
                         >
                           <div className="flex items-center">
@@ -166,7 +218,9 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                             />
                             <span>{type.label}</span>
                           </div>
-                          <span className="font-semibold">${type.price}/hr</span>
+                          <span className="font-semibold">
+                            ${type.price}/hr
+                          </span>
                         </label>
                       ))}
                     </div>
@@ -174,14 +228,16 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
 
                   {/* Duration */}
                   <div>
-                    <label className="block text-sm font-medium mb-3">Duration</label>
+                    <label className="block text-sm font-medium mb-3">
+                      Duration
+                    </label>
                     <select
                       value={duration}
                       onChange={(e) => setDuration(e.target.value)}
                       className={`w-full p-3 rounded-lg border ${
-                        isDark 
-                          ? 'bg-gray-700 border-gray-600 text-white' 
-                          : 'bg-white border-gray-200'
+                        isDark
+                          ? "bg-gray-700 border-gray-600 text-white"
+                          : "bg-white border-gray-200"
                       }`}
                     >
                       <option value="30">30 minutes</option>
@@ -196,7 +252,9 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                 <div className="space-y-6">
                   {/* Date Selection */}
                   <div>
-                    <label className="block text-sm font-medium mb-3">Select Date</label>
+                    <label className="block text-sm font-medium mb-3">
+                      Select Date
+                    </label>
                     <div className="grid grid-cols-2 gap-2">
                       {getNextWeekDates().map((date) => (
                         <button
@@ -204,12 +262,12 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                           onClick={() => setSelectedDate(date.value)}
                           className={`p-3 rounded-lg text-sm font-medium transition-colors ${
                             selectedDate === date.value
-                              ? isDark 
-                                ? 'bg-blue-600 text-white' 
-                                : 'bg-blue-500 text-white'
-                              : isDark 
-                                ? 'bg-gray-700 hover:bg-gray-600' 
-                                : 'bg-gray-100 hover:bg-gray-200'
+                              ? isDark
+                                ? "bg-blue-600 text-white"
+                                : "bg-blue-500 text-white"
+                              : isDark
+                              ? "bg-gray-700 hover:bg-gray-600"
+                              : "bg-gray-100 hover:bg-gray-200"
                           }`}
                         >
                           {date.label}
@@ -220,7 +278,9 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
 
                   {/* Time Selection */}
                   <div>
-                    <label className="block text-sm font-medium mb-3">Select Time</label>
+                    <label className="block text-sm font-medium mb-3">
+                      Select Time
+                    </label>
                     <div className="grid grid-cols-2 gap-2">
                       {availableTimes.map((time) => (
                         <button
@@ -228,12 +288,12 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                           onClick={() => setSelectedTime(time)}
                           className={`p-3 rounded-lg text-sm font-medium transition-colors ${
                             selectedTime === time
-                              ? isDark 
-                                ? 'bg-blue-600 text-white' 
-                                : 'bg-blue-500 text-white'
-                              : isDark 
-                                ? 'bg-gray-700 hover:bg-gray-600' 
-                                : 'bg-gray-100 hover:bg-gray-200'
+                              ? isDark
+                                ? "bg-blue-600 text-white"
+                                : "bg-blue-500 text-white"
+                              : isDark
+                              ? "bg-gray-700 hover:bg-gray-600"
+                              : "bg-gray-100 hover:bg-gray-200"
                           }`}
                         >
                           {time}
@@ -255,17 +315,19 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                   placeholder="Any specific topics or questions you'd like to discuss?"
                   rows={4}
                   className={`w-full p-3 rounded-lg border resize-none ${
-                    isDark 
-                      ? 'bg-gray-700 border-gray-600 text-white placeholder-gray-400' 
-                      : 'bg-white border-gray-200 placeholder-gray-500'
+                    isDark
+                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
+                      : "bg-white border-gray-200 placeholder-gray-500"
                   }`}
                 />
               </div>
 
               {/* Booking Summary */}
-              <div className={`mt-6 p-4 rounded-xl ${
-                isDark ? 'bg-gray-700' : 'bg-gray-50'
-              }`}>
+              <div
+                className={`mt-6 p-4 rounded-xl ${
+                  isDark ? "bg-gray-700" : "bg-gray-50"
+                }`}
+              >
                 <div className="flex justify-between items-center mb-2">
                   <span>Session ({duration} minutes)</span>
                   <span>${calculateTotal()}</span>
@@ -282,10 +344,10 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                 disabled={!selectedDate || !selectedTime}
                 className={`w-full mt-6 py-4 px-6 rounded-lg font-semibold text-lg transition-colors ${
                   selectedDate && selectedTime
-                    ? 'bg-blue-600 hover:bg-blue-700 text-white'
-                    : isDark 
-                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    ? "bg-blue-600 hover:bg-blue-700 text-white"
+                    : isDark
+                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >
                 Book Session
@@ -296,15 +358,19 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
             <div className="text-center">
               <div className="mb-6">
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-semibold mb-2">Booking Confirmed!</h3>
-                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className="text-2xl font-semibold mb-2">
+                  Booking Confirmed!
+                </h3>
+                <p className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>
                   Your session has been successfully booked.
                 </p>
               </div>
 
-              <div className={`text-left p-6 rounded-xl mb-6 ${
-                isDark ? 'bg-gray-700' : 'bg-gray-50'
-              }`}>
+              <div
+                className={`text-left p-6 rounded-xl mb-6 ${
+                  isDark ? "bg-gray-700" : "bg-gray-50"
+                }`}
+              >
                 <h4 className="font-semibold mb-4">Session Details:</h4>
                 <div className="space-y-2">
                   <div className="flex justify-between">
@@ -325,7 +391,9 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                   </div>
                   <div className="flex justify-between">
                     <span>Type:</span>
-                    <span>{sessionTypes.find(t => t.value === sessionType)?.label}</span>
+                    <span>
+                      {sessionTypes.find((t) => t.value === sessionType)?.label}
+                    </span>
                   </div>
                   <div className="flex justify-between font-semibold pt-2 border-t border-gray-300">
                     <span>Total:</span>
@@ -334,8 +402,13 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                 </div>
               </div>
 
-              <p className={`text-sm mb-6 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                You'll receive a confirmation email shortly with meeting details and payment information.
+              <p
+                className={`text-sm mb-6 ${
+                  isDark ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                You'll receive a confirmation email shortly with meeting details
+                and payment information.
               </p>
 
               <button

@@ -1,6 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
-import { Users, Star, Briefcase } from 'lucide-react';
+import React from "react";
+import { motion } from "framer-motion";
+import { Users, Star, Briefcase } from "lucide-react";
 import { useTheme } from "../../Context/ThemeContext";
 
 const HeroSection: React.FC = () => {
@@ -13,22 +13,22 @@ const HeroSection: React.FC = () => {
     {
       icon: Users,
       title: "Growing Team",
-      description: "Join our diverse team of passionate professionals"
+      description: "Join our diverse team of passionate professionals",
     },
     {
       icon: Star,
       title: "Impact Driven",
-      description: "Make a real difference in people's career journeys"
+      description: "Make a real difference in people's career journeys",
     },
     {
       icon: Briefcase,
       title: "Innovation",
-      description: "Work with cutting-edge technology and methodologies"
-    }
+      description: "Work with cutting-edge technology and methodologies",
+    },
   ];
 
   return (
-    <motion.section 
+    <motion.section
       className="relative px-4 py-16 sm:py-24 "
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -41,16 +41,23 @@ const HeroSection: React.FC = () => {
           transition={{ duration: 0.6, delay: 0.2 }}
           className="mb-8"
         >
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <br/>
-          <h1 className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 ${accentClass}`}>
+          <br />
+          <br />
+          <br />
+          <br />
+          <br />
+          <h1
+            className={`text-4xl sm:text-5xl lg:text-6xl font-bold mb-6 ${accentClass}`}
+          >
             Join Mentor Hub
           </h1>
-          <p className={`text-xl sm:text-2xl mb-8 max-w-3xl mx-auto ${isDark ? 'text-gray-300' : 'text-gray-700'}`}>
-            Help us revolutionize career development by connecting job seekers with experienced interview trainers worldwide
+          <p
+            className={`text-xl sm:text-2xl mb-8 max-w-3xl mx-auto ${
+              isDark ? "text-gray-300" : "text-gray-700"
+            }`}
+          >
+            Help us revolutionize career development by connecting job seekers
+            with experienced interview trainers worldwide
           </p>
         </motion.div>
 
@@ -62,11 +69,15 @@ const HeroSection: React.FC = () => {
         >
           {features.map((feature, index) => (
             <div key={index} className="text-center">
-              <div className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${iconBgClass} mb-4`}>
+              <div
+                className={`inline-flex items-center justify-center w-16 h-16 rounded-full ${iconBgClass} mb-4`}
+              >
                 <feature.icon className={`w-8 h-8 ${iconColorClass}`} />
               </div>
               <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className={isDark ? 'text-gray-300' : 'text-gray-600'}>{feature.description}</p>
+              <p className={isDark ? "text-gray-300" : "text-gray-600"}>
+                {feature.description}
+              </p>
             </div>
           ))}
         </motion.div>
