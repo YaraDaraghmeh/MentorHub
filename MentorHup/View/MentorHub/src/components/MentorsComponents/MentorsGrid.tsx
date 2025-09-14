@@ -1,14 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, MapPin, Clock, Users, Heart, Share2, Award } from 'lucide-react';
-import  type { Mentor } from '../../types/types';
+import  type { Mentor , MentorsGridProps} from '../../types/types';
 import { useTheme } from "../../Context/ThemeContext";
 
-interface MentorsGridProps {
-  mentors: Mentor[];
-}
 
-const MentorsGrid: React.FC<MentorsGridProps> = ({ mentors }) => {
+
+const MentorsGrid: React.FC<MentorsGridProps> = ({ mentors , onBookSession }: MentorsGridProps) => {
   const { isDark } = useTheme();
   const containerVariants = {
     hidden: { opacity: 0 },

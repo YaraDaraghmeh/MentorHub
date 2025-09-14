@@ -1,0 +1,181 @@
+import { BsFillCalendar2CheckFill, BsFillBookmarkFill } from "react-icons/bs";
+import { useTheme } from "../../Context/ThemeContext";
+import CardDash from "../../components/Cards/CardDashboard";
+import { MdOutlineSchedule, MdOutlineCheckCircle } from "react-icons/md";
+import { FaUserTie, FaClock } from "react-icons/fa";
+import { BiTask } from "react-icons/bi";
+import BarChartDash from "../../components/Charts/BarChart";
+import Table from "../../components/Tables/Table";
+import data from "../../components/Tables/dataTable.json";
+import Eye from "../../components/Tables/eyeicon";
+import { useNavigate } from "react-router-dom";
+
+const DashboardMentee = () => {
+  const { isDark } = useTheme();
+  const navigate = useNavigate();
+
+  const state = [
+    {
+      title: "My Mentors",
+      value: "3",
+      icon: <FaUserTie />,
+      color: "",
+    },
+    {
+      title: "Scheduled Sessions",
+      value: "8",
+      icon: <BsFillCalendar2CheckFill />,
+      color: "",
+    },
+    {
+      title: "Completed Sessions",
+      value: "15",
+      icon: <MdOutlineCheckCircle />,
+      color: "",
+    },
+    {
+      title: "Learning Hours",
+      value: "42",
+      icon: <FaClock />,
+      color: "",
+    },
+  ];
+
+
+  const learningProgress = [
+    { label: "Week 1", value: 2 },
+    { label: "Week 2", value: 4 },
+    { label: "Week 3", value: 3 },
+    { label: "Week 4", value: 5 },
+    { label: "Week 5", value: 4 },
+    { label: "Week 6", value: 6 },
+  ];
+
+ 
+
+  const columns = [
+    {
+      header: "Mentor Name",
+      accessor: "name" as const,
+      render: (row: any) => {
+        return (
+          <div className="flex items-center gap-3 justify-start text-start">
+            <div className="w-12 h-12">
+              <img
+                src={row.image}
+                className="w-full h-full rounded-full"
+                alt="profile"
+              />
+            </div>
+            {row.name}
+          </div>
+        );
+      },
+    },
+    { header: "Date & time", accessor: "date" as const },
+    { header: "Duration", accessor: "duration" as const },
+    { header: "Session Type", accessor: "status" as const }, // Using existing status field since 'type' doesn't exist
+    {
+      header: "Status",
+      accessor: "status" as const,
+      render: (row: any) => (
+        <span
+          className={`font-semibold p-2 rounded-full text-white ${
+            row.status === "Confirmed"
+              ? "bg-[var(--secondary-dark)]"
+              : row.status === "Completed"
+              ? "bg-green-500"
+              : "bg-[var(--red-light)]"
+          }`}
+        >
+          {row.status}
+        </span>
+      ),
+    },
+    {
+      header: "Action",
+      accessor: "id" as const,
+      render: () => (
+        <div className="flex justify-center items-center">
+          <Eye className="w-5 h-5 cursor-pointer" />
+        </div>
+      ),
+    },
+  ];
+
+  const handleNavigation = (path: string) => {
+    navigate(path);
+  };
+
+  return (
+    <>
+      {/* Welcome Section */}
+      <div className="mb-6">
+        <p className={`mt-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+          Track your progress and manage your mentoring sessions
+        </p>
+      </div>
+
+      {/* Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-6">
+        {state.map((state, index) => (
+          <CardDash
+            key={index}
+            title={state.title}
+            icon={state.icon}
+            value={state.value}
+            isDark={isDark}
+          />
+        ))}
+      </div>
+
+      {/* Quick Actions */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
+        <button 
+          onClick={() => handleNavigation('/mentee/main')}
+          className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg transition-colors"
+        >
+          <MdOutlineSchedule className="w-6 h-6 mx-auto mb-2" />
+          <span className="text-sm">Book Session</span>
+        </button>
+        <button 
+          onClick={() => handleNavigation('/mentee/goals')}
+          className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg transition-colors"
+        >
+          <BiTask className="w-6 h-6 mx-auto mb-2" />
+          <span className="text-sm">View Goals</span>
+        </button>
+        <button 
+          onClick={() => handleNavigation('/mentee/resources')}
+          className="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-lg transition-colors"
+        >
+          <BsFillBookmarkFill className="w-6 h-6 mx-auto mb-2" />
+          <span className="text-sm">Resources</span>
+        </button>
+        <button 
+          onClick={() => handleNavigation('/mentee/main')}
+          className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-lg transition-colors"
+        >
+          <FaClock className="w-6 h-6 mx-auto mb-2" />
+          <span className="text-sm">Schedule</span>
+        </button>
+      </div>
+
+      {/*Charts  */}
+      <div className="py-6">
+        <div className="flex justify-center">
+          <div className="w-full max-w-4xl">
+            <BarChartDash data={learningProgress} />
+          </div>
+        </div>
+      </div>
+
+      {/* Table Sessions */}
+      <div className="py-7 w-full">
+        <Table titleTable="My Booked Sessions" data={data} columns={columns} />
+      </div>
+    </>
+  );
+};
+
+export default DashboardMentee;

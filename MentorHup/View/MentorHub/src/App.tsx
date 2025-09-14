@@ -16,8 +16,10 @@ import Dashboard from "./components/Dashboard/dashboard";
 import DashboardAd from "./Pages/AdminPages/Dashboard";
 import ChateUser from "./Pages/MentorPages/Chatting";
 import Booking from "./Pages/MentorPages/Booking";
+import MenteeBooking from "./Pages/MenteePages/MenteeBookings";
+
 import BrowseMentor from "./Pages/MenteePages/BrowseMonetor";
-import MenteeDashboard from "./Pages/MenteePages/BrowseMonetor";
+import MenteeDashboard from "./Pages/MenteePages/Dashboard";
 import Users from "./Pages/AdminPages/Users";
 
 function App() {
@@ -34,7 +36,7 @@ function App() {
           {/* Public Pages */}
           <Routes>
             <Route
-              element={<MainLayout isDark={isDark} toggleTheme={toggleTheme} />}
+              element={<MainLayout  />}
             >
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutUsPage />} />
@@ -83,8 +85,8 @@ function App() {
             <Route element={<BodySystem />}>
               <Route path="/mentee/main" element={<BrowseMentor />} />
               <Route path="/mentee/dashboard" element={<MenteeDashboard />} />
-              <Route path="/mentee/chatting" element={<MenteeDashboard />} />
-              <Route path="/mentee/booking" element={<MenteeDashboard />} />
+              <Route path="/mentee/chatting" element={<ChateUser />} />
+              <Route path="/mentee/booking" element={<MenteeBooking />} />
             </Route>
           </Routes>
         </Router>
