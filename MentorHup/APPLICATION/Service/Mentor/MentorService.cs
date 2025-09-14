@@ -2,9 +2,6 @@
 using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -22,9 +19,9 @@ namespace MentorHup.APPLICATION.Service.Mentor
             decimal? maxPrice,
             int? Experiences)
         {
-            var query =  context.Mentors.Include(m => m.MentorSkills)
+            var query =  context.Mentors.Include(m => m.MentorSkills) // Note: Here we can add Include(m => m.ApplicationUser) then we execlude the mentees who own IsDeleted = true, (Review ApplicationDbContext line 123)
                .ThenInclude(ms => ms.Skill).Include(s => s.Availabilities)
-               .AsQueryable();
+               .AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(field))
                 query = query.Where(m => m.Field.Contains(field));

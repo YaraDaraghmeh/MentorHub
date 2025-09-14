@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MentorHup.APPLICATION.DTOs.Pagination
+﻿namespace MentorHup.APPLICATION.DTOs.Pagination
 {
     public class PaginationDto
     {

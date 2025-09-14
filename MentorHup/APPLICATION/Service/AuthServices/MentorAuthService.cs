@@ -38,7 +38,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             var user = new ApplicationUser
             {
                 UserName = request.Name,
-                Email = request.Email
+                Email = request.Email,
             };
 
             var result = await _userManager.CreateAsync(user, request.Password);
@@ -205,8 +205,40 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 .ThenInclude(ms => ms.Skill)
                 .FirstOrDefaultAsync(u => u.Email == request.Email);
 
-            if (user == null || !await _userManager.CheckPasswordAsync(user, request.Password))
+            if (user == null)
             {
+                return new MentorLoginRegistrationResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Invalid email or password" }
+                };
+            }
+
+            // check for blocking
+            if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow)
+            {
+                return new MentorLoginRegistrationResult
+                {
+                    IsSuccess = false,
+                    Errors = new[] { "Your account is blocked. Please contact admin." }
+                };
+            }
+
+            if (!await _userManager.CheckPasswordAsync(user, request.Password))
+            {
+                if (user.LockoutEnabled)
+                {
+                    await _userManager.AccessFailedAsync(user);
+                    if (await _userManager.IsLockedOutAsync(user))
+                    {
+                        return new MentorLoginRegistrationResult
+                        {
+                            IsSuccess = false,
+                            Errors = new[] { "Your account is blocked due to multiple failed login attempts." }
+                        };
+                    }
+                }
+
                 return new MentorLoginRegistrationResult
                 {
                     IsSuccess = false,
@@ -222,6 +254,10 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Errors = new[] { "Please confirm your email before logging in." }
                 };
             }
+
+            // when login successfully, reset access faild count to 0
+            if (user.LockoutEnabled)
+                await _userManager.ResetAccessFailedCountAsync(user);
 
             var token = await _tokenService.CreateTokenAsync(user);
             var roles = await _userManager.GetRolesAsync(user);
@@ -246,8 +282,9 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Expires = DateTime.UtcNow.AddHours(3)
                 }
             };
+
         }
 
-        
+
     }
 }

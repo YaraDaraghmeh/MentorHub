@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using FluentValidation.AspNetCore;
+using MentorHup.APPLICATION.Service.Admin;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Booking;
 using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.APPLICATION.Service.Message;
+using MentorHup.APPLICATION.Service.Profile;
 using MentorHup.APPLICATION.Service.Review;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
@@ -50,6 +52,8 @@ namespace MentorHup.Extensions
             services.AddScoped<IMessageService, MessageService>();
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IMenteeService, MenteeService>();
+            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IProfileService, ProfileService>();
 
             services.AddTransient<IEmailSender, EmailSender>();
 
@@ -75,26 +79,23 @@ namespace MentorHup.Extensions
                 });
 
                 c.AddSecurityRequirement(new OpenApiSecurityRequirement
-    {
-        {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
                 {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "Bearer"
-                },
-                Scheme = "oauth2",
-                Name = "Bearer",
-                In = ParameterLocation.Header,
-            },
-            new List<string>()
-        }
-    });
+                    {
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            },
+                            Scheme = "oauth2",
+                            Name = "Bearer",
+                            In = ParameterLocation.Header,
+                        },
+                        new List<string>()
+                    }
+                });
             });
-
-
-
 
         }
 

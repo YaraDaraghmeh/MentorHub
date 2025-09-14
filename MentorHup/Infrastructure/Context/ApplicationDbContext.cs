@@ -115,11 +115,19 @@ namespace MentorHup.Infrastructure.Context
 
 
             builder.Entity<Skill>().HasData(
-        new Skill { Id = 1, SkillName = "C#" },
-        new Skill { Id = 2, SkillName = "JavaScript" },
-        new Skill { Id = 3, SkillName = "React" },
-        new Skill { Id = 4, SkillName = "SQL" }
-    );
+                new Skill { Id = 1, SkillName = "C#" },
+                new Skill { Id = 2, SkillName = "JavaScript" },
+                new Skill { Id = 3, SkillName = "React" },
+                new Skill { Id = 4, SkillName = "SQL" }
+            );
+
+            builder.Entity<ApplicationUser>()
+                .HasQueryFilter(u => !u.IsDeleted); // now all entities linked to ApplicationUser or ApplicationUser itself will ignore the deleted users
+
+            builder.Entity<ApplicationUser>()
+                .Property(u => u.CreatedAt)
+                .HasDefaultValueSql("GETUTCDATE()"); // every user register in our Mentor Hub site, take the CreatedAt field the current date he/she registerd
+
 
         }
     }
