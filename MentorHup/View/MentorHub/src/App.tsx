@@ -24,7 +24,7 @@ import Users from "./Pages/AdminPages/Users";
 import SessionsAdm from "./Pages/AdminPages/Sessions";
 import ChattingAd from "./Pages/AdminPages/Chatting";
 import Payments from "./Pages/AdminPages/Payments";
-
+import FeedbackModal from "./components/SessionReview/SessionReview";
 function App() {
   const [isDark, setIsDark] = useState(false);
 
@@ -52,6 +52,7 @@ function App() {
               <Route path="/contactUs" element={<ContactUs />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/joinUs" element={<JoinUsPage />} />
+
             </Route>
           </Routes>
 

@@ -11,7 +11,6 @@ export interface Mentor {
   hourlyRate: number;
   specialties: string[];
   avatar: string;
-  isOnline: boolean;
   responseTime: string;
   totalSessions: number;
   successRate: number;
