@@ -131,34 +131,7 @@ const DashboardMentee = () => {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
-        <button 
-          onClick={() => handleNavigation('/mentee/main')}
-          className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg transition-colors"
-        >
-          <MdOutlineSchedule className="w-6 h-6 mx-auto mb-2" />
-          <span className="text-sm">Book Session</span>
-        </button>
-        <button 
-          onClick={() => handleNavigation('/mentee/goals')}
-          className="bg-green-500 hover:bg-green-600 text-white p-4 rounded-lg transition-colors"
-        >
-          <BiTask className="w-6 h-6 mx-auto mb-2" />
-          <span className="text-sm">View Goals</span>
-        </button>
-        <button 
-          onClick={() => handleNavigation('/mentee/resources')}
-          className="bg-purple-500 hover:bg-purple-600 text-white p-4 rounded-lg transition-colors"
-        >
-          <BsFillBookmarkFill className="w-6 h-6 mx-auto mb-2" />
-          <span className="text-sm">Resources</span>
-        </button>
-        <button 
-          onClick={() => handleNavigation('/mentee/main')}
-          className="bg-orange-500 hover:bg-orange-600 text-white p-4 rounded-lg transition-colors"
-        >
-          <FaClock className="w-6 h-6 mx-auto mb-2" />
-          <span className="text-sm">Schedule</span>
-        </button>
+      
       </div>
 
       {/*Charts  */}
