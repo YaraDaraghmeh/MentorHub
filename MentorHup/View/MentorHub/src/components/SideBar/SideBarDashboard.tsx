@@ -1,5 +1,6 @@
 import profilePicture from "../../assets/avatar-girl-with-glasses.png";
 import avatar from "../../assets/avatar-profile.png";
+import { MdOutlinePayment } from "react-icons/md";
 import { HiMenuAlt3 } from "react-icons/hi";
 import ListSide from "./listSide";
 import { IoPeople } from "react-icons/io5";
@@ -36,6 +37,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
       { icon: IoPeople, title: "Users", path: "/admin/users" },
       { icon: HiChatAlt2, title: "Chatting", path: "/admin/chatting" },
       { icon: HiMiniCalendar, title: "Sessions", path: "/admin/sessions" },
+      { icon: MdOutlinePayment, title: "Payments", path: "/admin/payment" },
     ],
     mentor: [
       {

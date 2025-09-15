@@ -22,6 +22,8 @@ import BrowseMentor from "./Pages/MenteePages/BrowseMonetor";
 import MenteeDashboard from "./Pages/MenteePages/Dashboard";
 import Users from "./Pages/AdminPages/Users";
 import SessionsAdm from "./Pages/AdminPages/Sessions";
+import ChattingAd from "./Pages/AdminPages/Chatting";
+import Payments from "./Pages/AdminPages/Payments";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -69,7 +71,9 @@ function App() {
               <Route path="/mentor/booking" element={<Booking />} />
               <Route path="/admin/dashboard" element={<DashboardAd />} />
               <Route path="/admin/users" element={<Users />} />
-              <Route path="/admin/booking" element={<SessionsAdm />} />
+              <Route path="/admin/chatting" element={<ChattingAd />} />
+              <Route path="/admin/sessions" element={<SessionsAdm />} />
+              <Route path="/admin/payment" element={<Payments />} />
             </Route>
           </Routes>
           <Routes>

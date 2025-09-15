@@ -1,5 +1,12 @@
-import React, { useState } from 'react';
-import { X, Star, MapPin, DollarSign, CheckCircle, AlertCircle } from 'lucide-react';
+import React, { useState } from "react";
+import {
+  X,
+  Star,
+  MapPin,
+  DollarSign,
+  CheckCircle,
+  AlertCircle,
+} from "lucide-react";
 
 // Type definitions
 interface BookingModalProps {
@@ -37,10 +44,16 @@ interface BookingData {
 const mockUserData = {
   name: "John Doe",
   email: "john.doe@example.com",
-  avatar: "JD"
+  avatar: "JD",
 };
 
-const PaymentForm = ({ bookingData, isDark, onSuccess, onError, onBack }: {
+const PaymentForm = ({
+  bookingData,
+  isDark,
+  onSuccess,
+  onError,
+  onBack,
+}: {
   bookingData: BookingData;
   isDark: boolean;
   onSuccess: (paymentIntent: MockPaymentIntent) => void;
@@ -55,23 +68,25 @@ const PaymentForm = ({ bookingData, isDark, onSuccess, onError, onBack }: {
         onSuccess({
           id: `pi_${Date.now()}`,
           amount: bookingData.total * 100, // Stripe uses cents
-          status: 'succeeded'
+          status: "succeeded",
         });
       } else {
-        onError('Your card was declined. Please try a different payment method.');
+        onError(
+          "Your card was declined. Please try a different payment method."
+        );
       }
     }, 2000);
   };
 
   return (
-    <div className="space-y-4"> 
+    <div className="space-y-4">
       <div className="flex space-x-4">
         <button
           onClick={onBack}
           className={`px-6 py-3 rounded-lg border font-medium ${
-            isDark 
-              ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
-              : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+            isDark
+              ? "border-gray-600 text-gray-300 hover:bg-gray-700"
+              : "border-gray-300 text-gray-700 hover:bg-gray-50"
           }`}
         >
           Back
@@ -87,15 +102,20 @@ const PaymentForm = ({ bookingData, isDark, onSuccess, onError, onBack }: {
   );
 };
 
-const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) => {
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedTime, setSelectedTime] = useState('');
-  const [sessionType, setSessionType] = useState('mock-interview'); // Default to mock-interview
-  const [duration, setDuration] = useState('60');
-  const [additionalNotes, setAdditionalNotes] = useState('');
+const BookingModal = ({
+  isOpen,
+  onClose,
+  mentor,
+  isDark,
+}: BookingModalProps) => {
+  const [selectedDate, setSelectedDate] = useState("");
+  const [selectedTime, setSelectedTime] = useState("");
+  const [sessionType, setSessionType] = useState("mock-interview"); // Default to mock-interview
+  const [duration, setDuration] = useState("60");
+  const [additionalNotes, setAdditionalNotes] = useState("");
   const [step, setStep] = useState(1); // 1: form, 2: payment, 3: success, 4: error
-  const [paymentError, setPaymentError] = useState('');
-  const [paymentIntentId, setPaymentIntentId] = useState('');
+  const [paymentError, setPaymentError] = useState("");
+  const [paymentIntentId, setPaymentIntentId] = useState("");
 
   // Get current user from system
   const currentUser = mockUserData;
@@ -103,30 +123,30 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
   if (!isOpen || !mentor) return null;
 
   const sessionTypes = [
-    { 
-      value: 'interview-prep', 
-      label: 'Interview Preparation', 
+    {
+      value: "interview-prep",
+      label: "Interview Preparation",
       price: mentor.hourlyRate,
-      disabled: true // Disabled
+      disabled: true, // Disabled
     },
-    { 
-      value: 'resume-review', 
-      label: 'Resume Review', 
+    {
+      value: "resume-review",
+      label: "Resume Review",
       price: mentor.hourlyRate * 0.8,
-      disabled: true // Disabled
+      disabled: true, // Disabled
     },
-    { 
-      value: 'career-guidance', 
-      label: 'Career Guidance', 
+    {
+      value: "career-guidance",
+      label: "Career Guidance",
       price: mentor.hourlyRate * 0.9,
-      disabled: true // Disabled
+      disabled: true, // Disabled
     },
-    { 
-      value: 'mock-interview', 
-      label: 'Mock Interview', 
+    {
+      value: "mock-interview",
+      label: "Mock Interview",
       price: mentor.hourlyRate * 1.1,
-      disabled: false // Only this one is enabled
-    }
+      disabled: false, // Only this one is enabled
+    },
   ];
 
   const availableTimes = [
@@ -182,13 +202,13 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
 
   const resetModal = () => {
     setStep(1);
-    setSelectedDate('');
-    setSelectedTime('');
-    setSessionType('mock-interview'); // Reset to default enabled type
-    setDuration('60');
-    setAdditionalNotes('');
-    setPaymentError('');
-    setPaymentIntentId('');
+    setSelectedDate("");
+    setSelectedTime("");
+    setSessionType("mock-interview"); // Reset to default enabled type
+    setDuration("60");
+    setAdditionalNotes("");
+    setPaymentError("");
+    setPaymentIntentId("");
     onClose();
   };
 
@@ -203,21 +223,23 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
       <div
         className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${
           isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
         }`}
       >
         {/* Header */}
-        <div className={`sticky top-0 flex items-center justify-between p-6 border-b ${
-          isDark ? 'border-gray-700 bg-[#071b21]' : 'border-gray-200 bg-white'
-        }`}>
+        <div
+          className={`sticky top-0 flex items-center justify-between p-6 border-b ${
+            isDark ? "border-gray-700 bg-[#071b21]" : "border-gray-200 bg-white"
+          }`}
+        >
           <h2 className="text-2xl font-bold">
-            {step === 1 && 'Book a Session'}
-            {step === 2 && 'Payment Details'}
-            {step === 3 && 'Booking Confirmed!'}
-            {step === 4 && 'Payment Failed'}
+            {step === 1 && "Book a Session"}
+            {step === 2 && "Payment Details"}
+            {step === 3 && "Booking Confirmed!"}
+            {step === 4 && "Payment Failed"}
           </h2>
           <button
             onClick={resetModal}
@@ -231,14 +253,16 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
           </button>
         </div>
 
-        <div className={`p-6 ${isDark ? 'bg-[#071b21]' : 'bg-gray-50'}`}>
+        <div className={`p-6 ${isDark ? "bg-[#071b21]" : "bg-gray-50"}`}>
           {step === 1 && (
             // Step 1: Booking Form
             <>
               {/* Mentor Info */}
-              <div className={`p-4 rounded-xl mb-6 ${
-                isDark ? 'bg-[#071b21]' : 'bg-gray-50'
-              }`}>
+              <div
+                className={`p-4 rounded-xl mb-6 ${
+                  isDark ? "bg-[#071b21]" : "bg-gray-50"
+                }`}
+              >
                 <div className="flex items-center space-x-4">
                   <div
                     className={`w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold ${
@@ -291,17 +315,17 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                           className={`flex items-center justify-between p-3 rounded-lg border transition-colors ${
                             type.disabled
                               ? // Disabled styles
-                                isDark 
-                                  ? 'border-gray-700 bg-gray-800 opacity-50 cursor-not-allowed' 
-                                  : 'border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed'
+                                isDark
+                                ? "border-gray-700 bg-gray-800 opacity-50 cursor-not-allowed"
+                                : "border-gray-100 bg-gray-50 opacity-50 cursor-not-allowed"
                               : // Enabled styles
-                                sessionType === type.value
-                                  ? isDark 
-                                    ? 'border-[#000000] bg-[#09fb7630] cursor-pointer' 
-                                    : 'border-[#000000] bg-[#09fb7630] opacity-90 cursor-pointer'
-                                  : isDark 
-                                    ? 'border-gray-600 hover:border-gray-500 cursor-pointer' 
-                                    : 'border-gray-200 hover:border-gray-300 cursor-pointer'
+                              sessionType === type.value
+                              ? isDark
+                                ? "border-[#000000] bg-[#09fb7630] cursor-pointer"
+                                : "border-[#000000] bg-[#09fb7630] opacity-90 cursor-pointer"
+                              : isDark
+                              ? "border-gray-600 hover:border-gray-500 cursor-pointer"
+                              : "border-gray-200 hover:border-gray-300 cursor-pointer"
                           }`}
                         >
                           <div className="flex items-center">
@@ -314,13 +338,23 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                               onChange={(e) => setSessionType(e.target.value)}
                               className="mr-3"
                             />
-                            <span className={type.disabled ? 'text-gray-400' : ''}>{type.label}</span>
+                            <span
+                              className={type.disabled ? "text-gray-400" : ""}
+                            >
+                              {type.label}
+                            </span>
                           </div>
-                          <span className={`font-semibold ${type.disabled ? 'text-gray-400' : ''}`}>
+                          <span
+                            className={`font-semibold ${
+                              type.disabled ? "text-gray-400" : ""
+                            }`}
+                          >
                             ${type.price}/hr
                           </span>
                           {type.disabled && (
-                            <span className="text-xs text-gray-400 ml-2">(Coming Soon)</span>
+                            <span className="text-xs text-gray-400 ml-2">
+                              (Coming Soon)
+                            </span>
                           )}
                         </label>
                       ))}
@@ -336,9 +370,9 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                       value={duration}
                       onChange={(e) => setDuration(e.target.value)}
                       className={`w-full p-3 rounded-lg border ${
-                        isDark 
-                          ? 'bg-gray-700 border-gray-600 text-black' 
-                          : 'bg-white border-gray-200'
+                        isDark
+                          ? "bg-gray-700 border-gray-600 text-black"
+                          : "bg-white border-gray-200"
                       }`}
                     >
                       <option value="15">15 minutes</option>
@@ -363,12 +397,12 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                           onClick={() => setSelectedDate(date.value)}
                           className={`p-3 rounded-lg text-sm font-medium transition-colors ${
                             selectedDate === date.value
-                              ? isDark 
-                                ? 'bg-[#27b467] text-white' 
-                                : 'bg-[#27b467] text-white'
-                              : isDark 
-                                ? 'bg-gray-700 hover:bg-gray-600' 
-                                : 'bg-gray-100 hover:bg-gray-200'
+                              ? isDark
+                                ? "bg-[#27b467] text-white"
+                                : "bg-[#27b467] text-white"
+                              : isDark
+                              ? "bg-gray-700 hover:bg-gray-600"
+                              : "bg-gray-100 hover:bg-gray-200"
                           }`}
                         >
                           {date.label}
@@ -389,12 +423,12 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                           onClick={() => setSelectedTime(time)}
                           className={`p-3 rounded-lg text-sm font-medium transition-colors ${
                             selectedTime === time
-                              ? isDark 
-                                ? 'bg-[#27b467] text-white' 
-                                : 'bg-[#27b467] text-white'
-                              : isDark 
-                                ? 'bg-gray-700 hover:bg-gray-600' 
-                                : 'bg-gray-100 hover:bg-gray-200'
+                              ? isDark
+                                ? "bg-[#27b467] text-white"
+                                : "bg-[#27b467] text-white"
+                              : isDark
+                              ? "bg-gray-700 hover:bg-gray-600"
+                              : "bg-gray-100 hover:bg-gray-200"
                           }`}
                         >
                           {time}
@@ -445,10 +479,10 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                 disabled={!selectedDate || !selectedTime}
                 className={`w-full mt-6 py-4 px-6 rounded-lg font-semibold text-lg transition-colors ${
                   selectedDate && selectedTime
-                    ? 'bg-[#27b467] hover:bg-[#1e874e]text-white'
-                    : isDark 
-                      ? 'bg-gray-700 text-gray-500 cursor-not-allowed' 
-                      : 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                    ? "bg-[#27b467] hover:bg-[#1e874e]text-white"
+                    : isDark
+                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
                 }`}
               >
                 Continue to Payment
@@ -460,17 +494,25 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
             // Step 2: Payment Form with Mock Stripe
             <>
               {/* Booking Summary */}
-              <div className={`p-4 rounded-xl mb-6 ${
-                isDark ? 'bg-gray-700' : 'bg-gray-50'
-              }`}>
+              <div
+                className={`p-4 rounded-xl mb-6 ${
+                  isDark ? "bg-gray-700" : "bg-gray-50"
+                }`}
+              >
                 <h4 className="font-semibold mb-2">Booking Summary</h4>
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
-                    <span>{mentor.name} - {sessionTypes.find(t => t.value === sessionType)?.label}</span>
+                    <span>
+                      {mentor.name} -{" "}
+                      {sessionTypes.find((t) => t.value === sessionType)?.label}
+                    </span>
                     <span>${calculateTotal()}</span>
                   </div>
                   <div className="flex justify-between text-xs opacity-75">
-                    <span>{new Date(selectedDate).toLocaleDateString()} at {selectedTime}</span>
+                    <span>
+                      {new Date(selectedDate).toLocaleDateString()} at{" "}
+                      {selectedTime}
+                    </span>
                     <span>{duration} minutes</span>
                   </div>
                 </div>
@@ -491,8 +533,10 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
             <div className="text-center">
               <div className="mb-6">
                 <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
-                <h3 className="text-2xl font-semibold mb-2">Payment Successful!</h3>
-                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+                <h3 className="text-2xl font-semibold mb-2">
+                  Payment Successful!
+                </h3>
+                <p className={`${isDark ? "text-gray-300" : "text-gray-600"}`}>
                   Your session has been booked and payment processed.
                 </p>
               </div>
@@ -547,8 +591,13 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                 </div>
               </div>
 
-              <p className={`text-sm mb-6 ${isDark ? 'text-gray-400' : 'text-gray-500'}`}>
-                You'll receive a confirmation email with meeting details and calendar invite.
+              <p
+                className={`text-sm mb-6 ${
+                  isDark ? "text-gray-400" : "text-gray-500"
+                }`}
+              >
+                You'll receive a confirmation email with meeting details and
+                calendar invite.
               </p>
 
               <button
@@ -566,13 +615,21 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
               <div className="mb-6">
                 <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
                 <h3 className="text-2xl font-semibold mb-2">Payment Failed</h3>
-                <p className={`${isDark ? 'text-gray-300' : 'text-gray-600'} mb-4`}>
+                <p
+                  className={`${
+                    isDark ? "text-gray-300" : "text-gray-600"
+                  } mb-4`}
+                >
                   We couldn't process your payment. Please try again.
                 </p>
                 {paymentError && (
-                  <p className={`text-sm p-3 rounded-lg ${
-                    isDark ? 'bg-red-900/20 text-red-400' : 'bg-red-50 text-red-600'
-                  }`}>
+                  <p
+                    className={`text-sm p-3 rounded-lg ${
+                      isDark
+                        ? "bg-red-900/20 text-red-400"
+                        : "bg-red-50 text-red-600"
+                    }`}
+                  >
                     {paymentError}
                   </p>
                 )}
@@ -588,9 +645,9 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
                 <button
                   onClick={resetModal}
                   className={`px-6 py-3 rounded-lg border font-medium ${
-                    isDark 
-                      ? 'border-gray-600 text-gray-300 hover:bg-gray-700' 
-                      : 'border-gray-300 text-gray-700 hover:bg-gray-50'
+                    isDark
+                      ? "border-gray-600 text-gray-300 hover:bg-gray-700"
+                      : "border-gray-300 text-gray-700 hover:bg-gray-50"
                   }`}
                 >
                   Cancel
