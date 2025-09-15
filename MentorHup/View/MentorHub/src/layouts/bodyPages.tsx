@@ -22,7 +22,7 @@ const BodySystem = () => {
     >
       <SideBar
         profile={userProfile}
-        role="mentee"
+        role="admin"
         expended={isSidebarOpen}
         setExpended={setIsSidebarOpen}
       />
