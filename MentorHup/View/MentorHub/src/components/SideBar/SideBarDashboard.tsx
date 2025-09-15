@@ -12,6 +12,7 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
+
 interface profile {
   name: string;
   email: string;
@@ -69,11 +70,14 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
-        setExpended(false);
         setIsMobile(true);
+        // Don't automatically close sidebar on mobile resize
       } else {
-        setExpended(true);
         setIsMobile(false);
+        // Auto-open on desktop
+        if (!expended) {
+          setExpended(true);
+        }
       }
     };
 
@@ -83,13 +87,18 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
     handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [expended, setExpended]);
 
   return (
     <>
       <aside
-        className={`fixed left-0 top-0 h-screen bg-[var(--primary)] py-[22px] overflow-hidden flex flex-col z-20 transition-[width] duration-300 ${
+        className={`fixed left-0 top-0 h-screen bg-[var(--primary)] py-[22px] overflow-hidden flex flex-col z-20 transition-all duration-300 ${
           expended ? "w-[230px]" : "w-20"
+        } ${
+          // On mobile: slide in/out with transform
+          isMobile 
+            ? `${expended ? 'translate-x-0' : '-translate-x-full'}` 
+            : 'translate-x-0'
         }`}
       >
         <nav className="flex flex-col flex-1">
@@ -170,7 +179,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
         </nav>
       </aside>
 
-      {/* Mobile */}
+      {/* Mobile Overlay */}
       {isMobile && expended && (
         <div
           className="fixed inset-0 bg-black/50 z-10"
