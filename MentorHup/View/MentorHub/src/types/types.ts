@@ -1,20 +1,17 @@
-// src/types/types.ts
 export interface Mentor {
-  id: number;
+  id: string;
   name: string;
   title: string;
   company: string;
+  avatar: string;
   rating: number;
   reviews: number;
   experience: string;
-  location: string;
-  hourlyRate: number;
-  specialties: string[];
-  avatar: string;
-  responseTime: string;
   totalSessions: number;
+  hourlyRate: number;
   successRate: number;
-  badge?: string;
+  specialties: string[];
+  isOnline: boolean;
 }
 
 export interface Testimonial {
