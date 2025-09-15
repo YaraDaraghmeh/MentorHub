@@ -4,6 +4,7 @@ import Table from "./Table";
 import data from "./dataUsers.json";
 import { useState } from "react";
 import ConfirmModal from "../Modal/ModalConfirm";
+import profile from "../../assets/avatar-profile.png";
 
 interface UserData {
   id: number;
@@ -32,7 +33,7 @@ const TableUser = () => {
           <div className="flex items-center gap-3 justify-start text-start">
             <div className="w-12 h-12">
               <img
-                src={row.image}
+                src={row.image || profile}
                 className="w-full h-full rounded-full"
                 alt="profile"
               />

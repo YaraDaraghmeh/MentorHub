@@ -83,19 +83,25 @@ const DashboardMentee = () => {
     {
       header: "Status",
       accessor: "status" as const,
-      render: (row: any) => (
-        <span
-          className={`font-semibold p-2 rounded-full text-white ${
-            row.status === "Confirmed"
-              ? "bg-[var(--secondary-dark)]"
-              : row.status === "Completed"
-              ? "bg-green-500"
-              : "bg-[var(--red-light)]"
-          }`}
-        >
-          {row.status}
-        </span>
-      ),
+      render: (row: any) => {
+        const status = row.status?.trim().toLowerCase();
+
+        const statusColors: Record<string, string> = {
+          confirmed: "bg-[var(--secondary-dark)]",
+          cancelled: "bg-[var(--red-light)]",
+          pending: "bg-[#ffc300]",
+        };
+
+        const bgColor = statusColors[status] || "bg-gray-200";
+
+        return (
+          <span
+            className={`font-semibold p-2 rounded-full text-white ${bgColor}`}
+          >
+            {row.status}
+          </span>
+        );
+      },
     },
     {
       header: "Action",
@@ -112,10 +118,14 @@ const DashboardMentee = () => {
     <>
       {/* Welcome Section */}
       <div className="mb-6">
-        <h1 className={`text-2xl font-bold ${isDark ? 'text-white' : 'text-gray-800'}`}>
+        <h1
+          className={`text-2xl font-bold ${
+            isDark ? "text-white" : "text-gray-800"
+          }`}
+        >
           Welcome back to your learning journey! 🚀
         </h1>
-        <p className={`mt-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
+        <p className={`mt-2 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
           Track your progress and manage your mentoring sessions
         </p>
       </div>

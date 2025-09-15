@@ -45,12 +45,6 @@ export interface Position {
   requirements: string[];
 }
 
-export interface BookingModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  mentor: Mentor | null;
-  isDark: boolean;
-}
 
 export interface MentorsGridProps {
   mentors: Mentor[];
@@ -72,3 +66,20 @@ export interface BookingData {
   total: number;
   notes: string;
 }
+
+export interface BookingModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  mentor: Mentor | null;
+  isDark: boolean;
+}
+
+export interface PaymentDetails {
+  cardNumber: string;
+  expiryDate: string;
+  cvv: string;
+  cardName: string;
+  email: string;
+}
+
+

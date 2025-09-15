@@ -43,7 +43,7 @@ const MenteeTableBooking = () => {
         const statusColors: Record<string, string> = {
           confirmed: "bg-[var(--secondary-dark)]",
           cancelled: "bg-[var(--red-light)]",
-          pending: "bg-[#ffc300]",
+          pending: "bg-[#f59e0b]",
         };
 
         const bgColor = statusColors[status] || "bg-gray-200";
