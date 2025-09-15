@@ -1,4 +1,4 @@
-import MentorsGrid from "../../components/MentorsComponents/MentorsGrid"; 
+import MentorsGrid from "../../components/MenteeComponents/MentorsGrid"; 
 import { useTheme } from "../../Context/ThemeContext";
 import { useState, useMemo } from "react";
 import type { FilterState, Mentor } from '../../types/types';
@@ -175,12 +175,24 @@ const BrowseMentor = () => {
         onBookSession={handleBookSession}
       />
       
-      <BookingModal
-        isOpen={isBookingModalOpen}
-        onClose={handleCloseBookingModal}
-        mentor={selectedMentor}
-        isDark={isDark}
-      />
+      {/* Only render BookingModal when selectedMentor is not null */}
+      {selectedMentor && (
+        <BookingModal
+          isOpen={isBookingModalOpen}
+          onClose={handleCloseBookingModal}
+          mentor={{
+            id: selectedMentor.id.toString(), // Convert number to string if needed
+            name: selectedMentor.name,
+            title: selectedMentor.title,
+            company: selectedMentor.company,
+            avatar: selectedMentor.avatar,
+            rating: selectedMentor.rating,
+            location: selectedMentor.location,
+            hourlyRate: selectedMentor.hourlyRate,
+          }}
+          isDark={isDark}
+        />
+      )}
     </div>
   );
 };
