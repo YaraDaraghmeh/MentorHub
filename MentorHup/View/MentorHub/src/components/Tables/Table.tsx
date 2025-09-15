@@ -1,11 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTheme } from "../../Context/ThemeContext";
+import { MdOutlineNavigateNext } from "react-icons/md";
+import { GrFormPrevious } from "react-icons/gr";
 
 type ColumnDef<T> = {
   header: string;
-  accessor?: keyof T; 
+  accessor?: keyof T;
   render?: (row: T) => React.ReactNode;
-  id?: string; 
+  id?: string;
 };
 
 type TableProps<T> = {
@@ -20,6 +22,14 @@ function Table<T extends { id: number | string }>({
   columns,
 }: TableProps<T>) {
   const { isDark } = useTheme();
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPage = 5;
+
+  const indexOfLastRow = currentPage * rowsPage;
+  const indexOfFirstRow = indexOfLastRow - rowsPage;
+  const currentRows = data.slice(indexOfFirstRow, indexOfLastRow);
+
+  const totalPages = Math.ceil(data.length / rowsPage);
 
   return (
     <div
@@ -30,7 +40,7 @@ function Table<T extends { id: number | string }>({
       {/* Header Section */}
       <div className="inline-flex flex-col justify-between items-start w-full gap-3 h-auto p-4">
         <h2
-          className={`justify-start text-xl font-bold ${
+          className={`justify-start lg:text-xl sm:text-lg font-bold ${
             isDark ? "text-[var(--secondary-light)]" : "text-[bg-dark]"
           }`}
         >
@@ -63,7 +73,7 @@ function Table<T extends { id: number | string }>({
             {columns.map((col, index) => (
               <th
                 key={col.id || col.accessor?.toString() || index}
-                className={`px-4 py-2 text-center text-base font-semibold ${
+                className={`px-4 py-2 text-center lg:text-base sm:text-sm font-semibold ${
                   isDark
                     ? "text-[var(--gray-light)]"
                     : "text-[var(--primary-dark)]"
@@ -82,7 +92,7 @@ function Table<T extends { id: number | string }>({
               : "text-[var(--primary-rgba)]"
           }`}
         >
-          {data.map((row) => (
+          {currentRows.map((row) => (
             <tr
               key={row.id}
               className={`h-20 border-b ${
@@ -92,9 +102,9 @@ function Table<T extends { id: number | string }>({
               }`}
             >
               {columns.map((col, index) => (
-                <td 
-                  key={col.id || col.accessor?.toString() || index} 
-                  className="px-4 py-2 text-center"
+                <td
+                  key={col.id || col.accessor?.toString() || index}
+                  className="px-4 py-2 text-center lg:text-[16px] sm:text-sm"
                 >
                   {col.render
                     ? col.render(row)
@@ -107,6 +117,36 @@ function Table<T extends { id: number | string }>({
           ))}
         </tbody>
       </table>
+
+      {/* Pagination Controls */}
+      <div className="flex gap-2 p-4">
+        {/* Previous */}
+        <button
+          disabled={currentPage === 1}
+          onClick={() => setCurrentPage((prev) => prev - 1)}
+          className={`p-1 rounded-full disabled:opacity-50 ${
+            isDark ? "bg-[var(--secondary)]" : "bg-[var(--secondary-dark)]"
+          }`}
+        >
+          <GrFormPrevious />
+        </button>
+        <span
+          className={`px-2 ${isDark ? "text-white" : "text-[var(--primary)]"}`}
+        >
+          {currentPage} ... {totalPages}
+        </span>
+
+        {/* Next */}
+        <button
+          disabled={currentPage === totalPages}
+          onClick={() => setCurrentPage((prev) => prev + 1)}
+          className={`p-1 rounded-full disabled:opacity-50 ${
+            isDark ? "bg-[var(--secondary)]" : "bg-[var(--secondary-dark)]"
+          }`}
+        >
+          <MdOutlineNavigateNext />
+        </button>
+      </div>
     </div>
   );
 }

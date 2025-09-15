@@ -29,7 +29,7 @@ const PaymentsInSystem = () => {
           <div className="w-12 h-12">
             <img
               src={row.image || profile}
-              className="w-full h-full rounded-full"
+              className="hidden lg:block w-full h-full rounded-full"
               alt="profile"
             />
           </div>
@@ -46,7 +46,7 @@ const PaymentsInSystem = () => {
           <div className="w-12 h-12">
             <img
               src={row.image || profile}
-              className="w-full h-full rounded-full"
+              className="hidden lg:block w-full h-full rounded-full"
               alt="profile"
             />
           </div>
@@ -68,9 +68,9 @@ const PaymentsInSystem = () => {
 
         const statusColors: Record<string, string> = {
           succeeded: "bg-[var(--secondary-dark)]",
-          failed: "bg-[var(--red-light)]",
-          pending: "bg-[#f59e0b]",
-          refunded: "bg-blue-500",
+          cancelled: "bg-[var(--red-light)]",
+          // pending: "bg-[#f59e0b]",
+          // refunded: "bg-blue-500",
         };
 
         const bgColor = statusColors[status] || "bg-gray-200";

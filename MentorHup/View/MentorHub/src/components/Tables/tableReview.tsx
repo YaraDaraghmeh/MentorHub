@@ -30,7 +30,7 @@ const TableReview = () => {
             <img
               src={row.image || profile}
               onError={(e) => (e.currentTarget.src = profile)}
-              className="w-full h-full rounded-full"
+              className="hidden lg:block w-full h-full rounded-full"
               alt="profile"
             />
           </div>

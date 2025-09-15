@@ -5,6 +5,7 @@ import { Outlet } from "react-router-dom";
 import { IoNotifications } from "react-icons/io5";
 import { useTheme } from "../Context/ThemeContext";
 import { BsMoonFill, BsSunFill } from "react-icons/bs";
+import { FaTools } from "react-icons/fa";
 
 const userProfile = {
   name: " Sara Sayed Ahmad",
@@ -113,6 +114,20 @@ const BodySystem = () => {
           <div className="flex-1 py-5">
             <Outlet />
           </div>
+        </div>
+
+        <div className="fixed right-0 top-1/5 group">
+          <button
+            type="button"
+            className={`transition text-white py-2 px-4 rounded-l-full text-lg ${
+              isDark ? "bg-[var(--secondary-dark)]" : "bg-[var(--green-dark)]"
+            }`}
+          >
+            <FaTools size={24} />
+            <span className="absolute right-12 top-1/1 -translate-y-1/2 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition pointer-events-none">
+              Manage Skills
+            </span>
+          </button>
         </div>
       </div>
     </div>
