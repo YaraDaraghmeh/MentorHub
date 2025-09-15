@@ -1,13 +1,15 @@
-import { BsFillCalendar2CheckFill, BsFillPeopleFill } from "react-icons/bs";
+import {
+  BsFillCalendar2CheckFill,
+  BsFillPeopleFill,
+  BsStarHalf,
+} from "react-icons/bs";
 import { useTheme } from "../../Context/ThemeContext";
 import CardDash from "../Cards/CardDashboard";
-import { MdOutlineAttachMoney } from "react-icons/md";
 import { FaUserTie } from "react-icons/fa";
 import ApxChartDash from "../Charts/ApexChart";
 import BarChartDash from "../Charts/BarChart";
-import Table from "../Tables/Table";
-import data from "../Tables/dataTable.json";
-import Eye from "../Tables/eyeicon";
+import TableBooking from "../Tables/tableBooking";
+import TableReview from "../Tables/tableReview";
 
 const DashboardAdmin = () => {
   const { isDark } = useTheme();
@@ -20,9 +22,9 @@ const DashboardAdmin = () => {
       color: "",
     },
     {
-      title: "Total Mentors",
-      value: "80",
-      icon: <MdOutlineAttachMoney />,
+      title: "Total Reviews",
+      value: "22",
+      icon: <BsStarHalf />,
       color: "",
     },
     {
@@ -53,53 +55,6 @@ const DashboardAdmin = () => {
     { label: "Mentees", value: 44 },
   ];
 
-  const columns = [
-    {
-      header: "Name Mentee",
-      accessor: "name" as const,
-      render: (row: any) => {
-        return (
-          <div className="flex items-center gap-3 justify-start text-start">
-            <div className="w-12 h-12">
-              <img
-                src={row.image}
-                className="w-full h-full rounded-full"
-                alt="profile"
-              />
-            </div>
-            {row.name}
-          </div>
-        );
-      },
-    },
-    { header: "Date & time", accessor: "date" as const },
-    { header: "Duration", accessor: "duration" as const },
-    {
-      header: "Status",
-      accessor: "status" as const,
-      render: (row: any) => (
-        <span
-          className={`font-semibold p-2 rounded-full text-white ${
-            row.status === "Confirmed"
-              ? "bg-[var(--secondary-dark)]"
-              : "bg-[var(--red-light)]"
-          }`}
-        >
-          {row.status}
-        </span>
-      ),
-    },
-    {
-      header: "Action",
-      accessor: "id" as const,
-      render: () => (
-        <div className="flex justify-center items-center">
-          <Eye className="w-5 h-5 cursor-pointer" />
-        </div>
-      ),
-    },
-  ];
-
   return (
     <>
       {/* Cards */}
@@ -127,8 +82,11 @@ const DashboardAdmin = () => {
 
       {/* Table Booking */}
       <div className="py-7 w-full">
-        <Table titleTable="Booking" data={data} columns={columns} />
+        <TableBooking />
       </div>
+
+      {/* Table Review */}
+      <TableReview />
     </>
   );
 };

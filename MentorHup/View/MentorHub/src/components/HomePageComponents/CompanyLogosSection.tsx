@@ -23,8 +23,8 @@ const CompanyLogosSection = () => {
     <div
       className={`pt-24 pb-16 transition-all duration-300 ${
         isDark
-          ? "text-white bg-[#06171c]"
-          : "text-[var(--primary)] bg-[#96FBF1]"
+          ? "text-white bg-[var(--primary-rgba)]"
+          : "text-[var(--primary)] bg-[var(--primary-green-light)]"
       }`}
     >
       <div className="container mx-auto px-6 py-8">

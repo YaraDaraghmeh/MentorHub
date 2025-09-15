@@ -44,17 +44,25 @@ const TableBooking = () => {
       id: "status",
       header: "Status",
       accessor: "status" as keyof BookingData,
-      render: (row: BookingData) => (
-        <span
-          className={`font-semibold p-2 rounded-full text-white ${
-            row.status === "Confirmed"
-              ? "bg-[var(--secondary-dark)]"
-              : "bg-[var(--red-light)]"
-          }`}
-        >
-          {row.status}
-        </span>
-      ),
+      render: (row: BookingData) => {
+        const status = row.status?.trim().toLowerCase();
+
+        const statusColors: Record<string, string> = {
+          confirmed: "bg-[var(--secondary-dark)]",
+          cancelled: "bg-[var(--red-light)]",
+          pending: "bg-[#ffc300]",
+        };
+
+        const bgColor = statusColors[status] || "bg-gray-200";
+
+        return (
+          <span
+            className={`font-semibold p-2 rounded-full text-white ${bgColor}`}
+          >
+            {row.status}
+          </span>
+        );
+      },
     },
     {
       id: "actions",
@@ -71,7 +79,7 @@ const TableBooking = () => {
   ];
 
   return (
-    <div className="py-7 w-full">
+    <div className="pt-7 w-full">
       <Table<BookingData> titleTable="Booking" data={data} columns={columns} />
     </div>
   );

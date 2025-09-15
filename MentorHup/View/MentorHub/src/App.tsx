@@ -21,6 +21,7 @@ import MenteeBooking from "./Pages/MenteePages/MenteeBookings";
 import BrowseMentor from "./Pages/MenteePages/BrowseMonetor";
 import MenteeDashboard from "./Pages/MenteePages/Dashboard";
 import Users from "./Pages/AdminPages/Users";
+import SessionsAdm from "./Pages/AdminPages/Sessions";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -35,30 +36,19 @@ function App() {
         <Router>
           {/* Public Pages */}
           <Routes>
-            <Route
-              element={<MainLayout  />}
-            >
+            <Route element={<MainLayout />}>
               <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutUsPage />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/contactUs" element={<ContactUs />} />
               <Route path="/browsMentor" element={<PublicMentors />} />
-              <Route path="/" element={<HomePage  />} />
+              <Route path="/" element={<HomePage />} />
               <Route path="/about" element={<AboutUsPage />} />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
+              <Route path="/browsMentor" element={<PublicMentors />} />
+              <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/contactUs" element={<ContactUs />} />
-              <Route
-                path="/browsMentor"
-                element={<PublicMentors />}
-              />
+              <Route path="/browsMentor" element={<PublicMentors />} />
               <Route path="/joinUs" element={<JoinUsPage />} />
             </Route>
           </Routes>
@@ -79,6 +69,7 @@ function App() {
               <Route path="/mentor/booking" element={<Booking />} />
               <Route path="/admin/dashboard" element={<DashboardAd />} />
               <Route path="/admin/users" element={<Users />} />
+              <Route path="/admin/booking" element={<SessionsAdm />} />
             </Route>
           </Routes>
           <Routes>

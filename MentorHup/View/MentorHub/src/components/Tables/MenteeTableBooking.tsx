@@ -2,8 +2,17 @@ import Table from "./Table";
 import data from "./dataTable.json";
 import Eye from "./eyeicon";
 
+interface BookingData {
+  id: number;
+  name: string;
+  date: string;
+  duration: string;
+  status: string;
+  image: string;
+}
+
 const MenteeTableBooking = () => {
-    const columns = [
+  const columns = [
     {
       header: "Mentor Name",
       accessor: "name" as const,
@@ -28,19 +37,25 @@ const MenteeTableBooking = () => {
     {
       header: "Status",
       accessor: "status" as const,
-      render: (row: any) => (
-        <span
-          className={`font-semibold p-2 rounded-full text-white ${
-            row.status === "Confirmed"
-              ? "bg-[var(--secondary-dark)]"
-              : row.status === "Completed"
-              ? "bg-green-500"
-              : "bg-[var(--red-light)]"
-          }`}
-        >
-          {row.status}
-        </span>
-      ),
+      render: (row: BookingData) => {
+        const status = row.status?.trim().toLowerCase();
+
+        const statusColors: Record<string, string> = {
+          confirmed: "bg-[var(--secondary-dark)]",
+          cancelled: "bg-[var(--red-light)]",
+          pending: "bg-[#ffc300]",
+        };
+
+        const bgColor = statusColors[status] || "bg-gray-200";
+
+        return (
+          <span
+            className={`font-semibold p-2 rounded-full text-white ${bgColor}`}
+          >
+            {row.status}
+          </span>
+        );
+      },
     },
     {
       header: "Action",
@@ -52,13 +67,13 @@ const MenteeTableBooking = () => {
       ),
     },
   ];
-    return (
-        <>  
-          {/* Table Sessions */}
+  return (
+    <>
+      {/* Table Sessions */}
       <div className="py-7 w-full">
         <Table titleTable="My Booked Sessions" data={data} columns={columns} />
       </div>
-      </>
-    );
-}
+    </>
+  );
+};
 export default MenteeTableBooking;
