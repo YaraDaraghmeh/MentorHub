@@ -351,5 +351,3 @@ const BookingModal = ({ isOpen, onClose, mentor, isDark }: BookingModalProps) =>
     </div>
   );
 };
-
-export default BookingModal;
