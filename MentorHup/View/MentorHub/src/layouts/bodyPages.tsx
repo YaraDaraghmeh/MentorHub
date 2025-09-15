@@ -4,6 +4,7 @@ import { BiSearch } from "react-icons/bi";
 import { Outlet } from "react-router-dom";
 import { IoNotifications } from "react-icons/io5";
 import { useTheme } from "../Context/ThemeContext";
+import { BsMoonFill, BsSunFill } from "react-icons/bs";
 
 const userProfile = {
   name: " Sara Sayed Ahmad",
@@ -11,7 +12,7 @@ const userProfile = {
 };
 
 const BodySystem = () => {
-  const { isDark } = useTheme();
+  const { isDark, toggle } = useTheme();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
@@ -30,7 +31,7 @@ const BodySystem = () => {
       {/* page */}
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ${
-          isSidebarOpen ? "ml-[230px]" : "ml-20"
+          isSidebarOpen && window.innerWidth > 768 ? "ml-[230px]" : "ml-20"
         }`}
       >
         <div className="flex flex-col p-5 gap-7">
@@ -75,12 +76,36 @@ const BodySystem = () => {
               </div>
             </div>
 
-            <div className="flex">
-              <IoNotifications
-                className={`lg:w-[24px] lg:h-[24px] md:w-[22px] md:h-[22px] ${
-                  isDark ? "text-white" : "text-[var(--primary-rgba)]"
+            {/* Icons Container */}
+            <div className="flex items-center gap-2 justify-center sm:justify-end flex-shrink-0">
+              {/* Notifications */}
+              <button
+                className={`p-2 rounded-lg hover:bg-opacity-20 transition-colors duration-200 ${
+                  isDark
+                    ? "text-white hover:bg-white"
+                    : "text-[var(--primary)] hover:bg-[var(--primary)]"
                 }`}
-              />
+                aria-label="Notifications"
+              >
+                <IoNotifications className="w-5 h-5 lg:w-6 lg:h-6" />
+              </button>
+
+              {/* Theme Toggle */}
+              <button
+                onClick={toggle}
+                className={`p-2 rounded-lg transition-colors duration-200 ${
+                  isDark
+                    ? "hover:bg-gray-700 text-yellow-300"
+                    : "hover:bg-gray-100 text-gray-600"
+                }`}
+                aria-label="Toggle theme"
+              >
+                {isDark ? (
+                  <BsSunFill className="w-5 h-5 lg:w-6 lg:h-6" />
+                ) : (
+                  <BsMoonFill className="w-5 h-5 lg:w-6 lg:h-6" />
+                )}
+              </button>
             </div>
           </div>
 
