@@ -57,7 +57,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
         title: "Dashboard",
         path: "/mentee/dashboard",
       },
-      { icon: IoPeople, title: "Mentors", path: "/mentee/dashboard1" },
+      { icon: IoPeople, title: "Mentors", path: "/mentee/mentors" },
       { icon: HiMiniCalendar, title: "Booking", path: "/mentee/booking" },
       { icon: HiChatAlt2, title: "Chatting", path: "/mentee/chatting" },
     ],

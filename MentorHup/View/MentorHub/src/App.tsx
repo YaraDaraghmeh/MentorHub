@@ -76,7 +76,9 @@ function App() {
             <Route element={<BodySystem />}>
               <Route path="/mentee/main" element={<BrowseMentor />} />
               <Route path="/mentee/dashboard" element={<MenteeDashboard />} />
+              <Route path="/mentee/mentors" element={<BrowseMentor />} />
               <Route path="/mentee/chatting" element={<ChateUser />} />
+
               <Route path="/mentee/booking" element={<MenteeBooking />} />
             </Route>
           </Routes>
