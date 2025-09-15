@@ -31,11 +31,7 @@ const MentorsGrid: React.FC<MentorsGridProps> = ({
   };
 
   return (
-    <section
-      className={`py-8  ${
-        isDark ? "bg-[var(--primary-rgba)]" : "bg-[#96fbf1]"
-      }`}
-    >
+    <section className={`py-8`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           variants={containerVariants}

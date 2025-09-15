@@ -35,7 +35,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
       },
       { icon: IoPeople, title: "Users", path: "/admin/users" },
       { icon: HiChatAlt2, title: "Chatting", path: "/admin/chatting" },
-      { icon: HiMiniCalendar, title: "Booking", path: "/admin/booking" },
+      { icon: HiMiniCalendar, title: "Sessions", path: "/admin/sessions" },
     ],
     mentor: [
       {
