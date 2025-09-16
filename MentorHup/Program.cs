@@ -16,6 +16,17 @@ builder.Services.AddProblemDetails();
 builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
+//var MyAllowSepcificOrigins = "_myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("CorsPolicy", builder =>
+    {
+        builder.WithOrigins("http://localhost:5175") // frontend HTTP „Õœœ
+                      .AllowAnyMethod()
+                      .AllowAnyHeader();
+        // .AllowCredentials() „⁄ÿ· ·√‰Â frontend HTTP + backend HTTPS
+    });
+});
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
@@ -78,8 +89,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction() )
 
 //app.UseHttpsRedirection();
 app.UseExceptionHandler();
+app.UseCors("CorsPolicy");
 app.UseAuthentication();
-
 app.UseAuthorization();
 
 app.MapControllers();
