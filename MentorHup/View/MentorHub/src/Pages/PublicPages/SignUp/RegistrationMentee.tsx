@@ -1,19 +1,54 @@
 import AppForm from "../../../components/Form/Form";
 import FormFiled from "../../../components/Form/FormFiled";
 import video from "../../../assets/videoMentorHub2.mp4";
-// import video from "../../../assets/mockInterview.mp4";
+import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import urlMentee from "../../../Utilities/Mentee/urlMentee";
 
 const SignUpMentee = () => {
   const navigate = useNavigate();
-
-  const handleRei = () => {
-    console.log("test");
-  };
+  const [registerData, setRegisterData] = useState({
+    name: "",
+    gender: "",
+    imageLink: null,
+    email: "",
+    password: "",
+  });
 
   const handleSignIn = () => {
     navigate("/login");
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+
+    setRegisterData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const RegisterMentee = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const formData = new FormData();
+      formData.append("name", registerData.name);
+      formData.append("gender", registerData.gender);
+      formData.append("email", registerData.email);
+      formData.append("password", registerData.password);
+
+      const response = await axios.post(urlMentee.REGISTER_USER, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log("respo", response);
+    } catch (error: any) {
+      console.error(error.response?.data || error.message);
+    }
   };
 
   return (
@@ -37,12 +72,7 @@ const SignUpMentee = () => {
           </div>
         </div>
         <div className="w-full flex flex-col justify-center items-center">
-          <AppForm
-            title="Sign up"
-            span=" as"
-            span2=" Mentee"
-            onSubmit={handleRei}
-          >
+          <AppForm title="Sign up" span=" as" span2=" Mentee">
             <p className="w-full justify-center text-center text-[var(--gray-dark)] text-sm font-medium">
               Welcome to MentorHub
             </p>
@@ -55,6 +85,8 @@ const SignUpMentee = () => {
                     label="Name"
                     name="name"
                     placeholder="sara.."
+                    value={registerData.name}
+                    onChange={handleChange}
                   />
                 </div>
                 <div className="flex-1">
@@ -63,6 +95,8 @@ const SignUpMentee = () => {
                     label="Gender"
                     name="gender"
                     placeholder="Male or Female"
+                    value={registerData.gender}
+                    onChange={handleChange}
                   />
                 </div>
               </div>
@@ -71,16 +105,23 @@ const SignUpMentee = () => {
                 label="Email"
                 name="email"
                 placeholder="example@gmail.com"
+                value={registerData.email}
+                onChange={handleChange}
               />
               <FormFiled
-                type="text"
+                type="password"
                 label="Password"
                 name="password"
                 placeholder="***********"
+                value={registerData.password}
+                onChange={handleChange}
               />
 
               {/* Sign in */}
-              <button className="cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold ">
+              <button
+                onClick={RegisterMentee}
+                className="cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold "
+              >
                 Sign Up
               </button>
             </div>

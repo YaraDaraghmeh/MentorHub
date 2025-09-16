@@ -174,7 +174,7 @@ const MentorHubAbout: React.FC<MentorHubAboutProps> = () => {
         
         .card-hover-effect:hover {
           transform: translateY(-12px) scale(1.02);
-          box-shadow: 0 25px 50px  ;
+          box-shadow: 0 10px 32px  ;
         }
         
         .stats-counter {

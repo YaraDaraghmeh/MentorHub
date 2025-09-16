@@ -6,14 +6,13 @@ import { IoNotifications } from "react-icons/io5";
 import { useTheme } from "../Context/ThemeContext";
 import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import { FaTools } from "react-icons/fa";
+import { useAuth } from "../Context/AuthContext";
 
-const userProfile = {
-  name: " Sara Sayed Ahmad",
-  email: "sara@example.com",
-};
+type UserRole = "Admin" | "Mentor" | "Mentee";
 
 const BodySystem = () => {
   const { isDark, toggle } = useTheme();
+  const { roles, email, userId } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 
   return (
@@ -23,8 +22,8 @@ const BodySystem = () => {
       }`}
     >
       <SideBar
-        profile={userProfile}
-        role="admin"
+        profile={{ email, userId, name: null }}
+        role={roles as UserRole}
         expended={isSidebarOpen}
         setExpended={setIsSidebarOpen}
       />
@@ -54,7 +53,7 @@ const BodySystem = () => {
                       : "text-[var(--secondary-dark)]"
                   }`}
                 >
-                  {userProfile.name}
+                  {email}
                 </span>
                 <span>, Welcome Back!</span>
               </div>
