@@ -45,7 +45,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("AdminCommissions");
+                    b.ToTable("AdminCommissions", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.ApplicationUser", b =>
@@ -61,7 +61,9 @@ namespace MentorHup.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -167,7 +169,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("MentorId");
 
-                    b.ToTable("Bookings");
+                    b.ToTable("Bookings", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Mentee", b =>
@@ -198,7 +200,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Mentees");
+                    b.ToTable("Mentees", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Mentor", b =>
@@ -243,7 +245,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Mentors");
+                    b.ToTable("Mentors", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.MentorAvailability", b =>
@@ -273,7 +275,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("MentorId");
 
-                    b.ToTable("MentorAvailabilities");
+                    b.ToTable("MentorAvailabilities", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.MentorSkill", b =>
@@ -296,7 +298,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("MentorSkills");
+                    b.ToTable("MentorSkills", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Message", b =>
@@ -331,7 +333,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages");
+                    b.ToTable("Messages", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Payment", b =>
@@ -371,7 +373,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.RefreshToken", b =>
@@ -400,7 +402,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens");
+                    b.ToTable("RefreshTokens", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
@@ -428,7 +430,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("Reviews");
+                    b.ToTable("Reviews", (string)null);
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Skill", b =>
@@ -445,7 +447,7 @@ namespace MentorHup.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skills");
+                    b.ToTable("Skills", (string)null);
 
                     b.HasData(
                         new

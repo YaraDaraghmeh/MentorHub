@@ -55,6 +55,9 @@ var app = builder.Build();
 //  Seed Roles , Admin
 using (var scope = app.Services.CreateScope())
 {
+    var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    db.Database.Migrate(); // ·· Ì ·„  ÿ»ﬁ DB  ·ﬁ«∆Ì« ⁄·Ï «· migrations Â–« ”Ìÿ»ﬁ ﬂ· «·‹ 
+
     var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
     var userManager = scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>();
     var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
@@ -62,7 +65,7 @@ using (var scope = app.Services.CreateScope())
     await DefaultRolesSeeder.SeedAsync(roleManager, userManager, configuration);
 }
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (app.Environment.IsDevelopment() || app.Environment.IsProduction() )
 {
     app.MapOpenApi();
     app.UseSwagger();
