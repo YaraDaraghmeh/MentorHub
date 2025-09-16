@@ -117,7 +117,7 @@ Sent via MentorHub Contact Form
 
   return (
     <div
-      className={`min-h-screen ${themeClasses.bg} py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden`}
+      className={`min-h-screen ${themeClasses.bg} py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden`}
     >
       {/* Enhanced Background Pattern */}
       <div className="absolute inset-0 opacity-10">
@@ -188,12 +188,12 @@ Sent via MentorHub Contact Form
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-8">
+            <form onSubmit={handleSubmit} className="space-y-8 text-start">
               {/* Enhanced Form Fields */}
               <div className="relative group">
                 <label
                   htmlFor="email"
-                  className={`block text-sm font-medium ${themeClasses.text} mb-3 transition-colors group-focus-within:text-blue-600`}
+                  className={`block text-sm font-medium text-gray-900 mb-3 transition-colors group-focus-within:text-blue-600`}
                 >
                   Your Email Address
                 </label>
@@ -215,7 +215,7 @@ Sent via MentorHub Contact Form
               <div className="relative group">
                 <label
                   htmlFor="subject"
-                  className={`block text-sm font-medium ${themeClasses.text} mb-3 transition-colors group-focus-within:text-blue-600`}
+                  className={`block text-sm font-medium text-gray-900 mb-3 transition-colors group-focus-within:text-blue-600`}
                 >
                   Subject
                 </label>
@@ -237,7 +237,7 @@ Sent via MentorHub Contact Form
               <div className="relative group">
                 <label
                   htmlFor="message"
-                  className={`block text-sm font-medium ${themeClasses.text} mb-3 transition-colors group-focus-within:text-blue-600`}
+                  className={`block text-sm font-medium text-gray-900 mb-3 transition-colors group-focus-within:text-blue-600`}
                 >
                   Message
                 </label>

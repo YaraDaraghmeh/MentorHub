@@ -22,7 +22,7 @@ const TableBooking = () => {
           <div className="w-12 h-12">
             <img
               src={row.image}
-              className="w-full h-full rounded-full"
+              className="hidden lg:block w-full h-full rounded-full"
               alt="profile"
             />
           </div>

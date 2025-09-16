@@ -12,23 +12,25 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
+
 interface profile {
-  name: string;
-  email: string;
+  name: string | null;
+  email: string | null;
+  userId: string | null;
 }
 
-type UserRole = "admin" | "mentor" | "mentee";
+type UserRole = "Admin" | "Mentor" | "Mentee";
 
 interface sideProps {
   profile: profile;
-  role: UserRole;
+  role: UserRole | null;
   expended: boolean;
   setExpended: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
   const menuItems = {
-    admin: [
+    Admin: [
       {
         icon: RiDashboardHorizontalLine,
         title: "Dashboard",
@@ -39,7 +41,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
       { icon: HiMiniCalendar, title: "Sessions", path: "/admin/sessions" },
       { icon: MdOutlinePayment, title: "Payments", path: "/admin/payment" },
     ],
-    mentor: [
+    Mentor: [
       {
         icon: RiDashboardHorizontalLine,
         title: "Dashboard",
@@ -48,7 +50,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
       { icon: HiMiniCalendar, title: "Booking", path: "/mentor/booking" },
       { icon: HiChatAlt2, title: "Chatting", path: "/mentor/chatting" },
     ],
-    mentee: [
+    Mentee: [
       {
         icon: HiHome,
         title: "Main",
@@ -146,12 +148,13 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
           >
             {/* list nav */}
             <ul className={`w-full flex flex-col gap-3`}>
-              {menuItems[role].map((item, index) => (
-                <ListSide key={index} link={item.path} expended={expended}>
-                  <item.icon className="w-6 h-6" />
-                  {expended ? item.title : ""}
-                </ListSide>
-              ))}
+              {role &&
+                menuItems[role].map((item, index) => (
+                  <ListSide key={index} link={item.path} expended={expended}>
+                    <item.icon className="w-6 h-6" />
+                    {expended ? item.title : ""}
+                  </ListSide>
+                ))}
             </ul>
 
             {/* setting / logout */}

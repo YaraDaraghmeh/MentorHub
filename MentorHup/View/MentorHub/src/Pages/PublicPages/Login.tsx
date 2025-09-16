@@ -4,15 +4,16 @@ import FormFiled from "../../components/Form/FormFiled";
 import logo from "/src/assets/MentorHub-logo (1)/vector/default-monochrome.svg";
 import { FcGoogle } from "react-icons/fc";
 import ModalConfirm from "../../components/Modal/ModalConfirm";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import urlAuth from "../../Utilities/Auth/urlAuth";
+import { useAuth } from "../../Context/AuthContext";
 
 const LoginUser = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
-
-  const handleContact = () => {
-    console.log("test");
-  };
+  const [formData, setFormData] = useState({ email: "", password: "" });
+  const { setAuth } = useAuth();
 
   const handleSignUp = () => {
     navigate("/registration");
@@ -25,6 +26,42 @@ const LoginUser = () => {
 
     return () => clearTimeout(timer);
   }, []);
+
+  // when add data on inputs
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    console.log(formData);
+  };
+
+  // fun login
+  const handleLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(urlAuth.LOGIN_USER, formData, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const { roles, email, userId, accessToken, refreshToken } = response.data;
+      const roleString = roles[0] as "Admin" | "Mentor" | "Mentee";
+
+      setAuth({ userId, roles: roleString, email, accessToken, refreshToken });
+
+      if (roles === "Mentee") navigate("/mentee/dashboard");
+      else if (roles === "Mentor") navigate("/mentor/dashboard");
+      else if (roles === "Admin") navigate("/admin/dashboard");
+      else console.warn("Unknown roles:", roles);
+
+      console.log(response);
+    } catch (error: any) {
+      console.error(error.response?.data || error.message);
+    }
+  };
 
   return (
     <>
@@ -39,7 +76,6 @@ const LoginUser = () => {
             title="Welcome back! Ready to ace your next"
             span=" interview"
             span2=" ?"
-            onSubmit={handleContact}
           >
             <div className="self-stretch inline-flex flex-col w-full justify-between items-start gap-3.5">
               <p className="justify-center text-[var(--gray-dark)] text-base font-medium">
@@ -52,12 +88,16 @@ const LoginUser = () => {
                 label="Email"
                 name="email"
                 placeholder="example@gmail.com"
+                value={formData.email}
+                onChange={handleChange}
               />
               <FormFiled
-                type="text"
+                type="password"
                 label="Password"
                 name="password"
                 placeholder="***********"
+                value={formData.password}
+                onChange={handleChange}
               />
 
               {/* forget password */}
@@ -68,7 +108,10 @@ const LoginUser = () => {
               </div>
 
               {/* Sign in */}
-              <button className="cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold ">
+              <button
+                onClick={handleLogin}
+                className="cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold "
+              >
                 Sign in
               </button>
             </div>

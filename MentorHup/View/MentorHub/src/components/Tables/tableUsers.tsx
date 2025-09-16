@@ -34,7 +34,7 @@ const TableUser = () => {
             <div className="w-12 h-12">
               <img
                 src={row.image || profile}
-                className="w-full h-full rounded-full"
+                className="hidden lg:block w-full h-full rounded-full"
                 alt="profile"
               />
             </div>
@@ -100,7 +100,7 @@ const TableUser = () => {
       <ConfirmModal
         open={showModal}
         title="Delete User"
-        message="Are you sure about the deletion process?"
+        message="Are you sure you want to perform this action?"
         onClose={() => setShowModal(false)}
         onConfirm={() => {
           setShowModal(false);

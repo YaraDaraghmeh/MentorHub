@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from "react";
 import { useTheme } from "../../Context/ThemeContext";
 
 interface TeamMember {
@@ -7,8 +7,6 @@ interface TeamMember {
   image: string;
 }
 
-
-
 const MentorHubTeam: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -16,57 +14,67 @@ const MentorHubTeam: React.FC = () => {
   const [touchEnd, setTouchEnd] = useState(0);
   const { isDark } = useTheme();
   const teamMembers: TeamMember[] = [
-    { 
-      name: "Sarah Ahmed", 
+    {
+      name: "Sarah Ahmed",
       role: "Team Lead & Career Coach",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmVzc2lvbmFsJTIwcGVvcGxlfGVufDB8fDB8fHww"
+      image:
+        "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8cHJvZmVzc2lvbmFsJTIwcGVvcGxlfGVufDB8fDB8fHww",
     },
-    { 
-      name: "Yara Daraghmeh", 
+    {
+      name: "Yara Daraghmeh",
       role: "Frontend Queen",
-      image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cHJvZmVzc2lvbmFsJTIwcGVvcGxlfGVufDB8fDB8fHww"
+      image:
+        "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8cHJvZmVzc2lvbmFsJTIwcGVvcGxlfGVufDB8fDB8fHww",
     },
-    { 
-      name: "Khaled Mazen", 
+    {
+      name: "Khaled Mazen",
       role: "Backend Engineer",
-      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      image:
+        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
-    { 
-      name: "Amjad", 
+    {
+      name: "Amjad",
       role: "Backend Engineer",
-      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+      image:
+        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     },
-    { 
-      name: "Lisa Anderson", 
+    {
+      name: "Lisa Anderson",
       role: "Industry Relations",
-      image: "https://images.unsplash.com/photo-1655249481446-25d575f1c054?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fHByb2Zlc3Npb25hbCUyMHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D"
+      image:
+        "https://images.unsplash.com/photo-1655249481446-25d575f1c054?w=900&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjh8fHByb2Zlc3Npb25hbCUyMHBlb3BsZXxlbnwwfHwwfHx8MA%3D%3D",
     },
-    { 
-      name: "James Wilson", 
+    {
+      name: "James Wilson",
       role: "Technology Director",
-      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-    }
+      image:
+        "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=3687&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    },
   ];
 
-  const updateCarousel = useCallback((newIndex: number) => {
-    if (isAnimating) return;
-    setIsAnimating(true);
-    setCurrentIndex((newIndex + teamMembers.length) % teamMembers.length);
-    
-    setTimeout(() => {
-      setIsAnimating(false);
-    }, 800);
-  }, [isAnimating, teamMembers.length]);
+  const updateCarousel = useCallback(
+    (newIndex: number) => {
+      if (isAnimating) return;
+      setIsAnimating(true);
+      setCurrentIndex((newIndex + teamMembers.length) % teamMembers.length);
+
+      setTimeout(() => {
+        setIsAnimating(false);
+      }, 800);
+    },
+    [isAnimating, teamMembers.length]
+  );
 
   const getCardPosition = (cardIndex: number) => {
-    const offset = (cardIndex - currentIndex + teamMembers.length) % teamMembers.length;
-    
-    if (offset === 0) return 'center';
-    if (offset === 1) return 'right-1';
-    if (offset === 2) return 'right-2';
-    if (offset === teamMembers.length - 1) return 'left-1';
-    if (offset === teamMembers.length - 2) return 'left-2';
-    return 'hidden';
+    const offset =
+      (cardIndex - currentIndex + teamMembers.length) % teamMembers.length;
+
+    if (offset === 0) return "center";
+    if (offset === 1) return "right-1";
+    if (offset === 2) return "right-2";
+    if (offset === teamMembers.length - 1) return "left-1";
+    if (offset === teamMembers.length - 2) return "left-2";
+    return "hidden";
   };
 
   const handleTouchStart = (e: React.TouchEvent) => {
@@ -89,28 +97,28 @@ const MentorHubTeam: React.FC = () => {
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowLeft') updateCarousel(currentIndex - 1);
-      if (e.key === 'ArrowRight') updateCarousel(currentIndex + 1);
+      if (e.key === "ArrowLeft") updateCarousel(currentIndex - 1);
+      if (e.key === "ArrowRight") updateCarousel(currentIndex + 1);
     };
 
-    document.addEventListener('keydown', handleKeyDown);
-    return () => document.removeEventListener('keydown', handleKeyDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
   }, [currentIndex, updateCarousel]);
 
   const themeStyles = {
-    backgroundColor: isDark ? '#06171c' : '#96fbf1',
-    color: isDark ? '#ffffff' : '#071b21'
+    backgroundColor: isDark ? "var(--primary-rgba)" : "#96fbf1",
+    color: isDark ? "#ffffff" : "#071b21",
   };
 
   const cardStyle = {
-    background: '#ffffff',
-    boxShadow: isDark 
-      ? '0 10px 40px rgba(150, 251, 241, 0.3)' 
-      : '0 20px 40px rgba(6, 23, 28, 0.3)'
+    background: "#ffffff",
+    boxShadow: isDark
+      ? "0 10px 40px rgba(150, 251, 241, 0.3)"
+      : "0 20px 40px rgba(6, 23, 28, 0.3)",
   };
 
-  const accentColor = isDark ? '#96fbf1' : '#071b21';
-  const gradientAccent = 'linear-gradient(135deg, #482EF4, #5FF4C2)';
+  const accentColor = isDark ? "#96fbf1" : "#071b21";
+  const gradientAccent = "linear-gradient(135deg, #482EF4, #5FF4C2)";
 
   return (
     <div className="w-full">
@@ -242,7 +250,7 @@ const MentorHubTeam: React.FC = () => {
         }
 
         .title-text {
-          color: ${isDark ? '#96fbf1' : 'rgba(7, 27, 33, 0.6)'} !important;
+          color: ${isDark ? "#96fbf1" : "rgba(7, 27, 33, 0.6)"} !important;
         }
         
         @media (max-width: 768px) {
@@ -284,37 +292,37 @@ const MentorHubTeam: React.FC = () => {
         }
       `}</style>
 
-      <section 
+      <section
         className="relative py-20 sm:py-24 lg:py-32 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-screen flex flex-col justify-center items-center"
         style={{
-          fontFamily: 'Montserrat, sans-serif',
-          ...themeStyles
+          fontFamily: "Montserrat, sans-serif",
+          ...themeStyles,
         }}
       >
         {/* Background Elements */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          <div 
+          <div
             className="absolute -top-20 -right-20 w-96 h-96 rounded-full opacity-5"
             style={{
               background: gradientAccent,
-              animation: 'float 6s ease-in-out infinite'
+              animation: "float 6s ease-in-out infinite",
             }}
           ></div>
-          <div 
+          <div
             className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full opacity-5"
             style={{
               background: gradientAccent,
-              animation: 'float 6s ease-in-out infinite',
-              animationDelay: '3s'
+              animation: "float 6s ease-in-out infinite",
+              animationDelay: "3s",
             }}
           ></div>
         </div>
 
         {/* Title */}
-        <h1 
+        <h1
           className="title-text text-6xl sm:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-tight absolute top-12 left-1/2 transform -translate-x-1/2 pointer-events-none whitespace-nowrap"
           style={{
-            fontFamily: 'Arial Black, Arial Bold, Arial, sans-serif'
+            fontFamily: "Arial Black, Arial Bold, Arial, sans-serif",
           }}
         >
           OUR TEAM
@@ -325,12 +333,14 @@ const MentorHubTeam: React.FC = () => {
           {/* Left Arrow */}
           <button
             className="absolute top-1/2 left-4 lg:left-8 transform -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl font-bold z-20 transition-all duration-300 hover:scale-110"
-            style={{ 
+            style={{
               backgroundColor: `${accentColor}99`,
-              paddingRight: '3px'
+              paddingRight: "3px",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(7, 27, 33, 0.9)';
+              e.currentTarget.style.backgroundColor = isDark
+                ? "rgba(0, 0, 0, 0.8)"
+                : "rgba(7, 27, 33, 0.9)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = `${accentColor}99`;
@@ -341,7 +351,7 @@ const MentorHubTeam: React.FC = () => {
           </button>
 
           {/* Carousel Track */}
-          <div 
+          <div
             className="carousel-track w-full h-full flex justify-center items-center relative"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -350,7 +360,9 @@ const MentorHubTeam: React.FC = () => {
             {teamMembers.map((member, index) => (
               <div
                 key={`${member.name}-${index}`}
-                className={`team-card w-64 lg:w-80 h-80 lg:h-96 ${getCardPosition(index)}`}
+                className={`team-card w-64 lg:w-80 h-80 lg:h-96 ${getCardPosition(
+                  index
+                )}`}
                 style={cardStyle}
                 onClick={() => updateCarousel(index)}
               >
@@ -366,12 +378,14 @@ const MentorHubTeam: React.FC = () => {
           {/* Right Arrow */}
           <button
             className="absolute top-1/2 right-4 lg:right-8 transform -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center text-white text-2xl font-bold z-20 transition-all duration-300 hover:scale-110"
-            style={{ 
+            style={{
               backgroundColor: `${accentColor}99`,
-              paddingLeft: '3px'
+              paddingLeft: "3px",
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = isDark ? 'rgba(0, 0, 0, 0.8)' : 'rgba(7, 27, 33, 0.9)';
+              e.currentTarget.style.backgroundColor = isDark
+                ? "rgba(0, 0, 0, 0.8)"
+                : "rgba(7, 27, 33, 0.9)";
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = `${accentColor}99`;
@@ -384,19 +398,19 @@ const MentorHubTeam: React.FC = () => {
 
         {/* Member Info - Fixed and Always Visible */}
         <div className="member-info text-center mt-12 lg:mt-16 relative z-30">
-          <h2 
+          <h2
             key={`name-${currentIndex}`}
             className="member-name text-4xl lg:text-5xl font-bold mb-3 relative inline-block"
             style={{ color: accentColor }}
           >
             {teamMembers[currentIndex].name}
           </h2>
-          <p 
+          <p
             key={`role-${currentIndex}`}
             className="member-role text-lg lg:text-xl font-medium opacity-80 uppercase tracking-wider"
-            style={{ 
-              color: isDark ? '#848696' : '#4a5568',
-              marginTop: '8px'
+            style={{
+              color: isDark ? "#848696" : "#4a5568",
+              marginTop: "8px",
             }}
           >
             {teamMembers[currentIndex].role}
@@ -409,22 +423,17 @@ const MentorHubTeam: React.FC = () => {
             <button
               key={`dot-${index}`}
               className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                index === currentIndex 
-                  ? 'scale-125' 
-                  : 'hover:scale-110'
+                index === currentIndex ? "scale-125" : "hover:scale-110"
               }`}
               style={{
-                backgroundColor: index === currentIndex 
-                  ? accentColor 
-                  : `${accentColor}33`
+                backgroundColor:
+                  index === currentIndex ? accentColor : `${accentColor}33`,
               }}
               onClick={() => updateCarousel(index)}
               aria-label={`Go to team member ${index + 1}`}
             />
           ))}
         </div>
-
-       
       </section>
     </div>
   );

@@ -5,15 +5,11 @@ type ListItemProps = {
   title: string;
   span: string;
   span2?: string;
-  onSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 };
 
-const AppForm = ({ children, span, span2, title, onSubmit }: ListItemProps) => {
+const AppForm = ({ children, span, span2, title }: ListItemProps) => {
   return (
-    <form
-      className="flex flex-col w-full justify-center self-stretch items-center w-full gap-4"
-      onSubmit={onSubmit}
-    >
+    <form className="flex flex-col w-full justify-center self-stretch items-center w-full gap-4">
       <div className="flex">
         <h2 className="text-3xl font-bold text-[var(--primary)]">
           {title}

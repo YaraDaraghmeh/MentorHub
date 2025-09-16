@@ -2,10 +2,10 @@ import "./Form.css";
 
 type ListItemProps = {
   value?: string;
-  label?: string;
-  name?: string;
+  label: string;
+  name: string;
   placeholder?: string;
-  type?: string;
+  type: string;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
