@@ -5,7 +5,6 @@ using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
 
 namespace MentorHup.APPLICATION.Service.Booking;
 

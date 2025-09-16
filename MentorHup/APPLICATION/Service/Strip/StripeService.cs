@@ -1,5 +1,4 @@
 ﻿using MentorHup.APPLICATION.DTOs.Booking;
-using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
 using Microsoft.Extensions.Options;
 using Stripe;
@@ -9,8 +8,8 @@ namespace MentorHup.APPLICATION.Service.Strip;
 
 public class StripeService : IStripeService
 {
-    private readonly StripSettings _stripeSettings;
-    public StripeService(IOptions<StripSettings> options)
+    private readonly StripeSettings _stripeSettings;
+    public StripeService(IOptions<StripeSettings> options)
     {
         _stripeSettings = options.Value;
 
@@ -19,6 +18,26 @@ public class StripeService : IStripeService
 
     public async Task<string> CreateCheckoutSessionAsync(BookingSessionData booking)
     {
+        Console.WriteLine("=== Preparing Stripe Checkout Session ===");
+        Console.WriteLine($"MenteeId: {booking.MenteeId}, MentorAvailabilityId: {booking.MentorAvailabilityId}");
+        Console.WriteLine($"Amount: {booking.Amount}, MentorStripeAccountId: '{booking.MentorStripeAccountId}'");
+
+        var mentorAccountId = booking.MentorStripeAccountId?.Trim(); // 🟢 إزالة الفراغات
+
+
+        if (string.IsNullOrWhiteSpace(mentorAccountId))
+        {
+            throw new ArgumentException("Mentor Stripe AccountId is invalid.");
+        }
+
+        if (booking.Amount <= 0)
+        {
+            throw new ArgumentException("Booking amount must be greater than 0.");
+        }
+
+        var clientReferenceId = $"{booking.MenteeId}:{booking.MentorAvailabilityId}";
+        Console.WriteLine("ClientReferenceId: " + clientReferenceId);
+
         var options = new SessionCreateOptions
         {
             PaymentMethodTypes = new List<string> { "card" },
@@ -28,7 +47,7 @@ public class StripeService : IStripeService
             {
                 PriceData = new SessionLineItemPriceDataOptions
                 {
-                    UnitAmountDecimal = booking.Amount * 100, 
+                    UnitAmountDecimal = booking.Amount * 100,
                     Currency = "usd",
                     ProductData = new SessionLineItemPriceDataProductDataOptions
                     {
@@ -42,15 +61,15 @@ public class StripeService : IStripeService
             Mode = "payment",
             SuccessUrl = "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
             CancelUrl = "http://localhost:3000/cancel",
-            ClientReferenceId = $"{booking.MenteeId}:{booking.MentorAvailabilityId}",
+            ClientReferenceId = $"{booking.MenteeId}:{booking.MentorAvailabilityId}", // stripe لتتبع الحجز بين تطبيقي وال
 
             // الأهم 👇
             PaymentIntentData = new SessionPaymentIntentDataOptions
             {
-                ApplicationFeeAmount = 100, 
+                ApplicationFeeAmount = 100, // عمولة المنصة
                 TransferData = new SessionPaymentIntentDataTransferDataOptions
                 {
-                    Destination = booking.MentorStripeAccountId 
+                    Destination = mentorAccountId // mentor ارسال المال لحساب ال 
                 }
             },
             Metadata = new Dictionary<string, string>
@@ -77,8 +96,8 @@ public class StripeService : IStripeService
         {
             PaymentIntent = paymentIntentId,
             Reason = "requested_by_customer",
-            RefundApplicationFee = false, 
-            ReverseTransfer = false
+            RefundApplicationFee = false, // false: لا تسترجع عمولة المنصة
+            ReverseTransfer = false // false: mentor لا تسترجع ما تم تحويله لل
         };
 
         var refund = await refundService.CreateAsync(options);

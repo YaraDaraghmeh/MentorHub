@@ -121,8 +121,9 @@ namespace MentorHup.Infrastructure.Context
                 new Skill { Id = 4, SkillName = "SQL" }
             );
 
-            builder.Entity<ApplicationUser>()
-                .HasQueryFilter(u => !u.IsDeleted); // now all entities linked to ApplicationUser or ApplicationUser itself will ignore the deleted users
+            // temporarily commented (its existance like a barier to login, when the IsDeleted is true)
+            //builder.Entity<ApplicationUser>()
+            //    .HasQueryFilter(u => !u.IsDeleted); // now all entities linked to ApplicationUser or ApplicationUser itself will ignore the deleted users
 
             builder.Entity<ApplicationUser>()
                 .Property(u => u.CreatedAt)
