@@ -1,5 +1,5 @@
 ﻿namespace MentorHup.APPLICATION.DTOs.Mentor
-    {
+{
     public class MentorAvailabilityResponse
     {
         public DateTime StartTime { get; set; }

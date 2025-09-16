@@ -124,12 +124,15 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
             foreach (var availabilityDto in request.Availabilities)
             {
+                var duration = (int)(availabilityDto.EndTime - availabilityDto.StartTime).TotalMinutes;
+                // validation of StartTime, EndTime is made on Validators folder
+
                 _context.MentorAvailabilities.Add(new MentorAvailability
                 {
                     MentorId = mentor.Id,
                     StartTime = availabilityDto.StartTime,
                     EndTime = availabilityDto.EndTime,
-                    DurationInMinutes = availabilityDto.DurationInMinutes,
+                    DurationInMinutes = duration,
                     IsBooked = false
                 });
             }
