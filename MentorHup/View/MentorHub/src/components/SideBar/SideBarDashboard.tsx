@@ -12,6 +12,7 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
+import { useAuth } from "../../Context/AuthContext"; // استيراد useAuth
 
 interface profile {
   name: string | null;
@@ -29,6 +30,8 @@ interface sideProps {
 }
 
 const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
+  const { logout } = useAuth(); // استخدام logout من AuthContext
+  
   const menuItems = {
     Admin: [
       {
@@ -61,11 +64,12 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
         title: "Dashboard",
         path: "/mentee/dashboard",
       },
-      { icon: IoPeople, title: "Mentors", path: "/mentee/dashboard1" },
+      { icon: IoPeople, title: "Mentors", path: "/mentee/mentors" }, // غيرت من dashboard1 إلى mentors
       { icon: HiMiniCalendar, title: "Booking", path: "/mentee/booking" },
       { icon: HiChatAlt2, title: "Chatting", path: "/mentee/chatting" },
     ],
   };
+  
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -85,7 +89,12 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
     handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
-  }, []);
+  }, [setExpended]); // أضفت setExpended للـ dependency array
+
+  const handleLogout = () => {
+    console.log("Logging out...");
+    logout(); // سيقوم بمسح البيانات والتوجيه لصفحة lo
+  };
 
   return (
     <>
@@ -123,14 +132,14 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
             >
               <img
                 src={expended ? profilePicture : avatar}
-                alt={avatar}
+                alt="User Avatar"
                 className={`w-full h-full rounded-full overflow-hidden transition`}
               />
             </div>
             {expended ? (
               <div className="flex flex-col gap-1 items-center">
                 <span className="text-[var(--secondary-light)] text-base font-bold">
-                  {profile.name}
+                  {profile.name || "المستخدم"}
                 </span>
                 <span className="text-[var(--primary-green-light)] text-sm font-normal">
                   {profile.email}
@@ -159,15 +168,15 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
 
             {/* setting / logout */}
             <div className={expended ? "p-4" : "p-0"}>
-              <NavLink
+              <button
+                onClick={handleLogout}
                 className={`w-full flex items-center gap-3 cursor-pointer hover:text-[var(--secondary)] transition-all ${
                   expended ? "justify-start pl-3" : "justify-center pl-2"
-                }`}
-                to={"/login"}
+                } bg-transparent border-none`}
               >
                 <AiOutlineLogin className="w-6 h-6" />
                 <span className="ml-2">{expended ? "Logout" : ""}</span>
-              </NavLink>
+              </button>
             </div>
           </div>
         </nav>

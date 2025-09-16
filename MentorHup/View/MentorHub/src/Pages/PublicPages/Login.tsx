@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import AppForm from "../../components/Form/Form";
 import FormFiled from "../../components/Form/FormFiled";
 import logo from "/src/assets/MentorHub-logo (1)/vector/default-monochrome.svg";
@@ -9,9 +9,11 @@ import axios from "axios";
 import urlAuth from "../../Utilities/Auth/urlAuth";
 import { useAuth } from "../../Context/AuthContext";
 
-const LoginUser = () => {
+const LoginContent = () => {
   const navigate = useNavigate();
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { setAuth } = useAuth();
 
@@ -39,27 +41,53 @@ const LoginUser = () => {
   // fun login
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
+    setError("");
 
     try {
+      console.log("Data I sending .", formData);
+      
       const response = await axios.post(urlAuth.LOGIN_USER, formData, {
         headers: {
           "Content-Type": "application/json",
         },
       });
 
+      console.log(" Server Response :", response.data);
+
       const { roles, email, userId, accessToken, refreshToken } = response.data;
-      const roleString = roles[0] as "Admin" | "Mentor" | "Mentee";
+      
+      // تأكد من أن roles هو array وخذ أول عنصر
+      const roleString = Array.isArray(roles) ? roles[0] as "Admin" | "Mentor" | "Mentee" : roles as "Admin" | "Mentor" | "Mentee";
+      
+      console.log("Role :", roleString);
 
-      setAuth({ userId, roles: roleString, email, accessToken, refreshToken });
+      
+      await setAuth({ 
+        userId, 
+        roles: roleString, 
+        email, 
+        accessToken, 
+        refreshToken 
+      });
 
-      if (roles === "Mentee") navigate("/mentee/dashboard");
-      else if (roles === "Mentor") navigate("/mentor/dashboard");
-      else if (roles === "Admin") navigate("/admin/dashboard");
-      else console.warn("Unknown roles:", roles);
-
-      console.log(response);
+      console.log("Authentication data saved successfully.");
+      
+      // Force a re-render by updating a state (optional)
+      setFormData({ email: "", password: "" });
+      
     } catch (error: any) {
-      console.error(error.response?.data || error.message);
+      console.error("Failed ", error);
+      
+      if (error.response?.data?.message) {
+        setError(error.response.data.message);
+      } else if (error.response?.data) {
+        setError(" Failed to login. Please check your credentials.");
+      } else {
+        setError("   Server Conntction Error  ");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -81,6 +109,13 @@ const LoginUser = () => {
               <p className="justify-center text-[var(--gray-dark)] text-base font-medium">
                 Please enter your details
               </p>
+
+              {/* Error message */}
+              {error && (
+                <div className="w-full bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                  {error}
+                </div>
+              )}
 
               {/* inputs */}
               <FormFiled
@@ -110,9 +145,10 @@ const LoginUser = () => {
               {/* Sign in */}
               <button
                 onClick={handleLogin}
-                className="cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold "
+                disabled={loading}
+                className={`cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
-                Sign in
+                {loading ? ".................Logging In " : "Sign in"}
               </button>
             </div>
 
@@ -134,7 +170,7 @@ const LoginUser = () => {
             {/* Sign up */}
             <div className="inline-flex w-full justify-center items-start gap-3.5">
               <span className="justify-center text-[var(--gray-dark)] text-xs font-medium">
-                Don’t have an account?
+                Don't have an account?
               </span>
               <span
                 onClick={handleSignUp}
@@ -157,6 +193,18 @@ const LoginUser = () => {
       />
     </>
   );
+};
+
+// Main component with authentication check
+const LoginUser = () => {
+  const { isAuthenticated } = useAuth();
+
+  // If already authenticated, redirect to dashboard
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
+
+  return <LoginContent />;
 };
 
 export default LoginUser;

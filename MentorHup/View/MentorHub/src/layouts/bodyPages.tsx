@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SideBar from "../components/SideBar/SideBarDashboard";
 import { BiSearch } from "react-icons/bi";
 import { Outlet } from "react-router-dom";
@@ -12,8 +12,24 @@ type UserRole = "Admin" | "Mentor" | "Mentee";
 
 const BodySystem = () => {
   const { isDark, toggle } = useTheme();
-  const { roles, email, userId } = useAuth();
+  const { roles, email, userId, isAuthenticated } = useAuth(); // أضفت isAuthenticated
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+
+  // إضافة useEffect للتأكد من أن البيانات محدثة
+  useEffect(() => {
+    console.log("BodySystem - Auth data updated:", {
+      isAuthenticated,
+      roles,
+      email,
+      userId
+    });
+  }, [isAuthenticated, roles, email, userId]);
+
+  // إذا مش مسجل دخول، ما تعرض الـ component
+  if (!isAuthenticated) {
+    console.log("BodySystem - User not authenticated");
+    return <div>Loading...</div>;
+  }
 
   return (
     <div
@@ -22,7 +38,11 @@ const BodySystem = () => {
       }`}
     >
       <SideBar
-        profile={{ email, userId, name: null }}
+        profile={{ 
+          email, 
+          userId, 
+          name: email?.split('@')[0] || null // استخراج اسم من الإيميل كـ fallback
+        }}
         role={roles as UserRole}
         expended={isSidebarOpen}
         setExpended={setIsSidebarOpen}
@@ -31,7 +51,7 @@ const BodySystem = () => {
       {/* page */}
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ${
-          isSidebarOpen && window.innerWidth > 768 ? "ml-[230px]" : "ml-20"
+          isSidebarOpen ? "ml-[230px]" : "ml-20"
         }`}
       >
         <div className="flex flex-col p-5 gap-7">
@@ -45,7 +65,7 @@ const BodySystem = () => {
                     : "text-[var(--primary)]"
                 }`}
               >
-                <span>Hello</span>
+                <span>Hello </span>
                 <span
                   className={` ${
                     isDark
@@ -53,7 +73,7 @@ const BodySystem = () => {
                       : "text-[var(--secondary-dark)]"
                   }`}
                 >
-                  {email}
+                  {email || "User"}
                 </span>
                 <span>, Welcome Back!</span>
               </div>
@@ -68,7 +88,7 @@ const BodySystem = () => {
               }`}
             >
               <input
-                className="justify-start text-base font-medium  leading-normal"
+                className="flex-1 bg-transparent outline-none justify-start text-base font-medium leading-normal"
                 placeholder="Search..."
               />
               <div className="w-5 h-5">
@@ -123,7 +143,7 @@ const BodySystem = () => {
             }`}
           >
             <FaTools size={24} />
-            <span className="absolute right-12 top-1/1 -translate-y-1/2 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition pointer-events-none">
+            <span className="absolute right-12 top-1/2 -translate-y-1/2 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition pointer-events-none">
               Manage Skills
             </span>
           </button>

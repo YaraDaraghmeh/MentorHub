@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useState, type ReactNode, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -6,6 +7,7 @@ interface AuthContextType {
   refreshToken: string | null;
   roles: "Admin" | "Mentor" | "Mentee" | null;
   userId: string | null;
+  isAuthenticated: boolean;
   setAuth: (data: {
     userId: string;
     roles: "Admin" | "Mentor" | "Mentee";
@@ -20,6 +22,8 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
+  const navigate = useNavigate();
+  
   const [roles, setRoles] = useState<"Admin" | "Mentor" | "Mentee" | null>(
     (localStorage.getItem("roles") as "Admin" | "Mentor" | "Mentee") || null
   );
@@ -36,7 +40,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.getItem("userId")
   );
 
-  //save data, when login
+  // Check if user is authenticated
+  const isAuthenticated = !!(accessToken && roles && userId);
+
+  // Function to navigate based on role
+  const navigateToRole = (userRole: "Admin" | "Mentor" | "Mentee") => {
+    switch (userRole) {
+      case "Admin":
+        navigate("/admin/dashboard");
+        break;
+      case "Mentor":
+        navigate("/mentor/dashboard");
+        break;
+      case "Mentee":
+        navigate("/mentee/main");
+        break;
+      default:
+        navigate("/login");
+    }
+  };
+
+  // Save data when login
   const setAuth = ({
     userId,
     roles,
@@ -50,26 +74,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     accessToken: string;
     refreshToken: string;
   }) => {
+    console.log("setAuth called with:", { userId, roles, email });
+
+    // Save to localStorage first
+    localStorage.setItem("userId", userId);
+    localStorage.setItem("roles", roles);
+    localStorage.setItem("email", email);
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    // Update state - هذا سيؤدي لإعادة render للـ components
     setUserId(userId);
     setRoles(roles);
     setEmail(email);
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
 
-    localStorage.setItem("userId", userId);
-    localStorage.setItem("roles", roles);
-    localStorage.setItem("email", email);
-    localStorage.setItem("accessToken", accessToken);
-    localStorage.setItem("refreshToken", refreshToken);
+    console.log("Auth state updated, navigating...");
+    
+    // Navigate to appropriate page with a slight delay to ensure state update
+    setTimeout(() => {
+      console.log("Navigating to role:", roles);
+      navigateToRole(roles);
+    }, 200);
   };
 
-  //when renewing, update token
+  // When renewing, update token
   const updateAccessToken = (token: string) => {
     setAccessToken(token);
     localStorage.setItem("accessToken", token);
   };
 
-  //logout
+  // Logout
   const logout = () => {
     setRoles(null);
     setAccessToken(null);
@@ -82,7 +118,17 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("email");
     localStorage.removeItem("userId");
+
+    navigate("/login");
   };
+
+  // Check authentication on app start
+  useEffect(() => {
+    // If user is authenticated and on login page, redirect to dashboard
+    if (isAuthenticated && window.location.pathname === "/login") {
+      navigateToRole(roles!);
+    }
+  }, [isAuthenticated, roles]);
 
   return (
     <AuthContext.Provider
@@ -95,6 +141,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         logout,
         email,
         userId,
+        isAuthenticated,
       }}
     >
       {children}
