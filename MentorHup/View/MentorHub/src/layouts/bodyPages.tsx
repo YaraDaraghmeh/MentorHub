@@ -2,11 +2,12 @@ import { useState } from "react";
 import SideBar from "../components/SideBar/SideBarDashboard";
 import { BiSearch } from "react-icons/bi";
 import { Outlet } from "react-router-dom";
-import { IoNotifications } from "react-icons/io5";
 import { useTheme } from "../Context/ThemeContext";
 import { BsMoonFill, BsSunFill } from "react-icons/bs";
 import { FaTools } from "react-icons/fa";
 import { useAuth } from "../Context/AuthContext";
+import ModalSkills from "../components/Modal/ModalSkills";
+import TableSkills from "../components/Tables/tableSkills";
 
 type UserRole = "Admin" | "Mentor" | "Mentee";
 
@@ -14,6 +15,7 @@ const BodySystem = () => {
   const { isDark, toggle } = useTheme();
   const { roles, email, userId } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [showModal, setShowModal] = useState(false);
 
   return (
     <div
@@ -78,18 +80,6 @@ const BodySystem = () => {
 
             {/* Icons Container */}
             <div className="flex items-center gap-2 justify-center sm:justify-end flex-shrink-0">
-              {/* Notifications */}
-              <button
-                className={`p-2 rounded-lg hover:bg-opacity-20 transition-colors duration-200 ${
-                  isDark
-                    ? "text-white hover:bg-white"
-                    : "text-[var(--primary)] hover:bg-[var(--primary)]"
-                }`}
-                aria-label="Notifications"
-              >
-                <IoNotifications className="w-5 h-5 lg:w-6 lg:h-6" />
-              </button>
-
               {/* Theme Toggle */}
               <button
                 onClick={toggle}
@@ -115,7 +105,11 @@ const BodySystem = () => {
           </div>
         </div>
 
-        <div className="fixed right-0 top-1/5 group">
+        {/* {roles === "Admin" && ( */}
+        <div
+          className="fixed right-0 top-1/5 group"
+          onClick={() => setShowModal(!showModal)}
+        >
           <button
             type="button"
             className={`transition text-white py-2 px-4 rounded-l-full text-lg ${
@@ -128,6 +122,14 @@ const BodySystem = () => {
             </span>
           </button>
         </div>
+        {/* )} */}
+
+        {/* Modal Sills */}
+        <ModalSkills
+          open={showModal}
+          table={<TableSkills />}
+          onClose={() => setShowModal(false)}
+        />
       </div>
     </div>
   );
