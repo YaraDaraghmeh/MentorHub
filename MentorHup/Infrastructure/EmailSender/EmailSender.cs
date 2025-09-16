@@ -31,7 +31,7 @@ namespace MentorHup.Infrastructure.EmailSender
 
             var mail = new MailMessage
             {
-                From = new MailAddress(_fromEmail),
+                From = new MailAddress(_fromEmail, "MentorHub Platform"),
                 Subject = subject,
                 Body = htmlMessage,
                 IsBodyHtml = true
