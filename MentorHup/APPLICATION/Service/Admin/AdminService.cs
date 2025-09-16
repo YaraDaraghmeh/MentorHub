@@ -215,8 +215,7 @@ namespace MentorHup.APPLICATION.Service.Admin
 
             // Bookings
             var totalBookings = await dbContext.Bookings.CountAsync();
-            var completedBookings = await dbContext.Bookings.CountAsync(b => b.Status == BookingStatus.Completed);
-            var pendingBookings = await dbContext.Bookings.CountAsync(b => b.Status == BookingStatus.Pending);
+            var confirmedBookings = await dbContext.Bookings.CountAsync(b => b.Status == BookingStatus.Confirmed);
             var cancelledBookings = await dbContext.Bookings.CountAsync(b => b.Status == BookingStatus.Cancelled);
 
             // Reviews
@@ -225,7 +224,7 @@ namespace MentorHup.APPLICATION.Service.Admin
             // Payments
             var totalPayments = await dbContext.Bookings.Where(b => b.Status == BookingStatus.Completed).SumAsync(b => b.Amount);
             var pendingPayments = await dbContext.Bookings.Where(b => b.Status == BookingStatus.Pending).SumAsync(b => b.Amount);
-            var averagePayment = completedBookings > 0 ? totalPayments / completedBookings : 0;
+            var averagePayment = confirmedBookings > 0 ? totalPayments / confirmedBookings : 0;
 
 
             var mentorIdsWithBookings = await dbContext.Bookings.Select(b => b.MentorId).Distinct().ToListAsync();
@@ -244,8 +243,7 @@ namespace MentorHup.APPLICATION.Service.Admin
                 BlockedUsers = blockedUsers,
                 EmailNotConfirmed = emailNotConfirmed,
                 TotalBookings = totalBookings,
-                CompletedBookings = completedBookings,
-                PendingBookings = pendingBookings,
+                ConfirmedBookings = confirmedBookings,
                 CancelledBookings = cancelledBookings,
                 TotalReviews = totalReviews,
                 TotalPayments = totalPayments,
