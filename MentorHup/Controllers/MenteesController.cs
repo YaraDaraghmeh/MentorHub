@@ -1,7 +1,6 @@
 ﻿using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Mentee;
-using MentorHup.APPLICATION.Service.Mentor;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +11,11 @@ namespace MentorHup.APPLICATION.Controllers
     public class MenteesController : ControllerBase
     {
         private readonly IMenteeAuthService _menteeAuthService;
-        private readonly IMentorService _mentorService;
         private readonly IMenteeService menteeService;
 
-        public MenteesController(IMenteeAuthService menteeAuthService , IMentorService mentorService , IMenteeService menteeService)
+        public MenteesController(IMenteeAuthService menteeAuthService , IMenteeService menteeService)
         {
             _menteeAuthService = menteeAuthService;
-            _mentorService = mentorService;
             this.menteeService = menteeService;
         }
 
@@ -41,31 +38,6 @@ namespace MentorHup.APPLICATION.Controllers
             return StatusCode(StatusCodes.Status201Created, result.Mentee);
         }
 
-        [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {
-            var success = await _menteeAuthService.ConfirmEmailAsync(userId, token);
-
-            if (!success)
-                return BadRequest(new { message = "Email confirmation failed." });
-
-            return Ok(new { message = "Email confirmed successfully." });
-        }
-
-
-        [HttpPost("login")]
-        [AllowAnonymous]
-        [ProducesResponseType(typeof(MenteeResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Login([FromBody] MenteeLoginRequest request)
-        {
-            var result = await _menteeAuthService.LoginAsync(request);
-
-            if (!result.IsSuccess)
-                return Unauthorized(new { message = result.Errors });
-
-            return Ok(result);
-        }
 
         [HttpPatch("edit")]
         [Authorize(Roles = "Mentee")]

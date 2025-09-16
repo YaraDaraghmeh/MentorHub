@@ -1,17 +1,12 @@
 ﻿using AutoMapper;
 using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.Domain.Entities;
-using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Security.Claims;
 
 namespace MentorHup.APPLICATION.Service.AuthServices
 {
@@ -77,7 +72,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
             var confirmUrl = urlHelper.Action(
                 "ConfirmEmail",       // action name
-                "Mentees",               // controller name
+                "Auth",               // controller name
                 new { userId = user.Id, token = encodedToken },  // route values
                 httpContextAccessor.HttpContext.Request.Scheme        // protocol (http/https)
             );
@@ -118,7 +113,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             await emailSender.SendEmailAsync(email, subject, htmlMessage);
 
             
-            var mentee = new MentorHup.Domain.Entities.Mentee
+            var mentee = new Domain.Entities.Mentee
             {
                 Name = request.Name,
                 Gender = request.Gender,
@@ -157,7 +152,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Gender = mentee.Gender,
                     ImageLink = mentee.ImageUrl,
                     Email = user.Email!,
-                    AccessToken = token,
                     Roles = roles.ToList(),
                     Expires = DateTime.UtcNow.AddHours(3) 
                 }
@@ -174,86 +168,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
             return result.Succeeded;
-        }
-
-        public async Task<MenteeLoginResult> LoginAsync(MenteeLoginRequest request)
-        {
-            var user = await _userManager.Users
-                .Include(u => u.Mentee)
-                .FirstOrDefaultAsync(u => u.Email == request.Email);
-
-            if (user == null)
-            {
-                return new MenteeLoginResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Invalid email or password" }
-                };
-            }
-
-            // تحقق من القفل
-            if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow)
-            {
-                return new MenteeLoginResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Your account is blocked. Please contact admin." }
-                };
-            }
-
-            if (!await _userManager.CheckPasswordAsync(user, request.Password))
-            {
-                if (user.LockoutEnabled)
-                {
-                    await _userManager.AccessFailedAsync(user);
-                    if (await _userManager.IsLockedOutAsync(user))
-                    {
-                        return new MenteeLoginResult
-                        {
-                            IsSuccess = false,
-                            Errors = new[] { "Your account is blocked due to multiple failed login attempts." }
-                        };
-                    }
-                }
-
-                return new MenteeLoginResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Invalid email or password" }
-                };
-            }
-
-            if (!await _userManager.IsEmailConfirmedAsync(user))
-            {
-                return new MenteeLoginResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Please confirm your email before logging in." }
-                };
-            }
-
-            // when login successfully, reset access faild count to 0
-            if (user.LockoutEnabled)
-                await _userManager.ResetAccessFailedCountAsync(user);
-
-            var token = await _tokenService.CreateTokenAsync(user);
-            var roles = await _userManager.GetRolesAsync(user);
-
-            return new MenteeLoginResult
-            {
-                IsSuccess = true,
-                Mentee = new MenteeResponse
-                {
-                    Id = user.Mentee!.Id,
-                    Name = user.Mentee.Name,
-                    Gender = user.Mentee.Gender,
-                    ImageLink = user.Mentee.ImageUrl,
-                    Email = user.Email!,
-                    Roles = roles.ToList(),
-                    AccessToken = token,
-                    Expires = DateTime.UtcNow.AddHours(3)
-                }
-            };
         }
 
         

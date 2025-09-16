@@ -1,12 +1,10 @@
 ﻿using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
-using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Text;
 
 namespace MentorHup.APPLICATION.Service.AuthServices
@@ -24,10 +22,8 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly RoleManager<IdentityRole> _roleManager = roleManager;
         private readonly ApplicationDbContext _context = context;
-        private readonly ITokenService _tokenService = tokenService;
         private readonly IEmailSender emailSender = emailSender;
         private readonly IHttpContextAccessor httpContextAccessor = httpContextAccessor;
-        private readonly IWebHostEnvironment _webHostEnvironment = webHostEnvironment;
 
         public async Task<MentorLoginRegistrationResult> RegisterAsync(MentorRegisterRequest request)
         {
@@ -56,7 +52,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
-            var confirmUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}/api/mentors/confirm-email?userId={user.Id}&token={encodedToken}";
+            var confirmUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}/api/auth/confirm-email?userId={user.Id}&token={encodedToken}";
 
             string email = user.Email;
             string subject = "Welcome to MentorHub – Thank You for Joining as a Mentor";
@@ -174,116 +170,15 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Skills = skills,
                     Field = mentor.Field,
                     // Availabilities = availabilities,
-                    AccessToken = token,
                     Expires = DateTime.UtcNow.AddHours(3)
                 }
             };
         }
 
 
+   
 
-       
-
-        public async Task<bool> ConfirmEmailAsync(string userId, string token)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return false;
-
-            var decodedBytes = WebEncoders.Base64UrlDecode(token);
-            var decodedToken = Encoding.UTF8.GetString(decodedBytes);
-            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
-
-            return result.Succeeded;
-        }
-
-
-        public async Task<MentorLoginRegistrationResult> LoginAsync(MentorLoginRequest request)
-        {
-            var user = await _userManager.Users
-                .Include(u => u.Mentor)
-                .ThenInclude(m => m.MentorSkills)
-                .ThenInclude(ms => ms.Skill)
-                .FirstOrDefaultAsync(u => u.Email == request.Email);
-
-            if (user == null)
-            {
-                return new MentorLoginRegistrationResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Invalid email or password" }
-                };
-            }
-
-            // check for blocking
-            if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow)
-            {
-                return new MentorLoginRegistrationResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Your account is blocked. Please contact admin." }
-                };
-            }
-
-            if (!await _userManager.CheckPasswordAsync(user, request.Password))
-            {
-                if (user.LockoutEnabled)
-                {
-                    await _userManager.AccessFailedAsync(user);
-                    if (await _userManager.IsLockedOutAsync(user))
-                    {
-                        return new MentorLoginRegistrationResult
-                        {
-                            IsSuccess = false,
-                            Errors = new[] { "Your account is blocked due to multiple failed login attempts." }
-                        };
-                    }
-                }
-
-                return new MentorLoginRegistrationResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Invalid email or password" }
-                };
-            }
-
-            if (!await _userManager.IsEmailConfirmedAsync(user))
-            {
-                return new MentorLoginRegistrationResult
-                {
-                    IsSuccess = false,
-                    Errors = new[] { "Please confirm your email before logging in." }
-                };
-            }
-
-            // when login successfully, reset access faild count to 0
-            if (user.LockoutEnabled)
-                await _userManager.ResetAccessFailedCountAsync(user);
-
-            var token = await _tokenService.CreateTokenAsync(user);
-            var roles = await _userManager.GetRolesAsync(user);
-
-            var skills = user.Mentor!.MentorSkills.Select(ms => ms.Skill.SkillName).ToList();
-
-            return new MentorLoginRegistrationResult
-            {
-                IsSuccess = true,
-                Mentor = new MentorResponse
-                {
-                    Id = user.Mentor.Id,
-                    Name = user.Mentor.Name,
-                    Description = user.Mentor.Description,
-                    Experiences = user.Mentor.Experiences,
-                    Field = user.Mentor.Field,
-                    Price = user.Mentor.Price,
-                    Email = user.Email!,
-                    Roles = roles.ToList(),
-                    Skills = skills,
-                    AccessToken = token,
-                    Expires = DateTime.UtcNow.AddHours(3)
-                }
-            };
-
-        }
+        
 
 
     }

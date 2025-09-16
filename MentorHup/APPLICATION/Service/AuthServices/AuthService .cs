@@ -32,6 +32,19 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 this.httpContextAccessor = httpContextAccessor;
             }
 
+
+            public async Task<bool> ConfirmEmailAsync(string userId, string token)
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null) return false;
+
+                var decodedToken = System.Web.HttpUtility.UrlDecode(token);
+                var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
+
+                return result.Succeeded;
+            }
+
+
             public async Task<LoginResponse?> LoginAsync(LoginRequest request)
             {
                 var user = await _userManager.Users
