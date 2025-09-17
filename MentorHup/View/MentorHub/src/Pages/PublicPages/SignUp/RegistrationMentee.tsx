@@ -4,11 +4,13 @@ import video from "../../../assets/videoMentorHub2.mp4";
 import axios from "axios";
 import { FcGoogle } from "react-icons/fc";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import urlMentee from "../../../Utilities/Mentee/urlMentee";
+import ModalConfirm from "../../../components/Modal/ModalConfirm";
 
 const SignUpMentee = () => {
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
   const [registerData, setRegisterData] = useState({
     name: "",
     gender: "",
@@ -16,6 +18,14 @@ const SignUpMentee = () => {
     email: "",
     password: "",
   });
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShow(true);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleSignIn = () => {
     navigate("/login");
@@ -71,6 +81,8 @@ const SignUpMentee = () => {
             Booking Now
           </div>
         </div>
+
+        {/* Form */}
         <div className="w-full flex flex-col justify-center items-center">
           <AppForm title="Sign up" span=" as" span2=" Mentee">
             <p className="w-full justify-center text-center text-[var(--gray-dark)] text-sm font-medium">
@@ -155,6 +167,15 @@ const SignUpMentee = () => {
             </div>
           </AppForm>
         </div>
+
+        {/* Modal */}
+        <ModalConfirm
+          title="Stripe Account Required"
+          message="You need to have an active Stripe account to continue"
+          open={show}
+          onClose={() => setShow(false)}
+          onConfirm={() => setShow(false)}
+        />
       </div>
     </div>
   );

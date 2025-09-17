@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import HomePage from "./Pages/PublicPages/HomePage";
 import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
@@ -31,11 +36,11 @@ import { useAuth } from "./Context/AuthContext";
 // Component to handle default redirect
 const DefaultRedirect = () => {
   const { isAuthenticated, roles } = useAuth();
-  
+
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />;
   }
-  
+
   // Redirect based on user role
   switch (roles) {
     case "Admin":

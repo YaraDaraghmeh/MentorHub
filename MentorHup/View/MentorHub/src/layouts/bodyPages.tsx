@@ -23,7 +23,7 @@ const BodySystem = () => {
       isAuthenticated,
       roles,
       email,
-      userId
+      userId,
     });
   }, [isAuthenticated, roles, email, userId]);
 
@@ -40,10 +40,10 @@ const BodySystem = () => {
       }`}
     >
       <SideBar
-        profile={{ 
-          email, 
-          userId, 
-          name: email?.split('@')[0] || null // استخراج اسم من الإيميل كـ fallback
+        profile={{
+          email,
+          userId,
+          name: email?.split("@")[0] || null, // استخراج اسم من الإيميل كـ fallback
         }}
         role={roles as UserRole}
         expended={isSidebarOpen}
@@ -125,31 +125,40 @@ const BodySystem = () => {
           </div>
         </div>
 
-        {/* {roles === "Admin" && ( */}
-        <div
-          className="fixed right-0 top-1/5 group"
-          onClick={() => setShowModal(!showModal)}
-        >
-          <button
-            type="button"
-            className={`transition text-white py-2 px-4 rounded-l-full text-lg ${
-              isDark ? "bg-[var(--secondary-dark)]" : "bg-[var(--green-dark)]"
-            }`}
-          >
-            <FaTools size={24} />
-            <span className="absolute right-12 top-1/2 -translate-y-1/2 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition pointer-events-none">
-              Manage Skills
-            </span>
-          </button>
-        </div>
-        {/* )} */}
-
-        {/* Modal Sills */}
-        <ModalSkills
-          open={showModal}
-          table={<TableSkills />}
-          onClose={() => setShowModal(false)}
-        />
+        {roles === "Admin" && (
+          <div className="fixed right-0 top-1/8 group z-50">
+            <div className="relative inline-flex gap-0">
+              <button
+                type="button"
+                onClick={() => setShowModal(!showModal)}
+                className={`flex-col h-10 transition text-white py-2 px-4 rounded-l-full text-lg ${
+                  isDark
+                    ? "bg-[var(--secondary-dark)]"
+                    : "bg-[var(--green-dark)]"
+                }`}
+              >
+                <FaTools size={24} />
+                {/* <span
+                  style={{
+                    position: "fixed",
+                    // top: tooltipPos.top,
+                    // left: tooltipPos.left,
+                    transform: "translate(-100%, -50%)", // يجي على يسار منتصف الزر
+                  }}
+                  className=" top-1/4 -translate-y-1/2 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition pointer-events-none"
+                >
+                  Manage Skills
+                </span> */}
+              </button>
+              {/* Modal Sills */}
+              <ModalSkills
+                open={showModal}
+                table={<TableSkills />}
+                onClose={() => setShowModal(false)}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

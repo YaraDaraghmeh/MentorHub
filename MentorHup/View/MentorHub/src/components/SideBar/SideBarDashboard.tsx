@@ -10,7 +10,6 @@ import { HiChatAlt2 } from "react-icons/hi";
 import { AiOutlineLogin } from "react-icons/ai";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
-import { NavLink } from "react-router-dom";
 import { HiHome } from "react-icons/hi";
 import { useAuth } from "../../Context/AuthContext"; // استيراد useAuth
 
@@ -31,7 +30,7 @@ interface sideProps {
 
 const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
   const { logout } = useAuth(); // استخدام logout من AuthContext
-  
+
   const menuItems = {
     Admin: [
       {
@@ -69,7 +68,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
       { icon: HiChatAlt2, title: "Chatting", path: "/mentee/chatting" },
     ],
   };
-  
+
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {

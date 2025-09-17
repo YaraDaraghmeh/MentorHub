@@ -1,10 +1,11 @@
 import Chart from "react-apexcharts";
 import { useTheme } from "../../Context/ThemeContext";
 import type React from "react";
+import FormateWeekly from "../Dashboard/formateWeekly";
 
 type chartItem = {
-  label: string;
-  value: number;
+  weekLabel: string;
+  count: number;
 };
 
 interface BarChartProps {
@@ -17,7 +18,7 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
   const options = {
     chart: { id: "revenue-chart", toolbar: { show: false } },
     xaxis: {
-      categories: data.map((item) => item.label),
+      categories: data.map((item) => FormateWeekly(item.weekLabel)),
       labels: {
         show: true,
         rotate: -45,
@@ -64,7 +65,7 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
     grid: { show: false },
   };
 
-  const series = [{ name: "Value", data: data.map((item) => item.value) }];
+  const series = [{ name: "Value", data: data.map((item) => item.count) }];
 
   return (
     <Chart

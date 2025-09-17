@@ -23,7 +23,7 @@ function Table<T extends { id: number | string }>({
 }: TableProps<T>) {
   const { isDark } = useTheme();
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPage = 5;
+  const rowsPage = 4;
 
   const indexOfLastRow = currentPage * rowsPage;
   const indexOfFirstRow = indexOfLastRow - rowsPage;

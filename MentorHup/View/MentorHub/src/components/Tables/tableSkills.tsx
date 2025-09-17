@@ -1,5 +1,9 @@
+import { useEffect, useState } from "react";
 import Table from "./Table";
 import { MdModeEdit, MdDelete } from "react-icons/md";
+import axios from "axios";
+import urlSkills from "../../Utilities/Skills/urlSkills";
+import ModalEdit from "../Modal/ModalEdit";
 
 interface skills {
   id: number;
@@ -7,11 +11,46 @@ interface skills {
 }
 
 const TableSkills = () => {
-  const data: skills[] = [
-    { id: 1, skillName: "QA" },
-    { id: 2, skillName: "Frontend" },
-    { id: 3, skillName: ".Net C#" },
-  ];
+  const token = localStorage.getItem("accessToken")?.trim();
+  if (!token) {
+    console.log("Not Authorized");
+    return;
+  }
+
+  const [skill, setSkill] = useState<skills[]>([]);
+  const [open, setOpen] = useState(false);
+  const [skillEdit, setSkillEdit] = useState<skills>({ id: 0, skillName: "" });
+  const [currentPage, setCurrentPage] = useState(1);
+  const rowsPage = 20;
+
+  useEffect(() => {
+    fetchSkills(currentPage, rowsPage);
+  }, [currentPage]);
+
+  const fetchSkills = async (page: number, pageSize: number) => {
+    const res = await axios.get(urlSkills.SKILLS, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      params: { PageNumber: page, PageSize: pageSize },
+    });
+
+    console.log(res.data);
+
+    setSkill(res.data.items);
+  };
+
+  const handleEdit = (id: number, skillName: string) => {
+    setOpen(true);
+    const skill = {
+      id: id,
+      skillName: skillName,
+    };
+
+    console.log(skill);
+
+    setSkillEdit(skill);
+  };
 
   const columns = [
     {
@@ -22,19 +61,22 @@ const TableSkills = () => {
     {
       id: "name",
       header: "Skill Name",
-      accessor: "skillName" as keyof skills,
+      accessor: "name" as keyof skills,
     },
     {
-      id: "action",
+      id: "id",
       header: "Action",
       accessor: "id" as keyof skills,
       render: (row: skills) => (
-        <div className="flex fex-row">
-          <button className="p-2 w-9 h-9">
+        <div className="flex flex-row" key={row.id}>
+          <button
+            className="p-2 w-9 h-9"
+            onClick={() => handleEdit(row.id, row.skillName)}
+          >
             <MdModeEdit className="w-full h-full" />
           </button>
           <button className="p-2 w-9 h-9">
-            <MdDelete key={row.id} className="w-full h-full" />
+            <MdDelete className="w-full h-full" />
           </button>
         </div>
       ),
@@ -43,7 +85,15 @@ const TableSkills = () => {
 
   return (
     <div>
-      <Table titleTable="Manage Skills" data={data} columns={columns} />
+      <Table titleTable="Manage Skills" data={skill} columns={columns} />
+
+      {/* Modal edit skills */}
+      <ModalEdit
+        open={open}
+        value={skillEdit}
+        onClose={() => setOpen(false)}
+        onConfirm={() => setOpen(false)}
+      />
     </div>
   );
 };

@@ -1,22 +1,28 @@
 const API_URL_DEVELOPMENT = "/api/Admin";
 const API_URL_PRODUCTION = "http://appname.azurewebsite.net";
 
-// const ENDPOINT = {
-//   LOGIN: "login",
-//   LOGOUT: "logout",
-// };
+const ENDPOINT = {
+  GET_MENTORS: "mentors",
+  GET_MENTEES: "mentees",
+  STATISTICS: "dashboard-stats",
+  USER: "users",
+};
 
-// const development = {
-//   LOGIN_USER: `${API_URL_DEVELOPMENT}/${ENDPOINT.LOGIN}`,
-//   LOGOUT_USER: `${API_URL_DEVELOPMENT}/${ENDPOINT.LOGOUT}`,
-// };
+const development = {
+  GET_MENTOR: `${API_URL_DEVELOPMENT}/${ENDPOINT.GET_MENTORS}`,
+  GET_MENTEE: `${API_URL_DEVELOPMENT}/${ENDPOINT.GET_MENTEES}`,
+  GET_STATISTICS: `${API_URL_DEVELOPMENT}/${ENDPOINT.STATISTICS}`,
+  USERS: `${API_URL_DEVELOPMENT}/${ENDPOINT.USER}`,
+};
 
-// const production = {
-//   LOGIN_USER: `${API_URL_PRODUCTION}/${ENDPOINT.LOGIN}`,
-//   LOGOUT_USER: `${API_URL_PRODUCTION}/${ENDPOINT.LOGOUT}`,
-// };
+const production = {
+  GET_MENTOR: `${API_URL_PRODUCTION}/${ENDPOINT.GET_MENTORS}`,
+  GET_MENTEE: `${API_URL_PRODUCTION}/${ENDPOINT.GET_MENTEES}`,
+  GET_STATISTICS: `${API_URL_PRODUCTION}/${ENDPOINT.STATISTICS}`,
+  USERS: `${API_URL_PRODUCTION}/${ENDPOINT.USER}`,
+};
 
-// const urlAuth =
-//   import.meta.env.MODE === "development" ? development : production;
+const urlAdmin =
+  import.meta.env.MODE === "development" ? development : production;
 
-// export default urlAuth;
+export default urlAdmin;
