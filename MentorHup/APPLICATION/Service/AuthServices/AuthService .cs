@@ -38,7 +38,9 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null) return false;
 
-                var decodedToken = System.Web.HttpUtility.UrlDecode(token);
+                var tokenBytes = WebEncoders.Base64UrlDecode(token);
+                var decodedToken = Encoding.UTF8.GetString(tokenBytes);
+                
                 var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
                 return result.Succeeded;
