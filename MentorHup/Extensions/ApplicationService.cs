@@ -8,11 +8,8 @@ using MentorHup.APPLICATION.Service.Dashboard;
 using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.APPLICATION.Service.Message;
-<<<<<<< HEAD:MentorHup/Extensions/ApplicatrionService.cs
 using MentorHup.APPLICATION.Service.Notification;
-=======
 using MentorHup.APPLICATION.Service.Profile;
->>>>>>> 2449831d6fda79bce960de5ab579f06c276847d4:MentorHup/Extensions/ApplicationService.cs
 using MentorHup.APPLICATION.Service.Review;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
@@ -61,12 +58,9 @@ namespace MentorHup.Extensions
             services.AddScoped<IAdminService, AdminService>();
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IConversationService, ConversationService>();
-<<<<<<< HEAD:MentorHup/Extensions/ApplicatrionService.cs
             services.AddScoped<INotificationService, NotificationService>();
 
 
-=======
->>>>>>> 2449831d6fda79bce960de5ab579f06c276847d4:MentorHup/Extensions/ApplicationService.cs
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IWeeklyDashboardService, WeeklyDashboardService>();
 

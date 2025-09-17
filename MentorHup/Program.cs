@@ -3,11 +3,8 @@ using MentorHup.Domain.Entities;
 using MentorHup.Exceptions;
 using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
-<<<<<<< HEAD
 using MentorHup.Infrastructure.Hubs;
-using MentorHup.Infrastructure.Mapping;
-=======
->>>>>>> 2449831d6fda79bce960de5ab579f06c276847d4
+
 using MentorHup.Infrastructure.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -96,13 +93,8 @@ if (app.Environment.IsDevelopment() || app.Environment.IsProduction() )
 app.UseExceptionHandler();
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
-<<<<<<< HEAD
-
-app.UseCors("CorsPolicy");
 
 
-=======
->>>>>>> 2449831d6fda79bce960de5ab579f06c276847d4
 app.UseAuthorization();
 
 app.MapControllers();
