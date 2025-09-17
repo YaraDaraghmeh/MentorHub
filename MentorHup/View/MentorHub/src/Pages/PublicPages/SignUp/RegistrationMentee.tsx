@@ -18,6 +18,13 @@ const SignUpMentee = () => {
     email: "",
     password: "",
   });
+  const [errors, setErrors] = useState<{
+    name?: string;
+    gender?: string;
+    email?: string;
+    password?: string;
+    general?: string;
+  }>({});
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -37,27 +44,104 @@ const SignUpMentee = () => {
     const { name, value } = e.target;
 
     setRegisterData((prev) => ({ ...prev, [name]: value }));
+    // Clear field error on change
+    setErrors((prev) => ({ ...prev, [name]: undefined, general: undefined }));
   };
 
   const RegisterMentee = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Basic client-side validation
+    const newErrors: typeof errors = {};
+    if (!registerData.name.trim()) newErrors.name = "Name is required";
+    if (!registerData.gender.trim()) newErrors.gender = "Gender is required";
+    if (!registerData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(registerData.email)) {
+        newErrors.email = "Enter a valid email address";
+      }
+    }
+    if (!registerData.password) {
+      newErrors.password = "Password is required";
+    } else if (registerData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters";
+    }
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
+      return;
+    }
+
     try {
       const formData = new FormData();
-      formData.append("name", registerData.name);
-      formData.append("gender", registerData.gender);
-      formData.append("email", registerData.email);
-      formData.append("password", registerData.password);
+      // Required fields
+      formData.append("Name", registerData.name);
+      // Normalize gender capitalization if user typed lowercase
+      const normalizedGender = registerData.gender
+        ? registerData.gender.trim().toLowerCase() === "male"
+          ? "Male"
+          : registerData.gender.trim().toLowerCase() === "female"
+          ? "Female"
+          : registerData.gender
+        : "";
+      formData.append("Gender", normalizedGender);
+      // Do not append Image when empty; many backends reject empty string for file field
+      formData.append("Email", registerData.email);
+      formData.append("Password", registerData.password);
 
-      const response = await axios.post(urlMentee.REGISTER_USER, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(urlMentee.REGISTER_USER, formData);
 
-      console.log("respo", response);
+      console.log("Registration successful:", response.data);
+      // You can add success handling here (e.g., redirect to login page)
+      navigate("/login");
     } catch (error: any) {
-      console.error(error.response?.data || error.message);
+      if (error.response) {
+        const { status, statusText, data, headers } = error.response;
+        console.error("Registration failed - status:", status, statusText);
+        console.error("Headers:", headers);
+        if (typeof data === "string") {
+          console.error("Body (text):", data);
+          setErrors((prev) => ({ ...prev, general: data }));
+        } else {
+          try {
+            console.error("Body (json):", JSON.stringify(data));
+            // Map backend validation messages to fields when possible
+            const mapped: typeof errors = {};
+            if (data?.errors) {
+              if (data.errors.Password?.length) {
+                mapped.password = data.errors.Password[0];
+              }
+              if (data.errors.Email?.length) {
+                mapped.email = data.errors.Email[0];
+              }
+              if (data.errors.Name?.length) {
+                mapped.name = data.errors.Name[0];
+              }
+              if (data.errors.Gender?.length) {
+                mapped.gender = data.errors.Gender[0];
+              }
+            }
+            // Some responses send { message: [ ... ] }
+            if (Array.isArray(data?.message) && data.message.length) {
+              // Try to infer which field the message is about
+              const msg = data.message[0] as string;
+              if (/password/i.test(msg)) mapped.password = msg;
+              else if (/email/i.test(msg)) mapped.email = msg;
+              else if (/user(name)?/i.test(msg)) mapped.name = msg;
+              else mapped.general = msg;
+            }
+            setErrors(mapped);
+          } catch {
+            console.error("Body (raw):", data);
+            setErrors((prev) => ({ ...prev, general: "Registration failed. Please check your inputs." }));
+          }
+        }
+      } else {
+        console.error("Registration failed (no response):", error.message);
+        setErrors((prev) => ({ ...prev, general: "Network error. Please try again." }));
+      }
+      // You can add error handling here (e.g., show error message to user)
     }
   };
 
@@ -89,6 +173,11 @@ const SignUpMentee = () => {
               Welcome to MentorHub
             </p>
             <div className="self-stretch inline-flex flex-col w-full justify-between items-start gap-3.5">
+              {errors.general && (
+                <div className="w-full text-red-600 text-sm py-2" role="alert">
+                  {errors.general}
+                </div>
+              )}
               {/* inputs */}
               <div className="flex flex-col md:flex-row gap-3 w-full">
                 <div className="flex-1">
@@ -99,6 +188,7 @@ const SignUpMentee = () => {
                     placeholder="sara.."
                     value={registerData.name}
                     onChange={handleChange}
+                    error={errors.name}
                   />
                 </div>
                 <div className="flex-1">
@@ -109,6 +199,7 @@ const SignUpMentee = () => {
                     placeholder="Male or Female"
                     value={registerData.gender}
                     onChange={handleChange}
+                    error={errors.gender}
                   />
                 </div>
               </div>
@@ -119,6 +210,7 @@ const SignUpMentee = () => {
                 placeholder="example@gmail.com"
                 value={registerData.email}
                 onChange={handleChange}
+                error={errors.email}
               />
               <FormFiled
                 type="password"
@@ -127,6 +219,7 @@ const SignUpMentee = () => {
                 placeholder="***********"
                 value={registerData.password}
                 onChange={handleChange}
+                error={errors.password}
               />
 
               {/* Sign in */}

@@ -1,12 +1,15 @@
-const API_BEST_URL_DEVELOPMENT = "/api/mentees";
-const API_BEST_URL_PRODUCTION = "http://appname.azurewebsite.net";
+const API_BEST_URL_PRODUCTION = "https://mentor-hub.runasp.net/api/mentees";
+
+// In development, route through Vite dev server proxy to avoid CORS
+const API_BEST_URL_DEV_PROXY = "/api/mentees";
 
 const ENDPOINT = {
   REGISTER: "register",
 };
 
 const development = {
-  REGISTER_USER: `${API_BEST_URL_DEVELOPMENT}/${ENDPOINT.REGISTER}`,
+  // Use the proxy base during local development
+  REGISTER_USER: `${API_BEST_URL_DEV_PROXY}/${ENDPOINT.REGISTER}`,
 };
 
 const production = {

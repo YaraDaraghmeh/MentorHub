@@ -39,6 +39,14 @@ const Account = () => {
         name="password"
         placeholder="***********"
       />
+      <FormFiled
+        value={userData["stripeAccountId"] || ""}
+        onChange={handleChange}
+        type="text"
+        label="Stripe Account ID"
+        name="stripeAccountId"
+        placeholder="acct_..."
+      />
     </div>
   );
 };

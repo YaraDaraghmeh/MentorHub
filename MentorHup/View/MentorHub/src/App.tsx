@@ -3,6 +3,7 @@ import {
   Route,
   Routes,
   Navigate,
+  // useLocation,
 } from "react-router-dom";
 import HomePage from "./Pages/PublicPages/HomePage";
 import LoginUser from "./Pages/PublicPages/Login";
@@ -32,6 +33,8 @@ import FeedbackModal from "./components/SessionReview/SessionReview";
 import { AuthProvider } from "./Context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./Context/AuthContext";
+import ProfileAdmin from "./Pages/AdminPages/Profile";
+import WithoutHeader from "./layouts/withoutSidebar";
 
 // Component to handle default redirect
 const DefaultRedirect = () => {
@@ -60,6 +63,16 @@ function App() {
   const toggleTheme = () => {
     setIsDark(!isDark);
   };
+
+  // const loaction = useLocation();
+  // const hideSidebar = [
+  //   "/profile",
+  //   "/admin/profile",
+  //   "/mentor/profile",
+  //   "/mentee/profile",
+  // ];
+
+  // const shouldeHide = hideSidebar.includes(loaction.pathname);
 
   return (
     <>
@@ -99,6 +112,7 @@ function App() {
                 <Route path="chatting" element={<ChattingAd />} />
                 <Route path="sessions" element={<SessionsAdm />} />
                 <Route path="payment" element={<Payments />} />
+                <Route path="profile" element={<ProfileAdmin />} />
               </Route>
 
               {/* Mentor Routes - Protected */}
@@ -129,6 +143,18 @@ function App() {
                 <Route path="mentors" element={<BrowseMentor />} />
                 <Route path="chatting" element={<ChateUser />} />
                 <Route path="booking" element={<MenteeBooking />} />
+              </Route>
+
+              {/* Admin Profile (without Sidebar) */}
+              <Route
+                path="/admin/"
+                element={
+                  <ProtectedRoute allowedRoles={["Admin"]}>
+                    <WithoutHeader />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="profile" element={<ProfileAdmin />} />
               </Route>
 
               {/* Catch all - redirect to home or login */}

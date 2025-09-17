@@ -18,7 +18,7 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
   const options = {
     chart: { id: "revenue-chart", toolbar: { show: false } },
     xaxis: {
-      categories: data.map((item) => FormateWeekly(item.weekLabel)),
+      categories: data.map((item) => FormateWeekly(item.weekLabel ?? "")),
       labels: {
         show: true,
         rotate: -45,
@@ -65,7 +65,7 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
     grid: { show: false },
   };
 
-  const series = [{ name: "Value", data: data.map((item) => item.count) }];
+  const series = [{ name: "Value", data: data.map((item) => item.count ?? 0) }];
 
   return (
     <Chart
