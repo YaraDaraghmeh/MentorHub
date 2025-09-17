@@ -53,7 +53,7 @@ const BodySystem = () => {
       {/* page */}
       <div
         className={`flex-1 flex flex-col transition-all duration-300 ${
-          isSidebarOpen ? "ml-[230px]" : "ml-20"
+          isSidebarOpen && window.innerWidth > 768 ? "ml-[230px]" : "ml-20"
         }`}
       >
         <div className="flex flex-col p-5 gap-7">

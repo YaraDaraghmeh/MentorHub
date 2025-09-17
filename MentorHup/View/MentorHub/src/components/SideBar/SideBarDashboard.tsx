@@ -12,6 +12,7 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 import { useAuth } from "../../Context/AuthContext"; // استيراد useAuth
+import { NavLink } from "react-router-dom";
 
 interface profile {
   name: string | null;
@@ -92,7 +93,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
 
   const handleLogout = () => {
     console.log("Logging out...");
-    logout(); // سيقوم بمسح البيانات والتوجيه لصفحة lo
+    logout();
   };
 
   return (
@@ -129,11 +130,15 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
                 expended ? "w-[112px] h-[112px]" : "w-[28px] h-[28px]"
               }`}
             >
-              <img
-                src={expended ? profilePicture : avatar}
-                alt="User Avatar"
-                className={`w-full h-full rounded-full overflow-hidden transition`}
-              />
+              {role && (
+                <a href={`${role}/profile`}>
+                  <img
+                    src={expended ? profilePicture : avatar}
+                    alt="User Avatar"
+                    className={`w-full h-full rounded-full overflow-hidden transition`}
+                  />
+                </a>
+              )}
             </div>
             {expended ? (
               <div className="flex flex-col gap-1 items-center">
