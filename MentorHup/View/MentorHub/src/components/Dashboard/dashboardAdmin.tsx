@@ -10,49 +10,100 @@ import ApxChartDash from "../Charts/ApexChart";
 import BarChartDash from "../Charts/BarChart";
 import TableBooking from "../Tables/tableBooking";
 import TableReview from "../Tables/tableReview";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import urlAdmin from "../../Utilities/Admin/urlAdmin";
+import FormateWeekly from "./formateWeekly";
+import urlDashboard from "../../Utilities/Dashboard/urlDashboard";
+
+interface week {
+  weekLabel: string;
+  count: number;
+}
 
 const DashboardAdmin = () => {
   const { isDark } = useTheme();
+  const [statistics, setStatistics] = useState({
+    totalUsers: 0,
+    totalReviews: 0,
+    totalBookings: 0,
+    totalMentors: 0,
+    totalMentees: 0,
+    totalPayments: 0,
+  });
+
+  const [sessions, setSessions] = useState<week[]>([]);
+
+  const users = [
+    { label: "Mentors", value: statistics.totalMentors },
+    { label: "Mentees", value: statistics.totalMentees },
+  ];
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      console.log("Not Authorized");
+      return;
+    }
+
+    console.log(token);
+
+    const getDataUsers = async () => {
+      try {
+        const numbers = await axios.get(urlAdmin.GET_STATISTICS, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setStatistics(numbers.data);
+      } catch (error: any) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    getDataUsers();
+
+    const countBookingPerWeek = async () => {
+      try {
+        const booking = await axios.get(urlDashboard.BOOKING_PER_WEEK, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setSessions(booking.data);
+      } catch (error: any) {
+        console.log("Booking:", error);
+      }
+    };
+    countBookingPerWeek();
+  }, []);
 
   const state = [
     {
       title: "Total Users",
-      value: "120",
+      value: statistics.totalUsers,
       icon: <BsFillPeopleFill />,
       color: "",
     },
     {
       title: "Total Reviews",
-      value: "22",
+      value: statistics.totalReviews,
       icon: <BsStarHalf />,
       color: "",
     },
     {
       title: "Interviews Booked",
-      value: "30",
+      value: statistics.totalBookings,
       icon: <BsFillCalendar2CheckFill />,
       color: "",
     },
     {
       title: "Revenues",
-      value: "$250",
+      value: statistics.totalPayments,
       icon: <FaUserTie />,
       color: "",
     },
-  ];
-
-  const sessions = [
-    { label: "Week 1", value: 3 },
-    { label: "Week 2", value: 7 },
-    { label: "Week 3", value: 6 },
-    { label: "Week 4", value: 8 },
-    { label: "Week 5", value: 5 },
-    { label: "Week 6", value: 3 },
-  ];
-
-  const users = [
-    { label: "Mentors", value: 23 },
-    { label: "Mentees", value: 44 },
   ];
 
   return (

@@ -5,36 +5,69 @@ import { FaChalkboardTeacher } from "react-icons/fa";
 import { FaUsers } from "react-icons/fa";
 import CardDash from "../../components/Cards/CardDashboard";
 import { useTheme } from "../../Context/ThemeContext";
+import { useEffect, useState } from "react";
+import urlAdmin from "../../Utilities/Admin/urlAdmin";
+import axios from "axios";
 
 const Users = () => {
   const { isDark } = useTheme();
+  const [statistics, setStatistics] = useState({
+    totalUsers: 0,
+    totalMentors: 0,
+    totalMentees: 0,
+    activeUsers: 0,
+  });
 
   const state = [
     {
       title: "Total Users",
-      value: "120",
+      value: statistics.totalUsers,
       icon: <BsFillPeopleFill />,
       color: "",
     },
     {
       title: "Total Mentors",
-      value: "22",
+      value: statistics.totalMentors,
       icon: <FaChalkboardTeacher />,
       color: "",
     },
     {
       title: "Total Mentee",
-      value: "30",
+      value: statistics.totalMentees,
       icon: <FaUserTie />,
       color: "",
     },
     {
       title: "Active Users",
-      value: "250",
+      value: statistics.activeUsers,
       icon: <FaUsers />,
       color: "",
     },
   ];
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    if (!token) {
+      console.log("Not Authorized");
+      return;
+    }
+
+    const getDataUsers = async () => {
+      try {
+        const numbers = await axios.get(urlAdmin.GET_STATISTICS, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setStatistics(numbers.data);
+      } catch (error: any) {
+        console.error("Error fetching statistics:", error);
+      }
+    };
+
+    getDataUsers();
+  }, []);
 
   return (
     <>

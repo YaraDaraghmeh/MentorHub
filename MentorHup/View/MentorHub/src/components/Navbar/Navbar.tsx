@@ -19,7 +19,7 @@ const Nav = () => {
   };
 
   const navLinks = [
-    { title: "Home", path: "/" },
+    { title: "Home", path: "/home" },
     { title: "About", path: "/about" },
     { title: "Mentors", path: "/browsMentor" },
     { title: "Contact Us", path: "/contactUs" },
@@ -30,10 +30,7 @@ const Nav = () => {
     <nav className="nav fixed top-0 left-0 z-50 lg:px-[45px] md:px-[38px] px-6 bg-dark flex flex-shrink-0 items-center justify-between w-full">
       {/* logo */}
       <Link to="/" className="flex items-center">
-        <img
-          className="cursor-pointer h-10 w-auto object-contain"
-          src={logo}
-        />
+        <img className="cursor-pointer h-10 w-auto object-contain" src={logo} />
       </Link>
 
       {/* list navbar */}

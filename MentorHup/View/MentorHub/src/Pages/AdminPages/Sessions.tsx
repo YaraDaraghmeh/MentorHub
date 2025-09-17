@@ -1,39 +1,66 @@
-import {
-  BsCalendar2CheckFill,
-  BsCalendarXFill,
-  BsFillCalendar3WeekFill,
-} from "react-icons/bs";
+import { BsCalendar2CheckFill, BsCalendarXFill } from "react-icons/bs";
 import TableBooking from "../../components/Tables/tableBooking";
 import { FaRegCalendarDays } from "react-icons/fa6";
 import CardDash from "../../components/Cards/CardDashboard";
+import { IoPeopleSharp } from "react-icons/io5";
 import { useTheme } from "../../Context/ThemeContext";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import urlAdmin from "../../Utilities/Admin/urlAdmin";
 
 const SessionsAdm = () => {
   const { isDark } = useTheme();
+  const [statistics, setStatistics] = useState({
+    totalBookings: 0,
+    confirmedBookings: 0,
+    cancelledBookings: 0,
+    mentorsWithNoBookings: 0,
+  });
+
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      console.log("Not Authorized");
+    }
+
+    const getData = async () => {
+      try {
+        const res = await axios.get(urlAdmin.GET_STATISTICS, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        setStatistics(res.data);
+        console.log(res.data);
+      } catch (error: any) {}
+    };
+
+    getData();
+  }, []);
 
   const state = [
     {
       title: "Total Sessions",
-      value: "12",
+      value: statistics.totalBookings,
       icon: <FaRegCalendarDays />,
       color: "",
     },
     {
       title: "Sessions Completed",
-      value: "33",
+      value: statistics.confirmedBookings,
       icon: <BsCalendar2CheckFill />,
       color: "",
     },
     {
       title: "Sessions Cancelled",
-      value: "4",
+      value: statistics.cancelledBookings,
       icon: <BsCalendarXFill />,
       color: "",
     },
     {
-      title: "Sessions Pending",
-      value: "60",
-      icon: <BsFillCalendar3WeekFill />,
+      title: "Mentors without Booking",
+      value: statistics.mentorsWithNoBookings,
+      icon: <IoPeopleSharp />,
       color: "",
     },
   ];

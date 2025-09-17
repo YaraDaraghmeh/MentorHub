@@ -3,15 +3,13 @@ import AppForm from "../../components/Form/Form";
 import FormFiled from "../../components/Form/FormFiled";
 import logo from "/src/assets/MentorHub-logo (1)/vector/default-monochrome.svg";
 import { FcGoogle } from "react-icons/fc";
-import ModalConfirm from "../../components/Modal/ModalConfirm";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import urlAuth from "../../Utilities/Auth/urlAuth";
 import { useAuth } from "../../Context/AuthContext";
 
 const LoginContent = () => {
   const navigate = useNavigate();
-  const [show, setShow] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({ email: "", password: "" });
@@ -20,14 +18,6 @@ const LoginContent = () => {
   const handleSignUp = () => {
     navigate("/registration");
   };
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setShow(true);
-    }, 3000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   // when add data on inputs
   const handleChange = (
@@ -46,7 +36,7 @@ const LoginContent = () => {
 
     try {
       console.log("Data I sending .", formData);
-      
+
       const response = await axios.post(urlAuth.LOGIN_USER, formData, {
         headers: {
           "Content-Type": "application/json",
@@ -56,35 +46,35 @@ const LoginContent = () => {
       console.log(" Server Response :", response.data);
 
       const { roles, email, userId, accessToken, refreshToken } = response.data;
-      
+
       // تأكد من أن roles هو array وخذ أول عنصر
-      const roleString = Array.isArray(roles) ? roles[0] as "Admin" | "Mentor" | "Mentee" : roles as "Admin" | "Mentor" | "Mentee";
-      
+      const roleString = Array.isArray(roles)
+        ? (roles[0] as "Admin" | "Mentor" | "Mentee")
+        : (roles as "Admin" | "Mentor" | "Mentee");
+
       console.log("Role :", roleString);
 
-      
-      await setAuth({ 
-        userId, 
-        roles: roleString, 
-        email, 
-        accessToken, 
-        refreshToken 
+      await setAuth({
+        userId,
+        roles: roleString,
+        email,
+        accessToken,
+        refreshToken,
       });
 
       console.log("Authentication data saved successfully.");
-      
+
       // Force a re-render by updating a state (optional)
       setFormData({ email: "", password: "" });
-      
     } catch (error: any) {
       console.error("Failed ", error);
-      
+
       if (error.response?.data?.message) {
         setError(error.response.data.message);
       } else if (error.response?.data) {
         setError(" Failed to login. Please check your credentials.");
       } else {
-        setError("   Server Conntction Error  ");
+        setError("Server Conntction Error  ");
       }
     } finally {
       setLoading(false);
@@ -146,7 +136,9 @@ const LoginContent = () => {
               <button
                 onClick={handleLogin}
                 disabled={loading}
-                className={`cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold ${
+                  loading ? "opacity-50 cursor-not-allowed" : ""
+                }`}
               >
                 {loading ? ".................Logging In " : "Sign in"}
               </button>
@@ -182,15 +174,6 @@ const LoginContent = () => {
           </AppForm>
         </div>
       </div>
-
-      {/* Modal */}
-      <ModalConfirm
-        title="Stripe Account Required"
-        message="You need to have an active Stripe account to continue"
-        open={show}
-        onClose={() => setShow(false)}
-        onConfirm={() => setShow(false)}
-      />
     </>
   );
 };
@@ -198,9 +181,10 @@ const LoginContent = () => {
 // Main component with authentication check
 const LoginUser = () => {
   const { isAuthenticated } = useAuth();
+  const token = localStorage.getItem("accsseToken");
 
   // If already authenticated, redirect to dashboard
-  if (isAuthenticated) {
+  if (token && isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
