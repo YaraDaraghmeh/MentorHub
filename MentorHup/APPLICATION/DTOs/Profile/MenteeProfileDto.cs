@@ -9,6 +9,5 @@ namespace MentorHup.APPLICATION.DTOs.Profile
         public string Email { get; set; }
         public string UserName { get; set; }
         public string Gender { get; set; }
-        public List<MenteeBookingOverviewDto> Bookings { get; set; }
     }
 }

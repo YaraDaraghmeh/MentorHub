@@ -9,6 +9,7 @@
         public int Experiences { get; set; }
         public string Field { get; set; } = null!;
         public int ReviewCount { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public List<string> Skills { get; set; } = new();
         public List<MentorAvailabilityResponse> Availabilities { get; set; } = new();

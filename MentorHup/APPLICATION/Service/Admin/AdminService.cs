@@ -52,7 +52,7 @@ namespace MentorHup.APPLICATION.Service.Admin
                     Id = m.Id,
                     Name = m.Name,
                     Gender = m.Gender,
-                    ReviewCount = m.Bookings.Count(b => b.Review != null)
+                    CreatedAt = m.ApplicationUser.CreatedAt,
                 })
                 .ToListAsync();
 

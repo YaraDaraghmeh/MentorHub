@@ -1,6 +1,5 @@
 ﻿using MentorHup.APPLICATION.DTOs.Admin;
 using MentorHup.APPLICATION.DTOs.Pagination;
-using MentorHup.APPLICATION.DTOs.Skill;
 using MentorHup.APPLICATION.Service.Admin;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

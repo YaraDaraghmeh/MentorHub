@@ -1,5 +1,4 @@
 ﻿using MentorHup.APPLICATION.Common;
-using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.APPLICATION.DTOs.Mentor;
 
 namespace MentorHup.APPLICATION.Service.Mentor;

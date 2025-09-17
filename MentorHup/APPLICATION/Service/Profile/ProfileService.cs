@@ -21,7 +21,6 @@ namespace MentorHup.APPLICATION.Service.Profile
                 case "Mentee":
                     var mentee = await dbContext.Mentees
                         .AsNoTracking()
-                        .Include(ment => ment.Bookings)
                         .Include(m => m.ApplicationUser)
                         .FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
 
@@ -34,19 +33,6 @@ namespace MentorHup.APPLICATION.Service.Profile
                         Email = mentee.ApplicationUser.Email,
                         UserName = mentee.ApplicationUser.UserName,
                         Gender = mentee.Gender,
-                        // make a manual mapping (Domain Model => DTO) for every booking
-                        Bookings = mentee.Bookings
-                        .Select(booking => new MenteeBookingOverviewDto
-                        {
-                            BookingId = booking.Id,
-                            StartTime = booking.StartTime,
-                            EndTime = booking.EndTime,
-                            Amount = booking.Amount,
-                            MeetingUrl = booking.MeetingUrl,
-                            Status = booking.Status,
-                            MentorName = booking.Mentor.ApplicationUser.UserName
-                        }
-                        ).ToList(),
                         Role = "Mentee"
                     };
 
