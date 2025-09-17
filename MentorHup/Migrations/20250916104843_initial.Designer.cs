@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MentorHup.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250910215928_Init")]
-    partial class Init
+    [Migration("20250916104843_initial")]
+    partial class initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -329,6 +329,39 @@ namespace MentorHup.Migrations
                     b.HasIndex("SenderId");
 
                     b.ToTable("Messages");
+                });
+
+            modelBuilder.Entity("MentorHup.Domain.Entities.Notification", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsRead")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Message")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Payment", b =>
@@ -709,6 +742,17 @@ namespace MentorHup.Migrations
                     b.Navigation("Sender");
                 });
 
+            modelBuilder.Entity("MentorHup.Domain.Entities.Notification", b =>
+                {
+                    b.HasOne("MentorHup.Domain.Entities.ApplicationUser", "User")
+                        .WithMany("Notifications")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("MentorHup.Domain.Entities.Payment", b =>
                 {
                     b.HasOne("MentorHup.Domain.Entities.Booking", "Booking")
@@ -798,6 +842,8 @@ namespace MentorHup.Migrations
                     b.Navigation("Mentee");
 
                     b.Navigation("Mentor");
+
+                    b.Navigation("Notifications");
 
                     b.Navigation("ReceivedMessages");
 

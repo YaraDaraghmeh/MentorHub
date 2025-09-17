@@ -3,6 +3,7 @@ using MentorHup.Domain.Entities;
 using MentorHup.Exceptions;
 using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
+using MentorHup.Infrastructure.Hubs;
 using MentorHup.Infrastructure.Mapping;
 using MentorHup.Infrastructure.Seed;
 using Microsoft.AspNetCore.Identity;
@@ -73,9 +74,14 @@ if (app.Environment.IsDevelopment())
 app.UseExceptionHandler();
 app.UseAuthentication();
 
+app.UseCors("CorsPolicy");
+
+
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<ChatHub>("/chathub");
+app.MapHub<ChatHub>("/chatHub");
+app.MapHub<NotificationHub>("/notificationHub");
+
 
 app.Run();

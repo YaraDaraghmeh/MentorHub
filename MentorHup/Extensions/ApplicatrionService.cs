@@ -7,6 +7,7 @@ using MentorHup.APPLICATION.Service.Dashboard;
 using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.APPLICATION.Service.Message;
+using MentorHup.APPLICATION.Service.Notification;
 using MentorHup.APPLICATION.Service.Review;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.APPLICATION.Settings;
@@ -30,9 +31,9 @@ namespace MentorHup.Extensions
             {
                 options.AddPolicy("CorsPolicy", builder =>
                 {
-                    builder.AllowAnyOrigin()
-                        .AllowAnyMethod()
-                        .AllowAnyHeader();
+                    builder.WithOrigins("http://localhost:5174")
+                               .AllowAnyMethod()
+                               .AllowAnyHeader();
                 });
             });
         }
@@ -53,6 +54,8 @@ namespace MentorHup.Extensions
             services.AddScoped<IReviewService, ReviewService>();
             services.AddScoped<IMenteeService, MenteeService>();
             services.AddScoped<IConversationService, ConversationService>();
+            services.AddScoped<INotificationService, NotificationService>();
+
 
             services.AddTransient<IEmailSender, EmailSender>();
 
