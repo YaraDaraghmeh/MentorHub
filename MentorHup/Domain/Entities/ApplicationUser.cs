@@ -11,5 +11,8 @@ namespace MentorHup.Domain.Entities
         public ICollection<Message> SentMessages { get; set; } = new List<Message>();
         public ICollection<Message> ReceivedMessages { get; set; } = new List<Message>();
 
+        public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+
     }
 }

@@ -43,7 +43,7 @@ namespace MentorHup.APPLICATION.Service.Conversation
                     {
                         ConversationWithId = g.Key.Id,
                         ConversationWithName = g.Key.UserName ?? "Admin",
-                        ConversationWithAvatar = null, 
+                        ConversationWithAvatar = avatar, 
                         LastMessage = lastMessage.Content,
                         LastMessageTime = lastMessage.SentAt,
                         IsRead = lastMessage.ReceiverId == userId ? lastMessage.IsRead : true

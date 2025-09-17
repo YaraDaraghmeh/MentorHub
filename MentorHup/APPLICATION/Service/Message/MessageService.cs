@@ -1,17 +1,14 @@
 ﻿using MentorHup.APPLICATION.DTOs.DTOs;
+using MentorHup.APPLICATION.DTOs.Notification;
 using MentorHup.APPLICATION.Service.Message;
+using MentorHup.APPLICATION.Service.Notification;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
-public class MessageService : IMessageService
+public class MessageService(ApplicationDbContext _context , INotificationService _notificationService) : IMessageService
 {
-    private readonly ApplicationDbContext _context;
-
-    public MessageService(ApplicationDbContext context)
-    {
-        _context = context;
-    }
+    
 
     public async Task<MessageDto> SendMessageAsync(string senderId, CreateMessageDto dto)
     {
@@ -32,6 +29,13 @@ public class MessageService : IMessageService
 
         string senderName = sender?.Mentor?.Name ?? sender?.Mentee?.Name ?? "Admin";
         string? senderAvatar = sender?.Mentor?.ImageUrl ?? sender?.Mentee?.ImageUrl;
+
+        await _notificationService.CreateNotificationAsync(new NotificationCreateDto
+        {
+            UserId = dto.ReceiverId,
+            Title = "New Message",
+            Message = $"You have a new message from {senderName}"
+        });
 
         return new MessageDto
         {
