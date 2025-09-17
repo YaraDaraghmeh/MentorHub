@@ -9,33 +9,61 @@ import CardLabel from "../Cards/CardLabel";
 import picture from "../../assets/avatar-profile.png";
 import { useTheme } from "../../Context/ThemeContext";
 import BarChartDash from "../Charts/BarChart";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import urlMentor from "../../Utilities/Mentor/urlMentor";
 
 const DashboardMentor = () => {
   const { isDark } = useTheme();
+  const [stats, setStats] = useState({
+    totalMentees: 0,
+    totalReviews: 0,
+    totalEarnings: 0,
+    upcomingBookings: 0,
+  });
+
+  useEffect(() => {
+    const fetchMentorDashboard = async () => {
+      try {
+        const token = localStorage.getItem("accessToken")?.trim();
+        const headers = token
+          ? { Authorization: `Bearer ${token}` }
+          : undefined;
+        const res = await axios.get(urlMentor.MENTOR_DASHBOARD as string, {
+          headers,
+        });
+        const data = res.data || {};
+        setStats({
+          totalMentees: Number(data.totalMentees) || 0,
+          totalReviews: Number(data.totalReviews) || 0,
+          totalEarnings: Number(data.totalEarnings) || 0,
+          upcomingBookings: Number(data.upcomingBookings) || 0,
+        });
+      } catch (err: any) {
+        console.error(
+          "Failed to load mentor dashboard stats",
+          err?.response?.status,
+          err?.response?.data || err?.message
+        );
+      }
+    };
+    fetchMentorDashboard();
+  }, []);
+
   const state = [
-    { title: "Mentees", value: "12", icon: <BsFillPeopleFill />, color: "" },
-    {
-      title: "Upcoming Sessions",
-      value: "33",
-      icon: <BsFillCalendar2CheckFill />,
-      color: "",
-    },
-    { title: "Rating", value: "4.8", icon: <BsStarHalf />, color: "" },
-    {
-      title: "Earnings",
-      value: "$160",
-      icon: <MdOutlineAttachMoney />,
-      color: "",
-    },
+    { title: "Mentees", value: stats.totalMentees, icon: <BsFillPeopleFill />, color: "" },
+    { title: "Reviews", value: stats.totalReviews, icon: <BsStarHalf />, color: "" },
+    { title: "Upcoming Sessions", value: stats.upcomingBookings, icon: <BsFillCalendar2CheckFill />, color: "" },
+    { title: "Earnings", value: `$${stats.totalEarnings}`, icon: <MdOutlineAttachMoney />, color: "" },
   ];
 
   const sessions = [
-    { label: "Week 1", value: 3 },
-    { label: "Week 2", value: 7 },
-    { label: "Week 3", value: 6 },
-    { label: "Week 4", value: 8 },
-    { label: "Week 5", value: 5 },
-    { label: "Week 5", value: 3 },
+    { weekLabel: "Week 1", count: 3 },
+    { weekLabel: "Week 2", count: 7 },
+    { weekLabel: "Week 3", count: 6 },
+    { weekLabel: "Week 4", count: 8 },
+    { weekLabel: "Week 5", count: 5 },
+    { weekLabel: "Week 6", count: 3 },
   ];
 
   return (
