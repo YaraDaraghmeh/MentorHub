@@ -7,11 +7,17 @@ import ProfileInfo from "../../../components/formSteps/Personal";
 import PriceandSkills from "../../../components/formSteps/Price&Skills";
 import Available from "../../../components/formSteps/Availabledays";
 import { StepperContext } from "../../../Context/StepperContext";
+import axios from "axios";
+import urlMentor from "../../../Utilities/Mentor/urlMentor";
+import { useNavigate } from "react-router-dom";
 
 const SignUpMentor = () => {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
-  const [userData, setUserData] = useState("");
+  const [userData, setUserData] = useState<any>({});
   const [finalData, setFinalData] = useState<any[]>([]); //defined data such as FormData
+  const [generalError, setGeneralError] = useState<string | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const steps = [
     "Account Info",
@@ -33,15 +39,121 @@ const SignUpMentor = () => {
       default:
     }
   };
-  const handleSi = () => {
-    console.log("test");
+
+  const handleSubmit = async () => {
+    try {
+      setSubmitting(true);
+      setGeneralError(null);
+
+      // Parse required fields
+      const stripeAccountId = (userData as any)?.stripeAccountId?.toString().trim() || null;
+
+      // Use numeric skillIds from state when available; fallback to parse comma-separated string
+      let skillIds: number[] = [];
+      const skillIdsState = (userData as any)?.skillIds;
+      if (Array.isArray(skillIdsState)) {
+        skillIds = (skillIdsState as any[])
+          .map((v) => Number(v))
+          .filter((n) => Number.isFinite(n));
+      } else if (typeof skillIdsState === "string") {
+        skillIds = skillIdsState
+          .split(",")
+          .map((s) => s.trim())
+          .filter((s) => s.length > 0)
+          .map((s) => Number(s))
+          .filter((n) => Number.isFinite(n));
+      }
+
+      // availabilities from datetime-local inputs => ISO strings
+      const startTimeRaw = (userData as any)?.startTime as string | undefined;
+      const endTimeRaw = (userData as any)?.endTime as string | undefined;
+      const startTimeIso = startTimeRaw ? new Date(startTimeRaw).toISOString() : null;
+      const endTimeIso = endTimeRaw ? new Date(endTimeRaw).toISOString() : null;
+
+      // Minimal validation for required backend fields
+      if (!stripeAccountId) {
+        setGeneralError("Stripe Account ID is required.");
+        return;
+      }
+      if (!skillIds || skillIds.length === 0) {
+        setGeneralError("At least one Skill ID is required.");
+        return;
+      }
+      if (!startTimeIso || !endTimeIso) {
+        setGeneralError("Availability start and end times are required.");
+        return;
+      }
+
+      // Build payload; other not-in-form fields can remain null as requested
+      const payload = {
+        name: (userData as any)?.name ?? null,
+        description: (userData as any)?.description ?? null,
+        email: (userData as any)?.email ?? null,
+        password: (userData as any)?.password ?? null,
+        experiences:
+          (userData as any)?.experience !== undefined && (userData as any)?.experience !== ""
+            ? Number((userData as any)?.experience)
+            : null,
+        field: (userData as any)?.field ?? null,
+        stripeAccountId,
+        price:
+          (userData as any)?.price !== undefined && (userData as any)?.price !== ""
+            ? Number((userData as any)?.price)
+            : null,
+        skillIds,
+        availabilities: [
+          {
+            startTime: startTimeIso,
+            endTime: endTimeIso,
+          },
+        ],
+      };
+
+      const res = await axios.post(urlMentor.REGISTER_USER, payload, {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "text/plain",
+        },
+      });
+
+      console.log("Mentor registration success:", res.data);
+      alert(
+        "Registration successful! Please verify your email to activate your account, then log in."
+      );
+      navigate("/login");
+    } catch (error: any) {
+      if (error.response) {
+        const { status, statusText, data } = error.response;
+        console.error("Mentor registration failed:", status, statusText, data);
+        // Prefer detailed error message if available
+        if (typeof data === "string") setGeneralError(data);
+        else if (data?.title && data?.errors) setGeneralError(data.title);
+        else if (Array.isArray(data?.message) && data.message.length)
+          setGeneralError(data.message[0]);
+        else setGeneralError("Registration failed. Please check your inputs.");
+      } else {
+        console.error("Mentor registration failed:", error.message);
+        setGeneralError("Network error. Please try again.");
+      }
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const handleClick = (direction: string) => {
     let newStep = currentStep;
 
     // check if steps are within bounds
-    direction === "next" ? newStep++ : newStep--;
+    if (direction === "next") {
+      if (currentStep === steps.length) {
+        // On final step, submit instead of moving forward
+        if (!submitting) void handleSubmit();
+        return;
+      }
+      newStep++;
+    } else {
+      newStep--;
+    }
 
     newStep > 0 && newStep <= steps.length && setCurrentStep(newStep);
   };
@@ -49,7 +161,12 @@ const SignUpMentor = () => {
   return (
     <div className="w-full h-screen flex lg:flex-row flex-col justify-center items-center px-8 py-4 bg-gradient-to-b from-[var(--primary)] from-[0%] via-[var(--teal-950)] via-[80%] to-[var(--cyan-800)] to-[100%]">
       <div className="flex w-full lg:w-[78%]">
-        <AppForm title="Sign up" span=" as" span2=" Mentor" onSubmit={handleSi}>
+        <AppForm title="Sign up" span=" as" span2=" Mentor">
+          {generalError && (
+            <div className="w-full text-red-600 text-sm py-2" role="alert">
+              {generalError}
+            </div>
+          )}
           <Stepper steps={steps} currentStep={currentStep} />
           <div className="w-full">
             <StepperContext.Provider

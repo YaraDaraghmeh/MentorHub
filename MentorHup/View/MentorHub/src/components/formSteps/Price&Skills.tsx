@@ -1,10 +1,14 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import FormFiled from "../Form/FormFiled";
 import { StepperContext } from "../../Context/StepperContext";
-import { FaChevronDown } from "react-icons/fa6";
+import axios from "axios";
+import urlSkills from "../../Utilities/Skills/urlSkills";
 
 const PriceandSkills = () => {
   const { userData, setUserData } = useContext(StepperContext);
+  const [skills, setSkills] = useState<Array<{ id: number; name: string }>>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -12,6 +16,49 @@ const PriceandSkills = () => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
   };
+
+  // Toggle checkbox for a skill id
+  const toggleSkill = (id: number) => {
+    const current: number[] = Array.isArray((userData as any).skillIds)
+      ? ((userData as any).skillIds as number[])
+      : [];
+    const next = current.includes(id)
+      ? current.filter((x) => x !== id)
+      : [...current, id];
+    setUserData({ ...userData, skillIds: next });
+  };
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+        const token = localStorage.getItem("accessToken")?.trim();
+        const res = await axios.get(urlSkills.SKILLS, {
+          headers: token
+            ? {
+                Authorization: `Bearer ${token}`,
+              }
+            : undefined,
+          params: { PageNumber: 1, PageSize: 100 },
+        });
+
+        const items = res.data?.items ?? res.data ?? [];
+        const normalized = (items as any[]).map((it) => ({
+          id: Number(it.id),
+          name: (it.skillName ?? it.name ?? "").toString(),
+        }));
+        setSkills(normalized);
+      } catch (err: any) {
+        console.error("Failed to load skills", err.response?.data || err.message);
+        setError("Failed to load skills");
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchSkills();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <div className="self-stretch inline-flex flex-col w-full justify-between items-start gap-3.5">
@@ -26,23 +73,33 @@ const PriceandSkills = () => {
       />
 
       <label className="text-center justify-center text-[var(--primary)] text-base font-medium">
-        Skills
+        Select Skills
       </label>
-
-      <div className="relative flex w-full">
-        <select
-          id="skills"
-          onChange={handleChange}
-          className="appearance-none w-full p-2 pr-10 text-md text-[var(--primary)] bg-gray-50 border rounded-md
-        focus:ring-2 focus:ring-blue-400 focus:border-blue-4"
-        >
-          <option selected>Choose a skills</option>
-          <option value={userData["QA"] || ""}>QA</option>
-          <option value="CA">Canada</option>
-          <option value="DE">Germany</option>
-        </select>
-        <FaChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 pointer-events-none" />
-      </div>
+      {loading && <div className="text-sm text-gray-500">Loading skills...</div>}
+      {error && (
+        <div className="text-sm text-red-500" role="alert">
+          {error}
+        </div>
+      )}
+      {!loading && !error && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 w-full">
+          {skills.map((s) => {
+            const checked = Array.isArray((userData as any).skillIds)
+              ? ((userData as any).skillIds as number[]).includes(s.id)
+              : false;
+            return (
+              <label key={s.id} className="flex items-center gap-2">
+                <input
+                  type="checkbox"
+                  checked={checked}
+                  onChange={() => toggleSkill(s.id)}
+                />
+                <span className="text-[var(--primary)]">{s.name}</span>
+              </label>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };

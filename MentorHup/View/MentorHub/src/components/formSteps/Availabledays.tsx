@@ -21,27 +21,19 @@ const Available = () => {
       {/* inputs */}
       <FormFiled
         onChange={handleChange}
-        value={userData["startDate"] || ""}
-        type="date"
-        label="Start Date"
-        name="startDate"
-        placeholder="1/11/2025"
+        value={userData["startTime"] || ""}
+        type="datetime-local"
+        label="Start Time"
+        name="startTime"
+        placeholder=""
       />
       <FormFiled
         onChange={handleChange}
-        value={userData["endDate"] || ""}
-        type="date"
-        label="End Date"
-        name="endDate"
-        placeholder="12/12/2025"
-      />
-      <FormFiled
-        onChange={handleChange}
-        value={userData["duration"] || ""}
-        type="text"
-        label="Duration"
-        name="duration"
-        placeholder="60 min"
+        value={userData["endTime"] || ""}
+        type="datetime-local"
+        label="End Time"
+        name="endTime"
+        placeholder=""
       />
     </div>
   );
