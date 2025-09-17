@@ -4,18 +4,22 @@ using MentorHup.APPLICATION.Responses;
 using MentorHup.APPLICATION.Service.Strip;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
-using Stripe;
 
 namespace MentorHup.APPLICATION.Service.Booking;
 
-public class BookingService(ApplicationDbContext context, IStripeService stripeService) : IBookingService
+public class BookingService(ApplicationDbContext context, IStripeService stripeService, IEmailSender emailSender) : IBookingService
 {
+    private readonly IEmailSender emailSender = emailSender;
+
     public async Task<ApiResponse<string>> CancelBookingAsync(int bookingId, string appUserId, string role)
     {
         var booking = await context.Bookings
             .Include(b => b.Mentee)
+                .ThenInclude(m => m.ApplicationUser)
             .Include(b => b.Mentor)
+                .ThenInclude(m => m.ApplicationUser)
             .Include(b => b.MentorAvailability)
             .Include(b => b.Payment)
             .FirstOrDefaultAsync(b => b.Id == bookingId);
@@ -51,6 +55,41 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
 
             await context.SaveChangesAsync();
             await transaction.CommitAsync();
+
+            var menteeEmail = booking.Mentee.ApplicationUser.Email;
+            var mentorEmail = booking.Mentor.ApplicationUser.Email;
+
+            string subject = "Booking Cancelled";
+
+            string menteeBody = $@"
+            Hello {booking.Mentee.Name},
+
+            Your session with {booking.Mentor.Name} scheduled on {booking.StartTime:yyyy-MM-dd HH:mm} has been cancelled.
+
+            Meeting URL: {booking.MeetingUrl}
+
+            Refund Status: {(booking.Payment != null && booking.Payment.Status == PaymentStatus.Refunded ? "Refunded" : "Not applicable")}
+
+            Thank you for using our platform!
+            ";
+
+
+            await emailSender.SendEmailAsync(menteeEmail, subject, menteeBody);
+
+            string mentorBody = $@"
+            Hello {booking.Mentor.Name},
+
+            The session with {booking.Mentee.Name} scheduled on {booking.StartTime:yyyy-MM-dd HH:mm} has been cancelled.
+
+            Meeting URL: {booking.MeetingUrl}
+
+            Refund Status: {(booking.Payment != null && booking.Payment.Status == PaymentStatus.Refunded ? "Refunded" : "Not applicable")}
+
+            Thank you!
+            ";
+
+
+            await emailSender.SendEmailAsync(mentorEmail, subject, mentorBody);
 
             return ApiResponse<string>.SuccessResponse("Booking cancelled successfully.");
         }

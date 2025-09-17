@@ -11,6 +11,6 @@
         public int ReviewCount { get; set; }
 
         public List<string> Skills { get; set; } = new();
-        public List<MentorAvailabilityRequest> Availabilities { get; set; } = new();
+        public List<MentorAvailabilityResponse> Availabilities { get; set; } = new();
     }
 }

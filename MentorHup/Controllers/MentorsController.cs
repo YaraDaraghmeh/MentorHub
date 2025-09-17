@@ -56,33 +56,10 @@ namespace MentorHup.API.Controllers
 
 
 
-        [HttpGet("confirm-email")]
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
-        {
-            var success = await _mentorAuthService.ConfirmEmailAsync(userId, token);
 
-            if (!success)
-                return BadRequest(new { message = "Email confirmation failed." });
-
-            return Ok(new { message = "Email confirmed successfully." });
-        }
-
-
-        [HttpPost("login")]
-        [ProducesResponseType(typeof(MentorResponse), StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        public async Task<IActionResult> Login([FromBody] MentorLoginRequest request)
-        {
-            var result = await _mentorAuthService.LoginAsync(request);
-
-            if (!result.IsSuccess)
-                return Unauthorized(new { message = result.Errors });
-
-            return Ok(result.Mentor);
-        }
 
         [HttpGet()]
-        [Authorize(Roles = "Mentee,Admin")]
+        [Authorize(Roles = "Mentee")]
         [ProducesResponseType(typeof(List<MentorOverviewDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> GetAll([FromQuery] PaginationDto dto)

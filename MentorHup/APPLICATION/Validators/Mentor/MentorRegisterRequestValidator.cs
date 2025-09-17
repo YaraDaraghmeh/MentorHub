@@ -40,9 +40,6 @@ namespace MentorHup.APPLICATION.Validators.Mentor
             RuleForEach(x => x.Availabilities).ChildRules(
                 a =>
                 {
-                    a.RuleFor(av => av.DurationInMinutes)
-                        .GreaterThan(0).WithMessage("DurationInMinutes must be greater than 0");
-
                     a.RuleFor(av => av.StartTime).LessThan(av => av.EndTime)
                         .WithMessage("StartTime must be before EndTime");
 

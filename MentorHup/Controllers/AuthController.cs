@@ -20,6 +20,17 @@ namespace MentorHup.Controllers
             _authService = authService;
         }
 
+        [HttpGet("confirm-email")]
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            var success = await _authService.ConfirmEmailAsync(userId, token);
+
+            if (!success)
+                return BadRequest(new { message = "Email confirmation failed." });
+
+            return Ok(new { message = "Email confirmed successfully." });
+        }
+
         [HttpPost("login")]
         [AllowAnonymous]
         [ProducesResponseType(typeof(LoginResponse), StatusCodes.Status200OK)]

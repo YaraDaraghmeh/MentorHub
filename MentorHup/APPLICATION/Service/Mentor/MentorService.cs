@@ -2,9 +2,6 @@
 using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -22,9 +19,9 @@ namespace MentorHup.APPLICATION.Service.Mentor
             decimal? maxPrice,
             int? Experiences)
         {
-            var query =  context.Mentors.Include(m => m.MentorSkills)
+            var query =  context.Mentors.Include(m => m.MentorSkills) // Note: Here we can add Include(m => m.ApplicationUser) then we execlude the mentees who own IsDeleted = true, (Review ApplicationDbContext line 123)
                .ThenInclude(ms => ms.Skill).Include(s => s.Availabilities)
-               .AsQueryable();
+               .AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(field))
                 query = query.Where(m => m.Field.Contains(field));
@@ -56,12 +53,13 @@ namespace MentorHup.APPLICATION.Service.Mentor
                     Field = m.Field,
                     Skills = m.MentorSkills.Select(ms => ms.Skill.SkillName).ToList(),
                     Availabilities = m.Availabilities
-                       .Where(a => !a.IsBooked && a.StartTime > DateTime.UtcNow)
-                       .Select(a => new MentorAvailabilityRequest
+                    .Where(a => a.StartTime > DateTime.UtcNow) // give all mentors ignoring IsBooked or not
+                    .Select(a => new MentorAvailabilityResponse
                     {
-                        DurationInMinutes = a.DurationInMinutes,
                         StartTime = a.StartTime,
-                        EndTime = a.EndTime
+                        EndTime = a.EndTime,
+                        DurationInMinutes = (int)(a.EndTime - a.StartTime).TotalMinutes,
+                        IsBooked = a.IsBooked,
                     }).ToList(),
                     ReviewCount =  m.Bookings.Count(b => b.Review != null)
                 })
@@ -125,12 +123,14 @@ namespace MentorHup.APPLICATION.Service.Mentor
 
                 foreach (var availabilityDto in request.Availabilities)
                 {
+                    var duration = (int)(availabilityDto.EndTime - availabilityDto.StartTime).TotalMinutes;
+
                     context.MentorAvailabilities.Add(new MentorAvailability
                     {
                         MentorId = mentor.Id,
                         StartTime = availabilityDto.StartTime,
                         EndTime = availabilityDto.EndTime,
-                        DurationInMinutes = availabilityDto.DurationInMinutes,
+                        DurationInMinutes = duration,
                         IsBooked = false
                     });
                 }

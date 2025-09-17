@@ -1,6 +1,5 @@
 ﻿    using MentorHup.Domain.Entities;
     using Microsoft.AspNetCore.Identity;
-    using Microsoft.Extensions.Configuration;
 
     namespace MentorHup.Infrastructure.Seed
     {
@@ -35,9 +34,9 @@
                 {
                     adminUser = new ApplicationUser
                     {
-                        UserName = adminEmail,
+                        UserName = "MentorHub-Admin",
                         Email = adminEmail,
-                        EmailConfirmed = true
+                        EmailConfirmed = true,
                     };
 
                     var result = await userManager.CreateAsync(adminUser, adminPassword);

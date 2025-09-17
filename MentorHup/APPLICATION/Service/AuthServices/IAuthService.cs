@@ -6,6 +6,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 {
     public interface IAuthService
     {
+        Task<bool> ConfirmEmailAsync(string userId, string token);
         Task<LoginResponse?> LoginAsync(LoginRequest request);
         Task<RefreshTokenResponse?> RefreshTokenAsync(string userId);
         Task<ResetPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request);
