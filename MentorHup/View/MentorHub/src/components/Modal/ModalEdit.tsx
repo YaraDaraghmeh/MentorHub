@@ -4,7 +4,7 @@ import { useTheme } from "../../Context/ThemeContext";
 
 interface skill {
   id: number;
-  skillName: string;
+  name: string;
 }
 
 interface dataModal {
@@ -22,7 +22,7 @@ export default function ModalEdit({
 }: dataModal) {
   const { isDark } = useTheme();
 
-  console.log(value.skillName);
+  console.log(value.name);
 
   return (
     <Transition show={open} as={Fragment}>
@@ -61,9 +61,9 @@ export default function ModalEdit({
                   isDark ? "bg-white" : "bg-[var(--secondary-light)]"
                 }`}
                 type="text"
-                name="skillName"
+                name="name"
                 placeholder="QA, React JS, ..."
-                value={value.skillName}
+                value={value.name}
                 // onChange={handlChange}
                 required
               />

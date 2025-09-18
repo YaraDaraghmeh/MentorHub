@@ -15,7 +15,7 @@ const TableSkills = () => {
 
   const [skill, setSkill] = useState<skills[]>([]);
   const [open, setOpen] = useState(false);
-  const [skillEdit, setSkillEdit] = useState<skills>({ id: 0, skillName: "" });
+  const [skillEdit, setSkillEdit] = useState<skills>({ id: 0, name: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPage = 44;
 
@@ -36,16 +36,11 @@ const TableSkills = () => {
     setSkill(res.data.items);
   };
 
-  const handleEdit = (id: number, skillName: string) => {
+  const handleEdit = (id: number, name: string) => {
     setOpen(true);
-    const skill = {
-      id: id,
-      skillName: skillName,
-    };
+    console.log({ id, name });
 
-    console.log(skill);
-
-    setSkillEdit(skill);
+    setSkillEdit({ id, name });
   };
 
   const columns = [
@@ -67,7 +62,7 @@ const TableSkills = () => {
         <div className="flex flex-row" key={row.id}>
           <button
             className="p-2 w-9 h-9"
-            onClick={() => handleEdit(row.id, row.skillName)}
+            onClick={() => handleEdit(row.id, row.name)}
           >
             <MdModeEdit className="w-full h-full" />
           </button>
