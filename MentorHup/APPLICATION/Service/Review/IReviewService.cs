@@ -7,6 +7,7 @@ namespace MentorHup.APPLICATION.Service.Review
     {
         Task<ApiResponse<ReviewDto>> AddReviewAsync(CreateReviewDto dto, int menteeId);
         Task<ApiResponse<string>> DeleteReviewAsync(int reviewId, int menteeId);
+        Task<List<ReviewDto>> GetAllReviewsAsync();
         Task<List<ReviewDto>> GetReviewsByMentorIdAsync(int mentorId);
     }
 }

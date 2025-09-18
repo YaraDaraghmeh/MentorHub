@@ -68,6 +68,15 @@ public class ReviewController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("all-reviews")]
+    public async Task<ActionResult<List<ReviewDto>>> GetAllReviews()
+    {
+        var reviews = await _reviewService.GetAllReviewsAsync();
+        return Ok(reviews);
+    }
+
+
     [HttpGet("mentor/{mentorId}")]
     [Authorize()]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]

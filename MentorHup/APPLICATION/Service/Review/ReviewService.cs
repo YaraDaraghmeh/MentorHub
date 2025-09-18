@@ -68,6 +68,23 @@ public class ReviewService : IReviewService
         return ApiResponse<string>.SuccessResponse("Review deleted successfully.");
     }
 
+    public async Task<List<ReviewDto>> GetAllReviewsAsync()
+    {
+        var reviews = await _context.Bookings
+            .Where(b => b.Review != null)
+            .Select(b => new ReviewDto
+            {
+                Id = b.Review!.Id,
+                BookingId = b.Id,
+                Comment = b.Review.Comment,
+                Rating = b.Review.Rating,
+                CreatedAt = b.Review.CreatedAt,
+            })
+            .ToListAsync();
+
+        return reviews;
+    }
+
     public async Task<List<ReviewDto>> GetReviewsByMentorIdAsync(int mentorId)
     {
         var reviews = await _context.Bookings.Where(b => b.MentorId == mentorId &&
