@@ -52,7 +52,7 @@ const WithoutHeader = () => {
           isSidebarOpen && window.innerWidth > 768 ? "ml-[230px]" : "ml-20"
         }`}
       >
-        <div className="flex flex-col p-5 gap-7">
+        <div className="flex flex-col p-5 pt-0 gap-7">
           {/* Main content */}
           <div className="flex-1 ">
             <Outlet />
