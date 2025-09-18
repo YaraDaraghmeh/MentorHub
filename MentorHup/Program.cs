@@ -97,6 +97,8 @@ app.UseAuthentication();
 
 app.UseAuthorization();
 
+app.UseStaticFiles(); // allow browser to outline images
+
 app.MapControllers();
 app.MapHub<ChatHub>("/chatHub");
 app.MapHub<NotificationHub>("/notificationHub");
