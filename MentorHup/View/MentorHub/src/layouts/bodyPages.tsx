@@ -138,23 +138,15 @@ const BodySystem = () => {
                 }`}
               >
                 <FaTools size={24} />
-                {/* <span
-                  style={{
-                    position: "fixed",
-                    // top: tooltipPos.top,
-                    // left: tooltipPos.left,
-                    transform: "translate(-100%, -50%)", // يجي على يسار منتصف الزر
-                  }}
-                  className=" top-1/4 -translate-y-1/2 bg-black text-white text-sm px-2 py-1 rounded-md opacity-0 group-hover:opacity-100 transition pointer-events-none"
-                >
-                  Manage Skills
-                </span> */}
               </button>
               {/* Modal Sills */}
               <ModalSkills
                 open={showModal}
                 table={<TableSkills />}
                 onClose={() => setShowModal(false)}
+                // onSave={(newSkill) => {
+                //   setSkills((prev) => [...prev, newSkill]);
+                // }}
               />
             </div>
           </div>

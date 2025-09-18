@@ -4,11 +4,7 @@ import { MdModeEdit, MdDelete } from "react-icons/md";
 import axios from "axios";
 import urlSkills from "../../Utilities/Skills/urlSkills";
 import ModalEdit from "../Modal/ModalEdit";
-
-interface skills {
-  id: number;
-  skillName: string;
-}
+import type { skills } from "./interfaces";
 
 const TableSkills = () => {
   const token = localStorage.getItem("accessToken")?.trim();

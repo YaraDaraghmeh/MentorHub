@@ -51,7 +51,10 @@ const PriceandSkills = () => {
         }));
         setSkills(normalized);
       } catch (err: any) {
-        console.error("Failed to load skills", err.response?.data || err.message);
+        console.error(
+          "Failed to load skills",
+          err.response?.data || err.message
+        );
         setError("Failed to load skills");
       } finally {
         setLoading(false);
@@ -83,7 +86,9 @@ const PriceandSkills = () => {
         onChange={(e) => setQuery(e.target.value)}
         className="w-full px-3 py-2 rounded-md bg-[var(--secondary-dark)] text-[0000000] placeholder-gray-400 outline-none focus:ring-2 focus:ring-[var(--primary)]"
       />
-      {loading && <div className="text-sm text-gray-500">Loading skills...</div>}
+      {loading && (
+        <div className="text-sm text-gray-500">Loading skills...</div>
+      )}
       {error && (
         <div className="text-sm text-red-500" role="alert">
           {error}
@@ -121,7 +126,7 @@ const PriceandSkills = () => {
           <div
             role="listbox"
             aria-multiselectable
-            className="w-full max-h-64 overflow-auto rounded-md border border-gray-700/40 divide-y divide-gray-700/20"
+            className="w-full max-h-32 overflow-auto rounded-md border border-gray-700/40 divide-y divide-gray-700/20"
           >
             {skills
               .filter((s) =>
