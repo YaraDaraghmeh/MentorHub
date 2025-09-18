@@ -39,8 +39,8 @@ const ProfileUser = () => {
 
           <div className="relative top-[77px] left-12 z-12 rounded-full border-4 border-white w-32 h-32">
             <img src={profile} alt={profile} className="w-full h-full" />
-            <div className="absolute bg-gray-400 top-[87px] left-[90px] p-2 rounded-full">
-              <FaCamera className="text-md" />
+            <div className="absolute bg-gray-300 top-[87px] left-[90px] p-2 rounded-full">
+              <FaCamera className="text-md text-[var(--primary-light)]" />
             </div>
           </div>
         </div>
@@ -58,8 +58,8 @@ const ProfileUser = () => {
               <span
                 className={`py-1 px-4 mx-2 rounded-full flex flex-col justify-center items-center border-1 ${
                   isDark
-                    ? "border-gray-600 bg-[var(--Philippine)]"
-                    : "border-black bg-[var(--primay)]"
+                    ? "border-gray-600 text-[var(--primary)] bg-[var(--Philippine)]"
+                    : "border-gray-400 text-[var(--secondary-light)] bg-[var(--primary)]"
                 }`}
               >
                 Mentee
@@ -71,7 +71,7 @@ const ProfileUser = () => {
               {/* name & active */}
               <div className="flex flex-row gap-3">
                 <h1
-                  className={`flex-col text-semibold text-lg ${
+                  className={`flex-col font-bold text-lg ${
                     isDark ? "text-white" : "text-[var(--primary)]"
                   }`}
                 >
@@ -79,7 +79,7 @@ const ProfileUser = () => {
                 </h1>
                 <span
                   className={`flex flex-row justify-center items-center rounded-md px-1 border-2 gap-0 ${
-                    isDark ? "border-[#3a403d]" : "border-gray-400"
+                    isDark ? "border-[#3a403d]" : "border-gray-300"
                   }`}
                 >
                   <RxDotFilled className="text-[#008a45] text-lg" />
@@ -87,7 +87,7 @@ const ProfileUser = () => {
                     className={`text-sm ${
                       isDark
                         ? "text-[var(--secondary)]"
-                        : "text-[var(--primary)]"
+                        : "text-[var(--gray-dark)]"
                     }`}
                   >
                     Active
@@ -98,7 +98,7 @@ const ProfileUser = () => {
               {/* email */}
               <p
                 className={`flex flex-start ${
-                  isDark ? "text-gray-400" : `text-[var(--primary-light)]`
+                  isDark ? "text-gray-400" : `text-[var(--gray-medium)]`
                 }`}
               >
                 sara.ahmad@gmail.com
@@ -112,7 +112,7 @@ const ProfileUser = () => {
                   className={`text-sm ${
                     isDark
                       ? "text-[var(--aqua-green)]"
-                      : "text-[var(--primary-light)]"
+                      : "text-[var(--gray-medium)]"
                   }`}
                 >
                   Created
@@ -129,7 +129,7 @@ const ProfileUser = () => {
               </div>
               <div
                 className={`border border-r-1 h-14 m-2  ${
-                  isDark ? "border-[#383e4085]" : "border-black"
+                  isDark ? "border-[#383e4085]" : "border-[#8e999d85]"
                 }`}
               ></div>
               <div className="flex flex-col p-2 gap-2 text-start">
@@ -137,7 +137,7 @@ const ProfileUser = () => {
                   className={`text-sm ${
                     isDark
                       ? "text-[var(--aqua-green)]"
-                      : "text-[var(--primary-light)]"
+                      : "text-[var(--gray-medium)]"
                   }`}
                 >
                   Sessions
@@ -156,9 +156,7 @@ const ProfileUser = () => {
           </div>
 
           <hr
-            className={`${
-              isDark ? "text-[#383e4085]" : "text-[var(--primary)]"
-            }`}
+            className={`${isDark ? "text-[#383e4085]" : "text-[#8e999d85]"}`}
           ></hr>
 
           {/* information user */}
@@ -169,32 +167,32 @@ const ProfileUser = () => {
           >
             <div className="px-3 py-2">
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-                <h4 className="col-span-1 text-start">Name</h4>
+                <h4 className="col-span-1 text-start font-semibold">Name</h4>
                 <h5 className="col-span-1 text-start">Sara Sayed Ahmad</h5>
               </div>
               <hr
                 className={`${
-                  isDark ? "text-[#282d2e85]" : "text-[var(--primary)]"
+                  isDark ? "text-[#282d2e85]" : "text-[#8e999d85]"
                 }`}
               ></hr>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-                <h4 className="col-span-1 text-start">Gender</h4>
+                <h4 className="col-span-1 text-start font-semibold">Gender</h4>
                 <h5 className="col-span-1 text-start">Female</h5>
               </div>
               <hr
                 className={`${
-                  isDark ? "text-[#282d2e85]" : "text-[var(--primary)]"
+                  isDark ? "text-[#282d2e85]" : "text-[#8e999d85]"
                 }`}
               ></hr>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-                <h4 className="col-span-1 text-start">Email</h4>
+                <h4 className="col-span-1 text-start font-semibold">Email</h4>
                 <h5 className="col-span-1 text-start">
                   sarasayedahmad24@gmail.com
                 </h5>
               </div>
               <hr
                 className={`${
-                  isDark ? "text-[#282d2e85]" : "text-[var(--primary)]"
+                  isDark ? "text-[#282d2e85]" : "text-[#8e999d85]"
                 }`}
               ></hr>
             </div>
@@ -203,10 +201,10 @@ const ProfileUser = () => {
           {/* Edit profile */}
           <div className="flex flex-row gap-3 justify-end items-center px-3">
             <button
-              className={`text-end border-1 py-2 px-3 rounded-md ${
+              className={`text-end border-1 py-2 px-3 rounded-md border-[var(--gray-medium)] ${
                 isDark
-                  ? "text-[var(--secondary)] bg-[var(--primary-dark)] border-[var(--gray-medium)]"
-                  : "bg-[var(--primary-dark)]"
+                  ? "text-[var(--secondary)] bg-[var(--primary-dark)]"
+                  : "text-[var(--secondary-light)] bg-[var(--primary)]"
               }`}
             >
               Edit Profile
@@ -215,7 +213,7 @@ const ProfileUser = () => {
               className={`text-end border-1 py-2 px-3 rounded-md ${
                 isDark
                   ? "text-[var(--secondary)] bg-[var(--primary-dark)] border-[var(--gray-medium)]"
-                  : "bg-[var(--primary-dark)]"
+                  : "text-[var(--secondary-light)] bg-[var(--primary)]"
               }`}
             >
               Change Password
