@@ -24,6 +24,11 @@ public class ReviewService : IReviewService
         if (booking == null)
             return ApiResponse<ReviewDto>.FailResponse("Booking not found or not yours.");
 
+        if (booking.IsConfirmed == false)
+        {
+            return ApiResponse<ReviewDto>.FailResponse("You can't revewing the booking after cancelled it.");
+        }
+
         if (booking.EndTime > DateTime.UtcNow)
             return ApiResponse<ReviewDto>.FailResponse("Cannot review before session ends.");
 
