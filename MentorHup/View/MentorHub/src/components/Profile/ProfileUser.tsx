@@ -2,7 +2,7 @@ import { useState } from "react";
 import profile from "../../assets/avatar-profile.png";
 import { FaCamera } from "react-icons/fa6";
 import { useTheme } from "../../Context/ThemeContext";
-import bg from "../../assets/bg-profile-withoutShap.png";
+import bg from "../../assets/bg-profile-shape.png";
 import { RxDotFilled } from "react-icons/rx";
 
 interface user {
