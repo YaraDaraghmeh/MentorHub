@@ -4,6 +4,7 @@ using MentorHup.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MentorHup.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250918231202_add_CompanyName_property_to_Mentor")]
+    partial class add_CompanyName_property_to_Mentor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("AdminCommissions", (string)null);
+                    b.ToTable("AdminCommissions");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.ApplicationUser", b =>
@@ -169,7 +172,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("MentorId");
 
-                    b.ToTable("Bookings", (string)null);
+                    b.ToTable("Bookings");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Mentee", b =>
@@ -200,7 +203,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Mentees", (string)null);
+                    b.ToTable("Mentees");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Mentor", b =>
@@ -249,7 +252,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("ApplicationUserId")
                         .IsUnique();
 
-                    b.ToTable("Mentors", (string)null);
+                    b.ToTable("Mentors");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.MentorAvailability", b =>
@@ -279,7 +282,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("MentorId");
 
-                    b.ToTable("MentorAvailabilities", (string)null);
+                    b.ToTable("MentorAvailabilities");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.MentorSkill", b =>
@@ -302,7 +305,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("SkillId");
 
-                    b.ToTable("MentorSkills", (string)null);
+                    b.ToTable("MentorSkills");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Message", b =>
@@ -337,7 +340,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("SenderId");
 
-                    b.ToTable("Messages", (string)null);
+                    b.ToTable("Messages");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Notification", b =>
@@ -370,7 +373,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Notifications", (string)null);
+                    b.ToTable("Notifications");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Payment", b =>
@@ -410,7 +413,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.RefreshToken", b =>
@@ -439,7 +442,7 @@ namespace MentorHup.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("RefreshTokens", (string)null);
+                    b.ToTable("RefreshTokens");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Review", b =>
@@ -467,7 +470,7 @@ namespace MentorHup.Migrations
                     b.HasIndex("BookingId")
                         .IsUnique();
 
-                    b.ToTable("Reviews", (string)null);
+                    b.ToTable("Reviews");
                 });
 
             modelBuilder.Entity("MentorHup.Domain.Entities.Skill", b =>
@@ -484,7 +487,7 @@ namespace MentorHup.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skills", (string)null);
+                    b.ToTable("Skills");
 
                     b.HasData(
                         new

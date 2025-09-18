@@ -10,6 +10,9 @@ namespace MentorHup.APPLICATION.Validators.Mentor
             RuleFor(x => x.Name)           
                 .Length(2, 100).WithMessage("Name must be between 2 and 100 characters");
 
+            RuleFor(x => x.CompanyName)
+                .Length(2, 100).WithMessage("Company Name must be between 4-100 characters");
+
             RuleFor(x => x.Description)
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters");
 

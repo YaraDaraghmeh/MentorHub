@@ -47,6 +47,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                 {
                     Id = m.Id,
                     Name = m.Name,
+                    CompanyName = m.CompanyName,
                     Description = m.Description,
                     Experiences = m.Experiences,
                     Price = m.Price,
@@ -84,6 +85,9 @@ namespace MentorHup.APPLICATION.Service.Mentor
 
             if (!string.IsNullOrEmpty(request.Name))
                 mentor.Name = request.Name;
+            
+            if (!string.IsNullOrEmpty(request.CompanyName))
+                mentor.Name = request.CompanyName;
 
             if (!string.IsNullOrEmpty(request.Field))
                 mentor.Field = request.Field;
