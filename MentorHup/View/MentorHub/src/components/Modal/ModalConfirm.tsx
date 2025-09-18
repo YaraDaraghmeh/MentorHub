@@ -28,7 +28,7 @@ export default function ConfirmModal({
         {/* content */}
         <div className="fixed inset-0 flex items-center justify-center">
           <div
-            className={`p-7 rounded ${
+            className={`p-7 rounded w-[20rem] ${
               isDark ? "bg-[var(--primary-light)]" : "bg-white"
             }`}
           >
