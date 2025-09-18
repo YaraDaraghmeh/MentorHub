@@ -5,14 +5,17 @@ const API_BASE_URL_DEV_PROXY = "/api/mentors";
 
 const ENDPOINT = {
   REGISTER: "register",
+  DASHBOARD: "dashboard",
 };
 
 const development = {
   REGISTER_USER: `${API_BASE_URL_DEV_PROXY}/${ENDPOINT.REGISTER}`,
+  MENTOR_DASHBOARD: `${API_BASE_URL_DEV_PROXY}/${ENDPOINT.DASHBOARD}`,
 };
 
 const production = {
   REGISTER_USER: `${API_BASE_URL_PRODUCTION}/${ENDPOINT.REGISTER}`,
+  MENTOR_DASHBOARD: `${API_BASE_URL_PRODUCTION}/${ENDPOINT.DASHBOARD}`,
 };
 
 const urlMentor =
