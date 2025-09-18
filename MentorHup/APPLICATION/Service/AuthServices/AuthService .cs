@@ -119,6 +119,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
                 return new LoginResponse
                 {
+                    IsSuccess = true,
                     UserId = user.Id,
                     Email = user.Email!,
                     Roles = roles.ToList(),

@@ -24,6 +24,84 @@ namespace MentorHup.APPLICATION.Service.Admin
             this.userManager = userManager;
         }
 
+        public async Task<PageResult<AdminUserOverviewDto>> GetAllUsersAsync(int pageSize, int pageNumber, string? name, string? email, string? role, bool? isDeleted)
+        {
+            var usersQuery = dbContext.Users.AsNoTracking().AsQueryable();
+
+            if(!string.IsNullOrEmpty(name))
+            {
+                usersQuery = usersQuery.Where(user => user.UserName.Contains(name) || user.Email.Contains(name));
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                usersQuery = usersQuery.Where(user => user.Email.Contains(email));
+            }
+
+            if (isDeleted.HasValue)
+            {
+                usersQuery = usersQuery.Where(user => user.IsDeleted == isDeleted.Value);
+            }
+
+            // exclude Admin role
+            usersQuery = usersQuery.Where(user =>
+                !dbContext.UserRoles
+                    .Where(userRole => userRole.UserId == user.Id)
+                    .Join(dbContext.Roles,
+                          userRole => userRole.RoleId,
+                          role => role.Id,
+                          (ur, role) => role.Name)
+                    .Any(userRole => userRole == "Admin"));
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                // query was made on DB directly, (totalCount is accurate now), more performance (query made on SQL direct, before returning the result)
+                usersQuery = usersQuery
+                .Where(user => dbContext.UserRoles // UserRoles (UserId, Id)  ApplicationUserId (UserId)  Roles (Id) => matching UserRoles with ApplicationUserId by UserId then make join with Roles via Id to access the RoleName present on Roles table
+                    .Where(userRole => userRole.UserId == user.Id)
+                    .Join(dbContext.Roles,
+                          userRole => userRole.RoleId,
+                          role => role.Id,
+                          (userRole, role) => role.Name)
+                    .Any(roleName => roleName.Contains(role)));       
+            }
+
+            var totalCount = await usersQuery.CountAsync();
+
+            var items = await usersQuery
+                .OrderByDescending(user => user.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(user => new AdminUserOverviewDto
+                {
+                    Id = user.Id,
+                    UserName = user.UserName,
+                    Email = user.Email,
+                    CreatedAt = user.CreatedAt,
+                    IsDeleted = user.IsDeleted,
+                    LockoutEnd = user.LockoutEnd,
+                    Role = dbContext.UserRoles
+                    .Where(userRole => userRole.UserId == user.Id)
+                    .Join(dbContext.Roles, 
+                          userRole => userRole.RoleId,
+                          role => role.Id,
+                          (userRole, role) => role.Name)
+                    .FirstOrDefault(),
+                }).ToListAsync();
+
+            /*
+            if (!string.IsNullOrEmpty(role))
+            {
+            
+               // query was made on memory, not in DB (totalCount here is not accurate)
+               items = items.Where(item => !string.IsNullOrEmpty(item.Role) && item.Role.Contains(role, StringComparison.OrdinalIgnoreCase)).ToList();
+               totalCount = Math.Max(0, totalCount);
+               
+            }
+            */
+                return new PageResult<AdminUserOverviewDto>(items, totalCount, pageSize, pageNumber);
+        }
+
         public async Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(int pageSize, int pageNumber, string? field, string? skillName, decimal? minPrice, decimal? maxPrice, int? Experiences)
         {
             return await mentorService.GetAllMentorsAsync(pageSize, pageNumber, field, skillName, minPrice, maxPrice, Experiences);
@@ -254,5 +332,7 @@ namespace MentorHup.APPLICATION.Service.Admin
             };
 
         }
+
+
     }
 }

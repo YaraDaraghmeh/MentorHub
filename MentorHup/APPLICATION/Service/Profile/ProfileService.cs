@@ -1,5 +1,4 @@
-﻿using MentorHup.APPLICATION.DTOs.Booking;
-using MentorHup.APPLICATION.DTOs.Profile;
+﻿using MentorHup.APPLICATION.DTOs.Profile;
 using MentorHup.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 

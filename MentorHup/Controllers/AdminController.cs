@@ -13,6 +13,15 @@ namespace MentorHup.Controllers
     {
         private readonly IAdminService adminService = adminService;
 
+        [HttpGet("all-users")]
+        public async Task<IActionResult> GetAllUsers([FromQuery] AllUsersPaginationDto allUsersPaginationDto)
+        {
+            var users = await adminService.GetAllUsersAsync(allUsersPaginationDto.PageSize, allUsersPaginationDto.PageNumber,
+                allUsersPaginationDto.Name, allUsersPaginationDto.Email, allUsersPaginationDto.Role, allUsersPaginationDto.IsDeleted);
+
+            return Ok(users);
+        }
+
         [HttpGet("mentors")]
         public async Task<IActionResult> GetAllMentors([FromQuery] PaginationDto dto)
         {
