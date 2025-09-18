@@ -17,7 +17,7 @@ const TableSkills = () => {
   const [open, setOpen] = useState(false);
   const [skillEdit, setSkillEdit] = useState<skills>({ id: 0, skillName: "" });
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPage = 20;
+  const rowsPage = 44;
 
   useEffect(() => {
     fetchSkills(currentPage, rowsPage);

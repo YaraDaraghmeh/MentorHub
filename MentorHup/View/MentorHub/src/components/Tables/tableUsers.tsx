@@ -31,6 +31,10 @@ const TableUser = () => {
     id: "",
     show: false,
   });
+  // restore user
+  const [restoreUser, setRestoreUser] = useState<{ id: string; show: boolean }>(
+    { id: "", show: false }
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPage = 130;
 
@@ -38,13 +42,10 @@ const TableUser = () => {
   const removeUser = (id: string, isDeleted: boolean) => {
     if (isDeleted === false) {
       setConfirmData({ id, show: true });
+    } else {
+      setRestoreUser({ id, show: true });
     }
-    // else{
-    //alert message
-    // }
   };
-
-  // const handleBlock = (id: string) => {};
 
   const token = localStorage.getItem("accessToken");
 
@@ -214,6 +215,38 @@ const TableUser = () => {
             console.log("User blocked successfully");
           } catch (error) {
             console.log("delete user: ", error);
+          }
+        }}
+      />
+
+      {/* Modal restore user */}
+      <ConfirmModal
+        open={restoreUser.show}
+        title="Restore User"
+        message="This user is temporarily deleted. Do you want to restore this user"
+        onClose={() => setRestoreUser((prev) => ({ ...prev, show: false }))}
+        onConfirm={async () => {
+          try {
+            const res = await axios.patch(
+              `${urlAdmin.USERSAC}/${restoreUser.id}/restore`,
+              {},
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+
+            if (res.status === 200) {
+              setRestoreUser((prev) => ({ ...prev, show: false }));
+              setUsers((prev) =>
+                prev.map((u) =>
+                  u.id == restoreUser.id ? { ...u, isDeleted: !u.isDeleted } : u
+                )
+              );
+            }
+
+            console.log("User restored successfully");
+          } catch (error) {
+            console.log("restore user: ", error);
           }
         }}
       />
