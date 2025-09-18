@@ -6,14 +6,21 @@ import { useState } from "react";
 import axios from "axios";
 import urlSkills from "../../Utilities/Skills/urlSkills";
 import { IoCheckmarkDoneCircle } from "react-icons/io5";
+import type { skills } from "../Tables/interfaces";
 
 interface dataModal {
   open: boolean;
   table: React.ReactNode;
   onClose: () => void;
+  onSave?: (skill: skills) => void;
 }
 
-export default function ModalSkills({ open, table, onClose }: dataModal) {
+export default function ModalSkills({
+  open,
+  table,
+  onClose,
+  onSave,
+}: dataModal) {
   const { isDark } = useTheme();
   const [show, setShow] = useState(false);
   const [inputData, setInputData] = useState({ skillName: "" });
@@ -46,12 +53,14 @@ export default function ModalSkills({ open, table, onClose }: dataModal) {
           },
         });
 
-        console.log("Skill added:", res);
-        setInputData({ skillName: "" });
-        setShow(false);
-        setMessage("");
+        if (res.status === 200) {
+          setInputData({ skillName: "" });
+          onSave?.(res.data);
+          setShow(false);
+          setMessage("");
 
-        setShowMessageSuccess(true);
+          setShowMessageSuccess(true);
+        }
       }
     } catch (error: any) {
       console.error(

@@ -5,7 +5,8 @@ const ENDPOINT = {
   GET_MENTORS: "mentors",
   GET_MENTEES: "mentees",
   STATISTICS: "dashboard-stats",
-  USER: "users",
+  USER: "all-users",
+  USERSAC: "users",
 };
 
 const development = {
@@ -13,6 +14,7 @@ const development = {
   GET_MENTEE: `${API_URL_DEVELOPMENT}/${ENDPOINT.GET_MENTEES}`,
   GET_STATISTICS: `${API_URL_DEVELOPMENT}/${ENDPOINT.STATISTICS}`,
   USERS: `${API_URL_DEVELOPMENT}/${ENDPOINT.USER}`,
+  USERSAC: `${API_URL_DEVELOPMENT}/${ENDPOINT.USERSAC}`,
 };
 
 const production = {
@@ -20,6 +22,7 @@ const production = {
   GET_MENTEE: `${API_URL_PRODUCTION}/${ENDPOINT.GET_MENTEES}`,
   GET_STATISTICS: `${API_URL_PRODUCTION}/${ENDPOINT.STATISTICS}`,
   USERS: `${API_URL_PRODUCTION}/${ENDPOINT.USER}`,
+  USERSAC: `${API_URL_PRODUCTION}/${ENDPOINT.USERSAC}`,
 };
 
 const urlAdmin =
