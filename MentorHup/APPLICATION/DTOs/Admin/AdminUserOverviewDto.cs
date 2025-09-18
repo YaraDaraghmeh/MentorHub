@@ -9,5 +9,6 @@
         public bool IsDeleted { get; set; }
         public DateTimeOffset? LockoutEnd { get; set; }
         public string? Role { get; set; }
+        public string? ImageLink { get; set; }
     }
 }

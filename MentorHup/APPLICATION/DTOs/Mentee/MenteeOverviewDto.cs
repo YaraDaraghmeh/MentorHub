@@ -9,5 +9,6 @@ namespace MentorHup.APPLICATION.DTOs.Mentee
         public string Name { get; set; } = null!;
         public string Gender { get; set; } = null!;
         public DateTime CreatedAt { get; set; }
+        public string? ImageLink { get; set; }
     }
 }

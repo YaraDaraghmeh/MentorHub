@@ -52,6 +52,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                     Price = m.Price,
                     Field = m.Field,
                     CreatedAt = m.ApplicationUser.CreatedAt,
+                    ImageLink = m.ImageUrl,
                     Skills = m.MentorSkills.Select(ms => ms.Skill.SkillName).ToList(),
                     Availabilities = m.Availabilities
                     .Where(a => a.StartTime > DateTime.UtcNow) // give all mentors ignoring IsBooked or not

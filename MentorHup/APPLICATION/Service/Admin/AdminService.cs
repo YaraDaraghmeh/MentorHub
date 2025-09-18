@@ -68,26 +68,41 @@ namespace MentorHup.APPLICATION.Service.Admin
 
             var totalCount = await usersQuery.CountAsync();
 
-            var items = await usersQuery
-                .OrderByDescending(user => user.CreatedAt)
+            var items = usersQuery
+                .OrderByDescending(u => u.CreatedAt)
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
-                .Select(user => new AdminUserOverviewDto
+                .Select(user => new
                 {
-                    Id = user.Id,
-                    UserName = user.UserName,
-                    Email = user.Email,
-                    CreatedAt = user.CreatedAt,
-                    IsDeleted = user.IsDeleted,
-                    LockoutEnd = user.LockoutEnd,
-                    Role = dbContext.UserRoles
-                    .Where(userRole => userRole.UserId == user.Id)
-                    .Join(dbContext.Roles, 
-                          userRole => userRole.RoleId,
-                          role => role.Id,
-                          (userRole, role) => role.Name)
-                    .FirstOrDefault(),
-                }).ToListAsync();
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.CreatedAt,
+                    user.IsDeleted,
+                    user.LockoutEnd,
+                    RoleName = dbContext.UserRoles
+                                .Where(userRole => userRole.UserId == user.Id)
+                                .Join(dbContext.Roles, userRole => userRole.RoleId, role => role.Id, (userRole, role) => role.Name)
+                                .FirstOrDefault(),
+                    MentorImage = user.Mentor.ImageUrl,
+                    MenteeImage = user.Mentee.ImageUrl
+                })
+                .AsEnumerable()
+                .Select(x => new AdminUserOverviewDto
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Email = x.Email,
+                    ImageLink = x.RoleName == "Mentor" ? x.MentorImage
+                                : x.RoleName == "Mentee" ? x.MenteeImage
+                                : null,
+                    CreatedAt = x.CreatedAt,
+                    IsDeleted = x.IsDeleted,
+                    LockoutEnd = x.LockoutEnd,
+                    Role = x.RoleName
+                })
+                .ToList();
+
 
             /*
             if (!string.IsNullOrEmpty(role))
@@ -99,7 +114,7 @@ namespace MentorHup.APPLICATION.Service.Admin
                
             }
             */
-                return new PageResult<AdminUserOverviewDto>(items, totalCount, pageSize, pageNumber);
+            return new PageResult<AdminUserOverviewDto>(items, totalCount, pageSize, pageNumber);
         }
 
         public async Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(int pageSize, int pageNumber, string? field, string? skillName, decimal? minPrice, decimal? maxPrice, int? Experiences)
@@ -112,7 +127,8 @@ namespace MentorHup.APPLICATION.Service.Admin
         {
             var query = dbContext.Mentees // Note: Here we can add Include(m => m.ApplicationUser) then we execlude the mentees who own IsDeleted = true, (Review ApplicationDbContext line 123)
                 .Include(m => m.Bookings)
-                .AsNoTracking().AsQueryable();
+                .AsNoTracking()
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(m => m.Name.Contains(name));
@@ -130,7 +146,8 @@ namespace MentorHup.APPLICATION.Service.Admin
                     Id = m.Id,
                     Name = m.Name,
                     Gender = m.Gender,
-                    CreatedAt = m.ApplicationUser.CreatedAt,
+                    CreatedAt = m.ApplicationUser.CreatedAt, // don't need to include ApplicationUser because EF translate CreatedAt column into SQL when making projection (Select)
+                    ImageLink = m.ImageUrl,
                 })
                 .ToListAsync();
 
