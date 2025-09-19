@@ -55,8 +55,9 @@ public class ReviewService : IReviewService
             CreatedAt = review.CreatedAt,
             MenteeName = null, // because the mentee is added review
             MenteeImage = null,
-            MentorName = booking.Mentee.Name,
-            MentorImage = booking.Mentee.ImageUrl,
+            MentorName = booking.Mentor.Name,
+            MentorImage = booking.Mentor.ImageUrl,
+            MentorCV = booking.Mentor.CVUrl,
         };
 
         return ApiResponse<ReviewDto>.SuccessResponse(reviewDto, "Review added successfully.");
@@ -94,6 +95,7 @@ public class ReviewService : IReviewService
                 MenteeImage = booking.Mentee.ImageUrl,
                 MentorName = booking.Mentor.Name,
                 MentorImage = booking.Mentor.ImageUrl,
+                MentorCV = booking.Mentor.CVUrl,
             })
             .ToListAsync();
 
@@ -115,6 +117,7 @@ public class ReviewService : IReviewService
                 MenteeImage = booking.Mentee.ImageUrl,
                 MentorName = booking.Mentor.Name,
                 MentorImage = booking.Mentor.ImageUrl,
+                MentorCV = booking.Mentor.CVUrl,
             }).ToListAsync();
 
         return reviews;
@@ -136,6 +139,7 @@ public class ReviewService : IReviewService
                 MenteeImage = null,
                 MentorName = booking.Mentor.Name,
                 MentorImage = booking.Mentor.ImageUrl,
+                MentorCV = booking.Mentor.CVUrl,
             })
             .ToListAsync();
     }

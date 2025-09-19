@@ -54,6 +54,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                     Field = m.Field,
                     CreatedAt = m.ApplicationUser.CreatedAt,
                     ImageLink = m.ImageUrl,
+                    CVLink = m.CVUrl,
                     Skills = m.MentorSkills.Select(ms => ms.Skill.SkillName).ToList(),
                     Availabilities = m.Availabilities
                     .Where(a => a.StartTime > DateTime.UtcNow) // give all mentors ignoring IsBooked or not
@@ -87,7 +88,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                 mentor.Name = request.Name;
             
             if (!string.IsNullOrEmpty(request.CompanyName))
-                mentor.Name = request.CompanyName;
+                mentor.CompanyName = request.CompanyName;
 
             if (!string.IsNullOrEmpty(request.Field))
                 mentor.Field = request.Field;
@@ -191,6 +192,102 @@ namespace MentorHup.APPLICATION.Service.Mentor
             await context.SaveChangesAsync();
 
             return new UploadImageResult { IsSuccess = true, ImageUrl = mentor.ImageUrl };
+        }
+
+
+        /// <summary>
+        /// Download Mentor Image
+        /// </summary>
+        public async Task<(byte[] FileContent, string ContentType, string FileName)?> DownloadImageAsync(int mentorId)
+        {
+            var mentor = await context.Mentors.FirstOrDefaultAsync(m => m.Id == mentorId);
+            if (mentor == null || string.IsNullOrEmpty(mentor.ImageUrl))
+                return null;
+
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images/mentors", Path.GetFileName(new Uri(mentor.ImageUrl).LocalPath));
+            if (!System.IO.File.Exists(filePath))
+                return null;
+
+            var contentType = "application/octet-stream"; // generic download
+            var fileName = Path.GetFileName(filePath);
+            var fileContent = await System.IO.File.ReadAllBytesAsync(filePath);
+
+            return (fileContent, contentType, fileName);
+        }
+
+        public async Task<UploadCVResult> UploadCVAsync(IFormFile cv)
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+            {
+                return new UploadCVResult { IsSuccess = false, Errors = new[] { "User is not authenticated." } };
+            }
+
+            var mentor = await context.Mentors.FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
+            if (mentor == null)
+            {
+                return new UploadCVResult { IsSuccess = false, Errors = new[] { "Mentor profile not found." } };
+            }
+
+            if (cv != null && cv.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(webHostEnvironment.WebRootPath, "cvs/mentors");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // delete the old one from server (if exist)
+                if (!string.IsNullOrEmpty(mentor.CVUrl))
+                {
+                    var oldFileName = Path.GetFileName(new Uri(mentor.CVUrl).LocalPath);
+                    var oldFilePath = Path.Combine(uploadsFolder, oldFileName);
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // upload new cv
+                var uniqueFileName = $"{Guid.NewGuid()}_{cv.FileName}";
+                var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                using var fileStream = new FileStream(filePath, FileMode.Create);
+                await cv.CopyToAsync(fileStream);
+
+                var baseUrl = $"{httpContextAccessor.HttpContext.Request.Scheme}://{httpContextAccessor.HttpContext.Request.Host}";
+                mentor.CVUrl = $"{baseUrl}/cvs/mentors/{uniqueFileName}";
+            }
+
+            await context.SaveChangesAsync();
+
+            return new UploadCVResult { IsSuccess = true, CVUrl = mentor.CVUrl };
+        }
+
+
+        /// <summary>
+        /// Download Mentor CV
+        /// </summary>
+        public async Task<(byte[] FileContent, string ContentType, string FileName)?> DownloadCVAsync(int mentorId)
+        {
+            var mentor = await context.Mentors.FirstOrDefaultAsync(m => m.Id == mentorId);
+            if (mentor == null || string.IsNullOrEmpty(mentor.CVUrl))
+                return null;
+
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "cvs/mentors", Path.GetFileName(new Uri(mentor.CVUrl).LocalPath));
+            if (!System.IO.File.Exists(filePath))
+                return null;
+
+            var fileExtension = Path.GetExtension(filePath).ToLower();
+            var contentType = fileExtension switch
+            {
+                ".pdf" => "application/pdf",
+                ".doc" => "application/msword",
+                ".docx" => "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+                _ => "application/octet-stream"
+            };
+
+            var fileName = Path.GetFileName(filePath);
+            var fileContent = await System.IO.File.ReadAllBytesAsync(filePath);
+
+            return (fileContent, contentType, fileName);
         }
 
         public async Task<MentorDashboardDto> GetMentorDashboardAsync(string mentorId)

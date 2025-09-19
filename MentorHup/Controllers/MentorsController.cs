@@ -54,8 +54,39 @@ namespace MentorHup.API.Controllers
             return Ok(new { imageUrl = result.ImageUrl });
         }
 
+        [HttpGet("download-image/{mentorId}")]
+        [Authorize]
+        public async Task<IActionResult> DownloadImage(int mentorId)
+        {
+            var result = await _mentorService.DownloadImageAsync(mentorId);
+
+            if (result == null) return NotFound();
+
+            return File(result.Value.FileContent, result.Value.ContentType, result.Value.FileName);
+        }
 
 
+        [HttpPost("upload-cv")]
+        [Authorize(Roles = "Mentor")]
+        public async Task<IActionResult> UploadCV([FromForm] UploadCVRequest uploadCVRequest)
+        {
+            var result = await _mentorService.UploadCVAsync(uploadCVRequest.CV);
+            if (!result.IsSuccess)
+                return BadRequest(result);
+
+            return Ok(result);
+        }
+
+        [HttpGet("download-cv/{mentorId}")]
+        [Authorize]
+        public async Task<IActionResult> DownloadCV(int mentorId)
+        {
+            var result = await _mentorService.DownloadCVAsync(mentorId);
+
+            if (result == null) return NotFound();
+
+            return File(result.Value.FileContent, result.Value.ContentType, result.Value.FileName);
+        }
 
 
         [HttpGet()]

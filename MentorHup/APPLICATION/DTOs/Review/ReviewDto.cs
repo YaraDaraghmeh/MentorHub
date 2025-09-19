@@ -13,5 +13,6 @@
         public string? MenteeImage { get; set; }
         public string? MentorName { get; set; }
         public string? MentorImage { get; set; }
+        public string? MentorCV { get; set; }
     }
 }

@@ -170,6 +170,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Experiences = mentor.Experiences,
                     Price = mentor.Price,
                     ImageLink = mentor.ImageUrl,
+                    CVLink = mentor.CVUrl,
                     Email = user.Email!,
                     Roles = roles.ToList(),
                     Skills = skills,

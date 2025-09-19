@@ -39,6 +39,17 @@ namespace MentorHup.APPLICATION.Controllers
         }
 
 
+        [HttpGet("download-image/{menteeId}")]
+        [Authorize]
+        public async Task<IActionResult> DownloadImage(int menteeId)
+        {
+            var result = await menteeService.DownloadImageAsync(menteeId);
+
+            if (result == null) return NotFound();
+
+            return File(result.Value.FileContent, result.Value.ContentType, result.Value.FileName);
+        }
+
         [HttpPatch("edit")]
         [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> Edit([FromForm] MenteeUpdateRequest menteeUpdateRequest)

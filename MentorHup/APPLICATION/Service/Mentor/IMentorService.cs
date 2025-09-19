@@ -12,6 +12,9 @@ public interface IMentorService
     Task<bool> UpdateAsync(MentorUpdateRequest request);
 
     Task<UploadImageResult> UploadImageAsync(IFormFile image);
+    Task<(byte[] FileContent, string ContentType, string FileName)?> DownloadImageAsync(int mentorId);
+    Task<UploadCVResult> UploadCVAsync(IFormFile cv);
+    Task<(byte[] FileContent, string ContentType, string FileName)?> DownloadCVAsync(int mentorId);
 
     Task<MentorDashboardDto> GetMentorDashboardAsync(string mentorId);
 

@@ -5,6 +5,7 @@ namespace MentorHup.APPLICATION.Service.Mentee
 {
     public interface IMenteeService
     {
+        Task<(byte[] FileContent, string ContentType, string FileName)?> DownloadImageAsync(int menteeId);
         Task<bool> UpdateAsync(MenteeUpdateRequest request);
         Task<MenteeDashboardDto?> GetDashboardStatsAsync();
     }

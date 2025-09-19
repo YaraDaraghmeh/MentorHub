@@ -9,6 +9,26 @@ namespace MentorHup.APPLICATION.Service.Mentee
 {
     public class MenteeService(ApplicationDbContext _context, IHttpContextAccessor httpContextAccessor, IWebHostEnvironment _webHostEnvironment) :IMenteeService
     {
+        /// <summary>
+        /// Download Mentor Image
+        /// </summary>
+        public async Task<(byte[] FileContent, string ContentType, string FileName)?> DownloadImageAsync(int menteeId)
+        {
+            var mentee = await _context.Mentees.FirstOrDefaultAsync(mentee => mentee.Id == menteeId);
+            if (mentee == null || string.IsNullOrEmpty(mentee.ImageUrl))
+                return null;
+
+            var filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images/mentees", Path.GetFileName(new Uri(mentee.ImageUrl).LocalPath));
+            if (!System.IO.File.Exists(filePath))
+                return null;
+
+            var contentType = "application/octet-stream"; // generic download
+            var fileName = Path.GetFileName(filePath);
+            var fileContent = await System.IO.File.ReadAllBytesAsync(filePath);
+
+            return (fileContent, contentType, fileName);
+        }
+
         public async Task<bool> UpdateAsync(MenteeUpdateRequest request)
         {
             var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
