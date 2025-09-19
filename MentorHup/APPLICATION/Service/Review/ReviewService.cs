@@ -52,7 +52,11 @@ public class ReviewService : IReviewService
             BookingId = review.BookingId,
             Rating = review.Rating,
             Comment = review.Comment,
-            CreatedAt = review.CreatedAt
+            CreatedAt = review.CreatedAt,
+            MenteeName = null, // because the mentee is added review
+            MenteeImage = null,
+            MentorName = booking.Mentee.Name,
+            MentorImage = booking.Mentee.ImageUrl,
         };
 
         return ApiResponse<ReviewDto>.SuccessResponse(reviewDto, "Review added successfully.");
@@ -76,14 +80,20 @@ public class ReviewService : IReviewService
     public async Task<List<ReviewDto>> GetAllReviewsAsync()
     {
         var reviews = await _context.Bookings
-            .Where(b => b.Review != null)
-            .Select(b => new ReviewDto
+            .Where(booking => booking.Review != null)
+            .Include(booking => booking.Mentee)
+            .Include(booking => booking.Mentor)
+            .Select(booking => new ReviewDto
             {
-                Id = b.Review!.Id,
-                BookingId = b.Id,
-                Comment = b.Review.Comment,
-                Rating = b.Review.Rating,
-                CreatedAt = b.Review.CreatedAt,
+                Id = booking.Review!.Id,
+                BookingId = booking.Id,
+                Comment = booking.Review.Comment,
+                Rating = booking.Review.Rating,
+                CreatedAt = booking.Review.CreatedAt,
+                MenteeName = booking.Mentee.Name,
+                MenteeImage = booking.Mentee.ImageUrl,
+                MentorName = booking.Mentor.Name,
+                MentorImage = booking.Mentor.ImageUrl,
             })
             .ToListAsync();
 
@@ -92,15 +102,20 @@ public class ReviewService : IReviewService
 
     public async Task<List<ReviewDto>> GetReviewsByMentorIdAsync(int mentorId)
     {
-        var reviews = await _context.Bookings.Where(b => b.MentorId == mentorId &&
-        b.Review != null).Select(b => new ReviewDto
-        {
-            Id = b.Review!.Id,
-            BookingId = b.Id,
-            Comment = b.Review.Comment,
-            Rating = b.Review.Rating,
-            CreatedAt = b.Review.CreatedAt,
-        }).ToListAsync();
+        var reviews = await _context.Bookings.Where(booking => booking.MentorId == mentorId
+        && booking.Review != null)
+            .Select(booking => new ReviewDto
+            {
+                Id = booking.Review!.Id,
+                BookingId = booking.Id,
+                Comment = booking.Review.Comment,
+                Rating = booking.Review.Rating,
+                CreatedAt = booking.Review.CreatedAt,
+                MenteeName = booking.Mentee.Name,
+                MenteeImage = booking.Mentee.ImageUrl,
+                MentorName = booking.Mentor.Name,
+                MentorImage = booking.Mentor.ImageUrl,
+            }).ToListAsync();
 
         return reviews;
     }
@@ -117,6 +132,10 @@ public class ReviewService : IReviewService
                 Comment = booking.Review.Comment,
                 Rating = booking.Review.Rating,
                 CreatedAt = booking.Review.CreatedAt,
+                MenteeName = null,
+                MenteeImage = null,
+                MentorName = booking.Mentor.Name,
+                MentorImage = booking.Mentor.ImageUrl,
             })
             .ToListAsync();
     }
