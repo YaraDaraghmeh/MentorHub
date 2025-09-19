@@ -31,6 +31,7 @@ namespace MentorHup.APPLICATION.Service.Profile
                         ApplicationUserId = mentee.ApplicationUserId,
                         Email = mentee.ApplicationUser.Email,
                         UserName = mentee.ApplicationUser.UserName,
+                        ImageLink = mentee.ImageUrl,
                         Gender = mentee.Gender,
                         Role = "Mentee"
                     };
@@ -51,7 +52,10 @@ namespace MentorHup.APPLICATION.Service.Profile
                         ApplicationUserId = mentor.ApplicationUserId,
                         Email = mentor.ApplicationUser.Email,
                         UserName = mentor.ApplicationUser.UserName,
+                        ImageLink = mentor.ImageUrl,
+                        CVLink = mentor.CVUrl,
                         Description = mentor.Description,
+                        CompnayName = mentor.CompanyName,
                         Price = mentor.Price,
                         Skills = mentor.MentorSkills.Select(s => s.Skill.SkillName).ToList(),
                         Role = "Mentor"
