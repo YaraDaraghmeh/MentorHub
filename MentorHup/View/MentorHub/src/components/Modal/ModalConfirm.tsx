@@ -3,7 +3,7 @@ import { Fragment } from "react/jsx-runtime";
 import { useTheme } from "../../Context/ThemeContext";
 
 interface dataModal {
-  open: boolean;
+  open?: boolean;
   message: string;
   title: string;
   onClose: () => void;
