@@ -16,7 +16,7 @@ interface UserData {
   role: string;
   email: string;
   isDeleted: boolean;
-  image: string;
+  imageLink: string;
   createdAt: string;
   lockoutEnd?: string | null;
 }
@@ -112,7 +112,7 @@ const TableUser = () => {
           <div className="flex items-center gap-3 justify-start text-start">
             <div className="w-12 h-12">
               <img
-                src={row.image || profile}
+                src={row.imageLink || profile}
                 className="hidden lg:block w-full h-full rounded-full"
                 alt="profile"
               />

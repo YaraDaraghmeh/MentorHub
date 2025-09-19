@@ -5,7 +5,7 @@ import { RiAddLine } from "react-icons/ri";
 import { useState } from "react";
 import axios from "axios";
 import urlSkills from "../../Utilities/Skills/urlSkills";
-import type { skills } from "../Tables/interfaces";
+// import type { skills } from "../Tables/interfaces";
 import Alert from "../Tables/alerts";
 
 interface dataModal {
