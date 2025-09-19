@@ -26,7 +26,7 @@ public class ReviewService : IReviewService
 
         if (booking.IsConfirmed == false)
         {
-            return ApiResponse<ReviewDto>.FailResponse("You can't revewing the booking after cancelled it.");
+            return ApiResponse<ReviewDto>.FailResponse("You can't review a cancelled booking.");
         }
 
         if (booking.EndTime > DateTime.UtcNow)
@@ -104,4 +104,24 @@ public class ReviewService : IReviewService
 
         return reviews;
     }
+
+
+    public async Task<List<ReviewDto>> GetReviewsByMenteeIdAsync(int menteeId)
+    {
+        return await _context.Bookings
+            .Where(booking => booking.MenteeId == menteeId && booking.Review != null)
+            .Select(booking => new ReviewDto
+            {
+                Id = booking.Review.Id,
+                BookingId = booking.Id,
+                Comment = booking.Review.Comment,
+                Rating = booking.Review.Rating,
+                CreatedAt = booking.Review.CreatedAt,
+            })
+            .ToListAsync();
+    }
+
+
+
+
 }

@@ -94,4 +94,39 @@ public class ReviewController : ControllerBase
         return Ok(reviews);
     }
 
+    [HttpGet("my-reviews")]
+    [Authorize(Roles = "Mentee")]
+    public async Task<ActionResult<List<ReviewDto>>> GetMyReviews()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+        var mentee = await _context.Mentees.FirstOrDefaultAsync(mentee => mentee.ApplicationUserId == userId);
+
+        if (mentee == null)
+            return Unauthorized("Mentee not found.");
+
+        var reviews = await _reviewService.GetReviewsByMenteeIdAsync(mentee.Id);
+
+        return Ok(reviews);
+    }
+    
+    [HttpGet("my-reviews/mentor")]
+    [Authorize(Roles = "Mentor")]
+    public async Task<ActionResult<List<ReviewDto>>> GetMyReviewsForMentor()
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+        var mentor = await _context.Mentors.FirstOrDefaultAsync(mentor => mentor.ApplicationUserId == userId);
+
+        if (mentor == null)
+            return Unauthorized("Mentor not found.");
+
+        var reviews = await _reviewService.GetReviewsByMentorIdAsync(mentor.Id);
+
+        return Ok(reviews);
+    }
+
+
+
+
 }
