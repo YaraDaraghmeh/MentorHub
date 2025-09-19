@@ -23,6 +23,7 @@ namespace MentorHup.Controllers
         }
 
         [HttpGet("mentors")]
+        [Authorize(Roles = "Admin, Mentee")]
         public async Task<IActionResult> GetAllMentors([FromQuery] PaginationDto dto)
         {
 
@@ -35,6 +36,17 @@ namespace MentorHup.Controllers
                 dto.Experiences);
 
             return Ok(mentors);
+        }
+
+        [HttpGet("{mentorId}")]
+        [Authorize(Roles = "Admin, Mentee")]
+        public async Task<IActionResult> GetMentorById(int mentorId)
+        {
+            var mentor = await adminService.GetMentorByIdAsync(mentorId);
+
+            if (mentor == null) return NotFound();
+
+            return Ok(mentor);
         }
 
         [HttpGet("mentees")]

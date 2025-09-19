@@ -94,7 +94,7 @@ public class ReviewController : ControllerBase
         return Ok(reviews);
     }
 
-    [HttpGet("my-reviews")]
+    [HttpGet("my/mentee")]
     [Authorize(Roles = "Mentee")]
     public async Task<ActionResult<List<ReviewDto>>> GetMyReviews()
     {
@@ -110,7 +110,7 @@ public class ReviewController : ControllerBase
         return Ok(reviews);
     }
     
-    [HttpGet("my-reviews/mentor")]
+    [HttpGet("my/mentor")]
     [Authorize(Roles = "Mentor")]
     public async Task<ActionResult<List<ReviewDto>>> GetMyReviewsForMentor()
     {

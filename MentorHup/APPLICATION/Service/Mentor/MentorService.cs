@@ -19,7 +19,10 @@ namespace MentorHup.APPLICATION.Service.Mentor
             decimal? maxPrice,
             int? Experiences)
         {
-            var query =  context.Mentors.Include(m => m.MentorSkills) // Note: Here we can add Include(m => m.ApplicationUser) then we execlude the mentees who own IsDeleted = true, (Review ApplicationDbContext line 123)
+            var query =  context.Mentors
+                .Include(m => m.ApplicationUser)
+                .Include(m => m.Bookings)
+                .Include(m => m.MentorSkills) // Note: Here we can add Include(m => m.ApplicationUser) then we execlude the mentees who own IsDeleted = true, (Review ApplicationDbContext line 123)
                .ThenInclude(ms => ms.Skill).Include(s => s.Availabilities)
                .AsNoTracking().AsQueryable();
 
@@ -47,6 +50,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                 {
                     Id = m.Id,
                     Name = m.Name,
+                    Email = m.ApplicationUser.Email,
                     CompanyName = m.CompanyName,
                     Description = m.Description,
                     Experiences = m.Experiences,
@@ -60,6 +64,8 @@ namespace MentorHup.APPLICATION.Service.Mentor
                     .Where(a => a.StartTime > DateTime.UtcNow) // give all mentors ignoring IsBooked or not
                     .Select(a => new MentorAvailabilityResponse
                     {
+                        MentorAvailabilityId = a.Id,
+                        DayOfWeek = a.StartTime.DayOfWeek.ToString(),
                         StartTime = a.StartTime,
                         EndTime = a.EndTime,
                         DurationInMinutes = (int)(a.EndTime - a.StartTime).TotalMinutes,
