@@ -40,14 +40,14 @@ public class MessagesController(IConversationService _conversationService , IMes
     }
 
     [HttpGet("conversations")]
-    public async Task<IActionResult> GetConversations()
+    public async Task<IActionResult> GetConversations([FromQuery] string? searchTerm = null)
     {
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (userId == null)
             return Unauthorized();
 
-        var conversations = await _conversationService.GetConversationsListAsync(userId);
+        var conversations = await _conversationService.GetConversationsListAsync(userId, searchTerm);
 
         return Ok(conversations);
     }

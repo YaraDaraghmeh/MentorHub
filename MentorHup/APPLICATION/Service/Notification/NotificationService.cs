@@ -1,4 +1,5 @@
 ﻿using MentorHup.APPLICATION.DTOs.Notification;
+using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
 using MentorHup.Infrastructure.Hubs;
 using Microsoft.AspNetCore.SignalR;
@@ -44,6 +45,7 @@ namespace MentorHup.APPLICATION.Service.Notification
             {
                 Id = n.Id,
                 Message = n.Message,
+                Title = n.Title,
                 IsRead = n.IsRead,
                 CreatedAt = n.CreatedAt
             }).ToList();
