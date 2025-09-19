@@ -69,10 +69,20 @@ public class ReviewController : ControllerBase
         return NoContent();
     }
 
-    [HttpGet("all-reviews")]
-    public async Task<ActionResult<List<ReviewDto>>> GetAllReviews()
+    [HttpGet("all")]
+    public async Task<ActionResult<List<ReviewDto>>> GetAllReviews(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int? minRating = null,
+        [FromQuery] int? maxRating = null,
+        [FromQuery] DateTime? fromDate = null,
+        [FromQuery] DateTime? toDate = null,
+        [FromQuery] string? mentorName = null,
+        [FromQuery] string? menteeName = null)
     {
-        var reviews = await _reviewService.GetAllReviewsAsync();
+        var reviews = await _reviewService.GetAllReviewsAsync(pageNumber, pageSize,
+            minRating, maxRating, fromDate, toDate, mentorName, menteeName);
+
         return Ok(reviews);
     }
 
@@ -82,7 +92,15 @@ public class ReviewController : ControllerBase
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType( typeof(List<ReviewDto>),StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    public async Task<ActionResult<List<ReviewDto>>> GetReviewsByMentor(int mentorId)
+    public async Task<ActionResult<List<ReviewDto>>> GetReviewsByMentor(
+        int mentorId,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int? minRating = null,
+        [FromQuery] int? maxRating = null,
+        [FromQuery] DateTime? fromDate = null,
+        [FromQuery] DateTime? toDate = null,
+        [FromQuery] string? menteeName = null)
     {
 
         var mentorExists = await _context.Mentors.AnyAsync(m => m.Id == mentorId);
@@ -90,13 +108,22 @@ public class ReviewController : ControllerBase
             return NotFound($"Mentor with ID {mentorId} does not exist.");
 
 
-        var reviews =await _reviewService.GetReviewsByMentorIdAsync(mentorId);
+        var reviews = await _reviewService.GetReviewsByMentorIdAsync(
+            mentorId, pageNumber, pageSize, minRating, maxRating, fromDate, toDate, menteeName);
+
         return Ok(reviews);
     }
 
     [HttpGet("my/mentee")]
     [Authorize(Roles = "Mentee")]
-    public async Task<ActionResult<List<ReviewDto>>> GetMyReviews()
+    public async Task<ActionResult<List<ReviewDto>>> GetMyReviewsForMentee(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int? minRating = null,
+        [FromQuery] int? maxRating = null,
+        [FromQuery] DateTime? fromDate = null,
+        [FromQuery] DateTime? toDate = null,
+        [FromQuery] string? mentorName = null)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
@@ -105,14 +132,22 @@ public class ReviewController : ControllerBase
         if (mentee == null)
             return Unauthorized("Mentee not found.");
 
-        var reviews = await _reviewService.GetReviewsByMenteeIdAsync(mentee.Id);
+        var reviews = await _reviewService.GetReviewsByMenteeIdAsync(
+            mentee.Id, pageNumber, pageSize, minRating, maxRating, fromDate, toDate, mentorName);
 
         return Ok(reviews);
     }
     
     [HttpGet("my/mentor")]
     [Authorize(Roles = "Mentor")]
-    public async Task<ActionResult<List<ReviewDto>>> GetMyReviewsForMentor()
+    public async Task<ActionResult<List<ReviewDto>>> GetMyReviewsForMentor(
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
+        [FromQuery] int? minRating = null,
+        [FromQuery] int? maxRating = null,
+        [FromQuery] DateTime? fromDate = null,
+        [FromQuery] DateTime? toDate = null,
+        [FromQuery] string? menteeName = null)
     {
         var userId = User.FindFirst(ClaimTypes.NameIdentifier)!.Value;
 
@@ -121,7 +156,8 @@ public class ReviewController : ControllerBase
         if (mentor == null)
             return Unauthorized("Mentor not found.");
 
-        var reviews = await _reviewService.GetReviewsByMentorIdAsync(mentor.Id);
+        var reviews = await _reviewService.GetReviewsByMentorIdAsync(
+            mentor.Id, pageNumber, pageSize, minRating, maxRating, fromDate, toDate, menteeName);
 
         return Ok(reviews);
     }

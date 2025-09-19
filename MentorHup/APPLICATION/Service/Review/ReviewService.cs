@@ -1,4 +1,5 @@
-﻿using MentorHup.APPLICATION.DTOs.Review;
+﻿using MentorHup.APPLICATION.Common;
+using MentorHup.APPLICATION.DTOs.Review;
 using MentorHup.APPLICATION.Responses;
 using MentorHup.APPLICATION.Service.Review;
 using MentorHup.Domain.Entities;
@@ -78,70 +79,170 @@ public class ReviewService : IReviewService
         return ApiResponse<string>.SuccessResponse("Review deleted successfully.");
     }
 
-    public async Task<List<ReviewDto>> GetAllReviewsAsync()
+    public async Task<PageResult<ReviewDto>> GetAllReviewsAsync(int pageNumber, int pageSize,
+        int? minRating = null, int? maxRating = null,
+        DateTime? fromDate = null, DateTime? toDate = null,
+        string? mentorName = null, string? menteeName = null)
     {
-        var reviews = await _context.Bookings
-            .Where(booking => booking.Review != null)
-            .Include(booking => booking.Mentee)
-            .Include(booking => booking.Mentor)
-            .Select(booking => new ReviewDto
+        var query = _context.Bookings
+            .Include(b => b.Review)
+            .Include(b => b.Mentor)
+            .Include(b => b.Mentee)
+            .Where(b => b.Review != null)
+            .AsNoTracking()
+            .AsQueryable();
+
+        // Apply filters
+        if (minRating.HasValue)
+            query = query.Where(b => b.Review!.Rating >= minRating.Value);
+
+        if (maxRating.HasValue)
+            query = query.Where(b => b.Review!.Rating <= maxRating.Value);
+
+        if (fromDate.HasValue)
+            query = query.Where(b => b.Review!.CreatedAt >= fromDate.Value);
+
+        if (toDate.HasValue)
+            query = query.Where(b => b.Review!.CreatedAt <= toDate.Value);
+
+        if (!string.IsNullOrWhiteSpace(mentorName))
+            query = query.Where(b => b.Mentor.Name.Contains(mentorName));
+
+        if (!string.IsNullOrWhiteSpace(menteeName))
+            query = query.Where(b => b.Mentee.Name.Contains(menteeName));
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(b => b.Review!.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(b => new ReviewDto
             {
-                Id = booking.Review!.Id,
-                BookingId = booking.Id,
-                Comment = booking.Review.Comment,
-                Rating = booking.Review.Rating,
-                CreatedAt = booking.Review.CreatedAt,
-                MenteeName = booking.Mentee.Name,
-                MenteeImage = booking.Mentee.ImageUrl,
-                MentorName = booking.Mentor.Name,
-                MentorImage = booking.Mentor.ImageUrl,
-                MentorCV = booking.Mentor.CVUrl,
+                Id = b.Review!.Id,
+                BookingId = b.Id,
+                Rating = b.Review.Rating,
+                Comment = b.Review.Comment,
+                CreatedAt = b.Review.CreatedAt,
+                MenteeName = b.Mentee.Name,
+                MenteeImage = b.Mentee.ImageUrl,
+                MentorName = b.Mentor.Name,
+                MentorImage = b.Mentor.ImageUrl,
+                MentorCV = b.Mentor.CVUrl
             })
             .ToListAsync();
 
-        return reviews;
+        return new PageResult<ReviewDto>(items, totalCount, pageSize, pageNumber);
     }
 
-    public async Task<List<ReviewDto>> GetReviewsByMentorIdAsync(int mentorId)
+    public async Task<PageResult<ReviewDto>> GetReviewsByMentorIdAsync(
+        int mentorId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        int? minRating = null, int? maxRating = null,
+        DateTime? fromDate = null, DateTime? toDate = null,
+        string? menteeName = null)
     {
-        var reviews = await _context.Bookings.Where(booking => booking.MentorId == mentorId
-        && booking.Review != null)
-            .Select(booking => new ReviewDto
-            {
-                Id = booking.Review!.Id,
-                BookingId = booking.Id,
-                Comment = booking.Review.Comment,
-                Rating = booking.Review.Rating,
-                CreatedAt = booking.Review.CreatedAt,
-                MenteeName = booking.Mentee.Name,
-                MenteeImage = booking.Mentee.ImageUrl,
-                MentorName = booking.Mentor.Name,
-                MentorImage = booking.Mentor.ImageUrl,
-                MentorCV = booking.Mentor.CVUrl,
-            }).ToListAsync();
+        var query = _context.Bookings
+            .Include(b => b.Review)
+            .Include(b => b.Mentor)
+            .Include(b => b.Mentee)
+            .Where(b => b.Review != null && b.MentorId == mentorId)
+            .AsNoTracking();
 
-        return reviews;
+        if (minRating.HasValue)
+            query = query.Where(b => b.Review!.Rating >= minRating.Value);
+
+        if (maxRating.HasValue)
+            query = query.Where(b => b.Review!.Rating <= maxRating.Value);
+
+        if (fromDate.HasValue)
+            query = query.Where(b => b.Review!.CreatedAt >= fromDate.Value);
+
+        if (toDate.HasValue)
+            query = query.Where(b => b.Review!.CreatedAt <= toDate.Value);
+
+        if (!string.IsNullOrEmpty(menteeName))
+            query = query.Where(b => b.Mentee.Name.Contains(menteeName));
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(b => b.Review!.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(b => new ReviewDto
+            {
+                Id = b.Review!.Id,
+                BookingId = b.Id,
+                Rating = b.Review.Rating,
+                Comment = b.Review.Comment,
+                CreatedAt = b.Review.CreatedAt,
+                MenteeName = b.Mentee.Name,
+                MenteeImage = b.Mentee.ImageUrl,
+                MentorName = b.Mentor.Name,
+                MentorImage = b.Mentor.ImageUrl,
+                MentorCV = b.Mentor.CVUrl
+            })
+            .ToListAsync();
+
+        return new PageResult<ReviewDto>(items, totalCount, pageSize, pageNumber);
     }
 
 
-    public async Task<List<ReviewDto>> GetReviewsByMenteeIdAsync(int menteeId)
+    public async Task<PageResult<ReviewDto>> GetReviewsByMenteeIdAsync(
+        int menteeId,
+        int pageNumber = 1,
+        int pageSize = 10,
+        int? minRating = null, int? maxRating = null,
+        DateTime? fromDate = null, DateTime? toDate = null,
+        string? mentorName = null)
     {
-        return await _context.Bookings
-            .Where(booking => booking.MenteeId == menteeId && booking.Review != null)
-            .Select(booking => new ReviewDto
+        var query = _context.Bookings
+            .Include(b => b.Review)
+            .Include(b => b.Mentor)
+            .Include(b => b.Mentee)
+            .Where(b => b.Review != null && b.MenteeId == menteeId)
+            .AsNoTracking();
+
+
+        if (minRating.HasValue)
+            query = query.Where(b => b.Review!.Rating >= minRating.Value);
+
+        if (maxRating.HasValue)
+            query = query.Where(b => b.Review!.Rating <= maxRating.Value);
+
+        if (fromDate.HasValue)
+            query = query.Where(b => b.Review!.CreatedAt >= fromDate.Value);
+
+        if (toDate.HasValue)
+            query = query.Where(b => b.Review!.CreatedAt <= toDate.Value);
+
+        if(!string.IsNullOrEmpty(mentorName))
+            query = query.Where(b => b.Mentor.Name.Contains(mentorName));
+
+        var totalCount = await query.CountAsync();
+
+        var items = await query
+            .OrderByDescending(b => b.Review!.CreatedAt)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
+            .Select(b => new ReviewDto
             {
-                Id = booking.Review.Id,
-                BookingId = booking.Id,
-                Comment = booking.Review.Comment,
-                Rating = booking.Review.Rating,
-                CreatedAt = booking.Review.CreatedAt,
+                Id = b.Review!.Id,
+                BookingId = b.Id,
+                Rating = b.Review.Rating,
+                Comment = b.Review.Comment,
+                CreatedAt = b.Review.CreatedAt,
                 MenteeName = null,
                 MenteeImage = null,
-                MentorName = booking.Mentor.Name,
-                MentorImage = booking.Mentor.ImageUrl,
-                MentorCV = booking.Mentor.CVUrl,
+                MentorName = b.Mentor.Name,
+                MentorImage = b.Mentor.ImageUrl,
+                MentorCV = b.Mentor.CVUrl
             })
             .ToListAsync();
+
+        return new PageResult<ReviewDto>(items, totalCount, pageSize, pageNumber);
     }
 
 
