@@ -11,6 +11,10 @@ namespace MentorHup.APPLICATION.Validators.Mentor
                 .NotEmpty().WithMessage("Name is required")
                 .Length(2, 100).WithMessage("Name must be between 2 and 100 characters");
 
+            RuleFor(x => x.CompanyName)
+                .NotEmpty().WithMessage("Company Name is required")
+                .MaximumLength(500).WithMessage("Company Name must be between 4 to 100 characters");
+
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Description is required")
                 .MaximumLength(500).WithMessage("Description must not exceed 500 characters");

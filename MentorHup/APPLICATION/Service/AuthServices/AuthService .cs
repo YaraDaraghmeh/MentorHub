@@ -38,7 +38,9 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 var user = await _userManager.FindByIdAsync(userId);
                 if (user == null) return false;
 
-                var decodedToken = System.Web.HttpUtility.UrlDecode(token);
+                var tokenBytes = WebEncoders.Base64UrlDecode(token);
+                var decodedToken = Encoding.UTF8.GetString(tokenBytes);
+                
                 var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
 
                 return result.Succeeded;
@@ -52,11 +54,19 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     .Include(u => u.Mentor)
                     .FirstOrDefaultAsync(u => u.Email == request.Email);
 
+
                 if (user == null)
                     return new LoginResponse
                     {
                         IsSuccess = false,
                         Errors = new[] { "Invalid email or password." }
+                    };
+
+                if (!await _userManager.IsEmailConfirmedAsync(user))
+                    return new LoginResponse
+                    {
+                        IsSuccess = false,
+                        Errors = new[] { "Please confirm your email before logging in." }
                     };
 
                 // check for blocking
@@ -87,12 +97,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     };
                 }
               
-                if (!await _userManager.IsEmailConfirmedAsync(user))
-                    return new LoginResponse
-                    {
-                        IsSuccess = false,
-                        Errors = new[] { "Please confirm your email before logging in." }
-                    };
 
                 // when login successfully, reset access faild count to 0
                 if (user.LockoutEnabled)
@@ -117,8 +121,10 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
                 return new LoginResponse
                 {
+                    IsSuccess = true,
                     UserId = user.Id,
                     Email = user.Email!,
+                    UserName = user.UserName,
                     Roles = roles.ToList(),
                     AccessToken = accessToken,
                     RefreshToken = refreshToken.Token,

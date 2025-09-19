@@ -1,5 +1,4 @@
 ﻿using MentorHup.APPLICATION.Common;
-using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.APPLICATION.DTOs.Mentor;
 
 namespace MentorHup.APPLICATION.Service.Mentor;
@@ -13,6 +12,9 @@ public interface IMentorService
     Task<bool> UpdateAsync(MentorUpdateRequest request);
 
     Task<UploadImageResult> UploadImageAsync(IFormFile image);
+    Task<(byte[] FileContent, string ContentType, string FileName)?> DownloadImageAsync(int mentorId);
+    Task<UploadCVResult> UploadCVAsync(IFormFile cv);
+    Task<(byte[] FileContent, string ContentType, string FileName)?> DownloadCVAsync(int mentorId);
 
     Task<MentorDashboardDto> GetMentorDashboardAsync(string mentorId);
 

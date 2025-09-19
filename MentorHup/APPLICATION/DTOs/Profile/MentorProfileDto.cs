@@ -6,7 +6,10 @@
         public string ApplicationUserId { get; set; }
         public string Email { get; set; }
         public string UserName { get; set; }
+        public string ImageLink { get; set; }
+        public string CVLink { get; set; }
         public string Description { get; set; }
+        public string CompnayName { get; set; }
         public decimal Price { get; set; }
         public List<string> Skills { get; set; }
     }

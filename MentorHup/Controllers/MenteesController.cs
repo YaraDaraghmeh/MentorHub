@@ -39,6 +39,17 @@ namespace MentorHup.APPLICATION.Controllers
         }
 
 
+        [HttpGet("download-image/{menteeId}")]
+        [Authorize]
+        public async Task<IActionResult> DownloadImage(int menteeId)
+        {
+            var result = await menteeService.DownloadImageAsync(menteeId);
+
+            if (result == null) return NotFound();
+
+            return File(result.Value.FileContent, result.Value.ContentType, result.Value.FileName);
+        }
+
         [HttpPatch("edit")]
         [Authorize(Roles = "Mentee")]
         public async Task<IActionResult> Edit([FromForm] MenteeUpdateRequest menteeUpdateRequest)
@@ -51,6 +62,16 @@ namespace MentorHup.APPLICATION.Controllers
             return NoContent();
         }
 
+        [HttpGet("dashboard-stats")]
+        [Authorize(Roles = "Mentee")]
+        public async Task<IActionResult> GetDashboardStats()
+        {
+            var dashboard = await menteeService.GetDashboardStatsAsync();
 
+            if (dashboard == null)
+                return NotFound(new { message = "Mentee not found" });
+
+            return Ok(dashboard);
+        }
     }
 }

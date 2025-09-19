@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 
 namespace MentorHup.APPLICATION.Service.AuthServices
 {
@@ -68,7 +70,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
 
 
             var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-            var encodedToken = System.Web.HttpUtility.UrlEncode(token);
+            var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token));
 
             var confirmUrl = urlHelper.Action(
                 "ConfirmEmail",       // action name
@@ -158,17 +160,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             };
         }
 
-
-        public async Task<bool> ConfirmEmailAsync(string userId, string token)
-        {
-            var user = await _userManager.FindByIdAsync(userId);
-            if (user == null) return false;
-
-            var decodedToken = System.Web.HttpUtility.UrlDecode(token);
-            var result = await _userManager.ConfirmEmailAsync(user, decodedToken);
-
-            return result.Succeeded;
-        }
 
         
     }

@@ -62,6 +62,7 @@ public class PaymentsWebhookController : ControllerBase
 
             var availability = await _context.MentorAvailabilities
                 .Include(a => a.Mentor)
+                .ThenInclude(ment => ment.ApplicationUser)
                 .FirstOrDefaultAsync(a => a.Id == mentorAvailabilityId);
 
             if (availability == null)

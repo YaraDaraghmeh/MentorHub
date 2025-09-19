@@ -8,12 +8,22 @@ namespace MentorHup.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Admin")]
     public class AdminController(IAdminService adminService) : ControllerBase
     {
         private readonly IAdminService adminService = adminService;
 
+        [HttpGet("all-users")]
+        public async Task<IActionResult> GetAllUsers([FromQuery] AllUsersPaginationDto allUsersPaginationDto)
+        {
+            var users = await adminService.GetAllUsersAsync(allUsersPaginationDto.PageSize, allUsersPaginationDto.PageNumber,
+                allUsersPaginationDto.Name, allUsersPaginationDto.Email, allUsersPaginationDto.Role, allUsersPaginationDto.IsDeleted);
+
+            return Ok(users);
+        }
+
         [HttpGet("mentors")]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, Mentee")]
         public async Task<IActionResult> GetAllMentors([FromQuery] PaginationDto dto)
         {
 
@@ -28,8 +38,18 @@ namespace MentorHup.Controllers
             return Ok(mentors);
         }
 
+        [HttpGet("{mentorId}")]
+        [Authorize(Roles = "Admin, Mentee")]
+        public async Task<IActionResult> GetMentorById(int mentorId)
+        {
+            var mentor = await adminService.GetMentorByIdAsync(mentorId);
+
+            if (mentor == null) return NotFound();
+
+            return Ok(mentor);
+        }
+
         [HttpGet("mentees")]
-        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllMentees([FromQuery] MenteesPaginationDto menteesPaginationDto)
         {
             var mentees = await adminService.GetAllMenteesAsync(menteesPaginationDto.PageSize,

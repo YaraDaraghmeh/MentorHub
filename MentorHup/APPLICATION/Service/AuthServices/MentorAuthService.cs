@@ -93,6 +93,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             var mentor = new Domain.Entities.Mentor
             {
                 Name = request.Name,
+                CompanyName = request.CompanyName,
                 Description = request.Description,
                 Experiences = request.Experiences,
                 Price = request.Price,
@@ -164,10 +165,12 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 {
                     Id = mentor.Id,
                     Name = mentor.Name,
+                    CompanyName = mentor.CompanyName,
                     Description = mentor.Description,
                     Experiences = mentor.Experiences,
                     Price = mentor.Price,
                     ImageLink = mentor.ImageUrl,
+                    CVLink = mentor.CVUrl,
                     Email = user.Email!,
                     Roles = roles.ToList(),
                     Skills = skills,

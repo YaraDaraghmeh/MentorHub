@@ -8,11 +8,15 @@ namespace MentorHup.APPLICATION.Service.Admin
 {
     public interface IAdminService
     {
+        Task<PageResult<AdminUserOverviewDto>> GetAllUsersAsync(int pageSize, int pageNumber, string? name, string? email, string? role, bool? isDeleted);
         Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(int pageSize,
             int pageNumber, string? field, string? skillName, decimal? minPrice, decimal? maxPrice,
             int? Experiences);
+        Task<MentorOverviewDto?> GetMentorByIdAsync(int id);
         Task<PageResult<MenteeOverviewDto>> GetAllMenteesAsync(int pageSize,
             int pageNumber, string? name, string? gender);
+        Task<MenteeOverviewDto?> GetMenteeByIdAsync(int id);
+
         Task<bool> SoftDeleteUserAsync(string userId);
         Task<bool> RestoreUserAsync(string userId);
         Task<bool> BlockUserAsync(string userId);

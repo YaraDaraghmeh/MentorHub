@@ -5,12 +5,14 @@
         public int Id { get; set; }
         public string Name { get; set; } = null!;
         public string Field { get; set; } = null!;
+        public string CompanyName { get; set; }
         public string Description { get; set; } = null!;
         public int Experiences { get; set; }
         public decimal Price { get; set; }
         public string? StripeAccountId { get; set; }
 
         public string? ImageUrl { get; set; }
+        public string? CVUrl {  get; set; }
 
         public string ApplicationUserId { get; set; } = null!;
         public ApplicationUser ApplicationUser { get; set; } = null!;

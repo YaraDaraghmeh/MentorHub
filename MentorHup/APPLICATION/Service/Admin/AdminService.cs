@@ -24,17 +24,171 @@ namespace MentorHup.APPLICATION.Service.Admin
             this.userManager = userManager;
         }
 
+        public async Task<PageResult<AdminUserOverviewDto>> GetAllUsersAsync(int pageSize, int pageNumber, string? name, string? email, string? role, bool? isDeleted)
+        {
+            var usersQuery = dbContext.Users.AsNoTracking().AsQueryable();
+
+            if(!string.IsNullOrEmpty(name))
+            {
+                usersQuery = usersQuery.Where(user => user.UserName.Contains(name) || user.Email.Contains(name));
+            }
+
+            if (!string.IsNullOrEmpty(email))
+            {
+                usersQuery = usersQuery.Where(user => user.Email.Contains(email));
+            }
+
+            if (isDeleted.HasValue)
+            {
+                usersQuery = usersQuery.Where(user => user.IsDeleted == isDeleted.Value);
+            }
+
+            // exclude Admin role
+            usersQuery = usersQuery.Where(user =>
+                !dbContext.UserRoles
+                    .Where(userRole => userRole.UserId == user.Id)
+                    .Join(dbContext.Roles,
+                          userRole => userRole.RoleId,
+                          role => role.Id,
+                          (ur, role) => role.Name)
+                    .Any(userRole => userRole == "Admin"));
+
+            if (!string.IsNullOrEmpty(role))
+            {
+                // query was made on DB directly, (totalCount is accurate now), more performance (query made on SQL direct, before returning the result)
+                usersQuery = usersQuery
+                .Where(user => dbContext.UserRoles // UserRoles (UserId, Id)  ApplicationUserId (UserId)  Roles (Id) => matching UserRoles with ApplicationUserId by UserId then make join with Roles via Id to access the RoleName present on Roles table
+                    .Where(userRole => userRole.UserId == user.Id)
+                    .Join(dbContext.Roles,
+                          userRole => userRole.RoleId,
+                          role => role.Id,
+                          (userRole, role) => role.Name)
+                    .Any(roleName => roleName.Contains(role)));       
+            }
+
+            var totalCount = await usersQuery.CountAsync();
+
+            var items = usersQuery
+                .OrderByDescending(u => u.CreatedAt)
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .Select(user => new
+                {
+                    user.Id,
+                    user.UserName,
+                    user.Email,
+                    user.CreatedAt,
+                    user.IsDeleted,
+                    user.LockoutEnd,
+                    RoleName = dbContext.UserRoles
+                                .Where(userRole => userRole.UserId == user.Id)
+                                .Join(dbContext.Roles, userRole => userRole.RoleId, role => role.Id, (userRole, role) => role.Name)
+                                .FirstOrDefault(),
+                    MentorImage = user.Mentor.ImageUrl,
+                    MenteeImage = user.Mentee.ImageUrl
+                })
+                .AsEnumerable()
+                .Select(x => new AdminUserOverviewDto
+                {
+                    Id = x.Id,
+                    UserName = x.UserName,
+                    Email = x.Email,
+                    ImageLink = x.RoleName == "Mentor" ? x.MentorImage
+                                : x.RoleName == "Mentee" ? x.MenteeImage
+                                : null,
+                    CreatedAt = x.CreatedAt,
+                    IsDeleted = x.IsDeleted,
+                    LockoutEnd = x.LockoutEnd,
+                    Role = x.RoleName
+                })
+                .ToList();
+
+
+            /*
+            if (!string.IsNullOrEmpty(role))
+            {
+            
+               // query was made on memory, not in DB (totalCount here is not accurate)
+               items = items.Where(item => !string.IsNullOrEmpty(item.Role) && item.Role.Contains(role, StringComparison.OrdinalIgnoreCase)).ToList();
+               totalCount = Math.Max(0, totalCount);
+               
+            }
+            */
+            return new PageResult<AdminUserOverviewDto>(items, totalCount, pageSize, pageNumber);
+        }
+
         public async Task<PageResult<MentorOverviewDto>> GetAllMentorsAsync(int pageSize, int pageNumber, string? field, string? skillName, decimal? minPrice, decimal? maxPrice, int? Experiences)
         {
             return await mentorService.GetAllMentorsAsync(pageSize, pageNumber, field, skillName, minPrice, maxPrice, Experiences);
+        }
+
+        public async Task<MentorOverviewDto?> GetMentorByIdAsync(int id)
+        {
+            var mentor = await dbContext.Mentors
+                .Include(m => m.ApplicationUser)
+                .Include(m => m.Bookings)
+                .Include(m => m.MentorSkills).ThenInclude(ms => ms.Skill)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (mentor == null) return null;
+
+            return new MentorOverviewDto
+            {
+                Id = mentor.Id,
+                Name = mentor.ApplicationUser.UserName,
+                Email = mentor.ApplicationUser.Email,
+                CompanyName = mentor.CompanyName,
+                Description = mentor.Description,
+                Price = mentor.Price,
+                Experiences = mentor.Experiences,
+                Field = mentor.Field,
+                ReviewCount = mentor.Bookings.Count(b => b.Review != null),
+                CreatedAt = mentor.ApplicationUser.CreatedAt,
+                ImageLink = mentor.ImageUrl,
+                CVLink = mentor.CVUrl,
+                Skills = mentor.MentorSkills.Select(ms => ms.Skill.SkillName).ToList(),
+                Availabilities = mentor.Availabilities.Select(a => new MentorAvailabilityResponse
+                {
+                    MentorAvailabilityId = a.Id,
+                    DayOfWeek = a.StartTime.DayOfWeek.ToString(),
+                    StartTime = a.StartTime,
+                    EndTime = a.EndTime,
+                    DurationInMinutes = (int)(a.EndTime-a.StartTime).TotalMinutes,
+                    IsBooked = a.IsBooked,
+                }).ToList()
+            };
+
+        }
+
+        public async Task<MenteeOverviewDto?> GetMenteeByIdAsync(int id)
+        {
+            var mentee = await dbContext.Mentees
+                .Include(m => m.ApplicationUser)
+                .AsNoTracking()
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (mentee == null) return null;
+
+            return new MenteeOverviewDto
+            {
+                Id = mentee.Id,
+                Name = mentee.Name,
+                Email = mentee.ApplicationUser.Email,
+                Gender = mentee.Gender,
+                CreatedAt = mentee.ApplicationUser.CreatedAt,
+                ImageLink = mentee.ImageUrl
+            };
         }
 
 
         public async Task<PageResult<MenteeOverviewDto>> GetAllMenteesAsync(int pageSize, int pageNumber, string? name, string? gender)
         {
             var query = dbContext.Mentees // Note: Here we can add Include(m => m.ApplicationUser) then we execlude the mentees who own IsDeleted = true, (Review ApplicationDbContext line 123)
+                .Include(m => m.ApplicationUser)
                 .Include(m => m.Bookings)
-                .AsNoTracking().AsQueryable();
+                .AsNoTracking()
+                .AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(name))
                 query = query.Where(m => m.Name.Contains(name));
@@ -51,8 +205,10 @@ namespace MentorHup.APPLICATION.Service.Admin
                 {
                     Id = m.Id,
                     Name = m.Name,
+                    Email = m.ApplicationUser.Email,
                     Gender = m.Gender,
-                    ReviewCount = m.Bookings.Count(b => b.Review != null)
+                    CreatedAt = m.ApplicationUser.CreatedAt, // don't need to include ApplicationUser because EF translate CreatedAt column into SQL when making projection (Select)
+                    ImageLink = m.ImageUrl,
                 })
                 .ToListAsync();
 
@@ -254,5 +410,7 @@ namespace MentorHup.APPLICATION.Service.Admin
             };
 
         }
+
+
     }
 }

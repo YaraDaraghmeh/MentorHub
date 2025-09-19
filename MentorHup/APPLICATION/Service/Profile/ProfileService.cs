@@ -1,5 +1,4 @@
-﻿using MentorHup.APPLICATION.DTOs.Booking;
-using MentorHup.APPLICATION.DTOs.Profile;
+﻿using MentorHup.APPLICATION.DTOs.Profile;
 using MentorHup.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +20,6 @@ namespace MentorHup.APPLICATION.Service.Profile
                 case "Mentee":
                     var mentee = await dbContext.Mentees
                         .AsNoTracking()
-                        .Include(ment => ment.Bookings)
                         .Include(m => m.ApplicationUser)
                         .FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
 
@@ -33,20 +31,8 @@ namespace MentorHup.APPLICATION.Service.Profile
                         ApplicationUserId = mentee.ApplicationUserId,
                         Email = mentee.ApplicationUser.Email,
                         UserName = mentee.ApplicationUser.UserName,
+                        ImageLink = mentee.ImageUrl,
                         Gender = mentee.Gender,
-                        // make a manual mapping (Domain Model => DTO) for every booking
-                        Bookings = mentee.Bookings
-                        .Select(booking => new MenteeBookingOverviewDto
-                        {
-                            BookingId = booking.Id,
-                            StartTime = booking.StartTime,
-                            EndTime = booking.EndTime,
-                            Amount = booking.Amount,
-                            MeetingUrl = booking.MeetingUrl,
-                            Status = booking.Status,
-                            MentorName = booking.Mentor.ApplicationUser.UserName
-                        }
-                        ).ToList(),
                         Role = "Mentee"
                     };
 
@@ -66,7 +52,10 @@ namespace MentorHup.APPLICATION.Service.Profile
                         ApplicationUserId = mentor.ApplicationUserId,
                         Email = mentor.ApplicationUser.Email,
                         UserName = mentor.ApplicationUser.UserName,
+                        ImageLink = mentor.ImageUrl,
+                        CVLink = mentor.CVUrl,
                         Description = mentor.Description,
+                        CompnayName = mentor.CompanyName,
                         Price = mentor.Price,
                         Skills = mentor.MentorSkills.Select(s => s.Skill.SkillName).ToList(),
                         Role = "Mentor"
