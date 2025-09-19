@@ -1,4 +1,6 @@
 ﻿using MentorHup.APPLICATION.Dtos.Mentee;
+using MentorHup.APPLICATION.DTOs.Mentee;
+using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
@@ -56,5 +58,50 @@ namespace MentorHup.APPLICATION.Service.Mentee
             return true;
         }
 
+
+        public async Task<MenteeDashboardDto?> GetDashboardStatsAsync()
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var user = await _context.Users
+                .Include(u => u.Mentee)
+                .FirstOrDefaultAsync(u => u.Id == userId);
+
+            if (user == null || user.Mentee == null)
+                return null;
+
+            var menteeId = user.Mentee.Id;
+            var now = DateTime.UtcNow;
+
+            var bookings = await _context.Bookings
+                .Where(b => b.MenteeId == menteeId && b.Status == BookingStatus.Confirmed)
+                .ToListAsync();
+
+            // number of My Mentors (distinct)
+            var myMentors = bookings
+               .Select(b => b.MentorId)
+               .Distinct()
+               .Count();
+
+            // scheduled sessions
+            var scheduledSessions = bookings
+                .Count(booking => booking.StartTime > now);
+
+            // completed sessions
+            var completedSessions = bookings // there is no step on logic that change the confirmed status after it exceeds the current time, so we add another condition (end time must less that current time)
+                .Count(booking => booking.EndTime <= now); // there is no need to check the starting time is less than current time
+
+            // learning hours
+            var learningHours = bookings
+                .Where(booking => booking.EndTime <= now)
+                .Sum(booking => (booking.EndTime - booking.StartTime).TotalHours);
+
+            return new MenteeDashboardDto
+            {
+                MyMentors = myMentors,
+                ScheduledSessions = scheduledSessions,
+                CompletedSessions = completedSessions,
+                LearningHours = Math.Round(learningHours, 1) // ex: 7.5 hours
+            };
+        }
     }
 }

@@ -51,6 +51,16 @@ namespace MentorHup.APPLICATION.Controllers
             return NoContent();
         }
 
+        [HttpGet("dashboard-stats")]
+        [Authorize(Roles = "Mentee")]
+        public async Task<IActionResult> GetDashboardStats()
+        {
+            var dashboard = await menteeService.GetDashboardStatsAsync();
 
+            if (dashboard == null)
+                return NotFound(new { message = "Mentee not found" });
+
+            return Ok(dashboard);
+        }
     }
 }
