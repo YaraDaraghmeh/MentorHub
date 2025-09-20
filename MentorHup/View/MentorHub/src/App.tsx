@@ -35,6 +35,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./Context/AuthContext";
 import ProfileAdmin from "./Pages/AdminPages/Profile";
 import WithoutHeader from "./layouts/withoutSidebar";
+import GoogleCallback from "./Pages/Auth/GoogleCallback";
 
 // Component to handle default redirect
 const DefaultRedirect = () => {
@@ -94,6 +95,7 @@ function App() {
 
               {/* Login & Registration - public routes */}
               <Route path="/login" element={<LoginUser />} />
+              <Route path="/auth/google/callback" element={<GoogleCallback />} />
               <Route path="/registration" element={<ChooseUser />} />
               <Route path="/SignUp-mentee" element={<SignUpMentee />} />
               <Route path="/SignUp-mentor" element={<SignUpMentor />} />

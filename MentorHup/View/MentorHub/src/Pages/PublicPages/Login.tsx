@@ -3,20 +3,74 @@ import AppForm from "../../components/Form/Form";
 import FormFiled from "../../components/Form/FormFiled";
 import logo from "/src/assets/MentorHub-logo (1)/vector/default-monochrome.svg";
 import { FcGoogle } from "react-icons/fc";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import urlAuth from "../../Utilities/Auth/urlAuth";
 import { useAuth } from "../../Context/AuthContext";
+import GoogleAuthService from "../../Services/googleAuthService";
 
 const LoginContent = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
   const [formData, setFormData] = useState({ email: "", password: "" });
   const { setAuth } = useAuth();
 
   const handleSignUp = () => {
     navigate("/registration");
+  };
+
+  // Handle Google authentication callback
+  useEffect(() => {
+    const handleGoogleCallback = async () => {
+      if (GoogleAuthService.isGoogleAuthCallback()) {
+        setGoogleLoading(true);
+        try {
+          const authData = await GoogleAuthService.handleGoogleCallback();
+          
+          // Process roles similar to regular login
+          const roleString = Array.isArray(authData.roles)
+            ? (authData.roles[0] as "Admin" | "Mentor" | "Mentee")
+            : (authData.roles as "Admin" | "Mentor" | "Mentee");
+
+          await setAuth({
+            userId: authData.userId,
+            roles: roleString,
+            email: authData.email,
+            accessToken: authData.accessToken,
+            refreshToken: authData.refreshToken,
+          });
+
+          // Clean up URL parameters
+          GoogleAuthService.cleanupAuthParams();
+          
+          console.log("Google authentication successful");
+        } catch (error) {
+          console.error("Google authentication failed:", error);
+          setError("Google Sign-In failed. Please try again.");
+        } finally {
+          setGoogleLoading(false);
+        }
+      }
+    };
+
+    handleGoogleCallback();
+  }, [setAuth]);
+
+  // Handle Google Sign-In button click
+  const handleGoogleSignIn = async () => {
+    try {
+      setGoogleLoading(true);
+      setError("");
+      
+      // Use redirect method (recommended for OAuth)
+      GoogleAuthService.initiateGoogleSignIn("/mentee/main");
+    } catch (error) {
+      console.error("Failed to initiate Google Sign-In:", error);
+      setError("Failed to start Google Sign-In. Please try again.");
+      setGoogleLoading(false);
+    }
   };
 
   // when add data on inputs
@@ -154,9 +208,17 @@ const LoginContent = () => {
             </div>
 
             {/* Sign in with Google */}
-            <button className="cursor-pointer gap-3 w-4 h-4 rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--secondary-light)] justify-center text-[var(--primary)] text-lg font-semibold ">
+            <button 
+              onClick={handleGoogleSignIn}
+              disabled={googleLoading || loading}
+              className={`cursor-pointer gap-3 w-4 h-4 rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--secondary-light)] justify-center text-[var(--primary)] text-lg font-semibold ${
+                googleLoading || loading ? "opacity-50 cursor-not-allowed" : ""
+              }`}
+            >
               <FcGoogle />
-              <span>Sign in with Google</span>
+              <span>
+                {googleLoading ? "Signing in with Google..." : "Sign in with Google"}
+              </span>
             </button>
 
             {/* Sign up */}

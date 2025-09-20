@@ -5,6 +5,7 @@ import MentorsGrid from '../../components/MentorsComponents/MentorsGrid';
 import ContentSections from '../../components/MentorsComponents/ContentSections';
 import type { Mentor, FilterState } from '../../types/types';
 import { useTheme } from "../../Context/ThemeContext";
+
 const PublicMentors: React.FC = () => {
   const { isDark } = useTheme();
   const [filters, setFilters] = useState<FilterState>({
@@ -17,7 +18,7 @@ const PublicMentors: React.FC = () => {
 
   const mentors: Mentor[] = [
     {
-      id: 1,
+      id: "1",
       name: "Sarah Johnson",
       title: "Senior Software Engineer",
       company: "Google",
@@ -35,7 +36,7 @@ const PublicMentors: React.FC = () => {
       badge: "Top Rated"
     },
     {
-      id: 2,
+      id: "2",
       name: "Michael Chen",
       title: "Product Manager",
       company: "Microsoft",
@@ -52,7 +53,7 @@ const PublicMentors: React.FC = () => {
       successRate: 89
     },
     {
-      id: 3,
+      id: "3",
       name: "Emily Rodriguez",
       title: "UX Design Lead",
       company: "Adobe",
@@ -70,7 +71,7 @@ const PublicMentors: React.FC = () => {
       badge: "Expert"
     },
     {
-      id: 4,
+      id: "4",
       name: "David Kim",
       title: "Data Science Manager",
       company: "Netflix",
@@ -87,7 +88,7 @@ const PublicMentors: React.FC = () => {
       successRate: 91
     },
     {
-      id: 5,
+      id: "5",
       name: "Lisa Thompson",
       title: "Marketing Director",
       company: "Spotify",
@@ -104,7 +105,7 @@ const PublicMentors: React.FC = () => {
       successRate: 87
     },
     {
-      id: 6,
+      id: "6",
       name: "James Wilson",
       title: "Finance VP",
       company: "Goldman Sachs",
@@ -154,7 +155,6 @@ const PublicMentors: React.FC = () => {
     }`}>
       <HeroSection />
       <SearchFilters 
-      
         filters={filters}
         onFilterChange={handleFilterChange}
         showFilters={showFilters}
