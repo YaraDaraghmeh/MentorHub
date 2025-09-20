@@ -5,7 +5,6 @@ import { RiAddLine } from "react-icons/ri";
 import { useState } from "react";
 import axios from "axios";
 import urlSkills from "../../Utilities/Skills/urlSkills";
-// import type { skills } from "../Tables/interfaces";
 import Alert from "../Tables/alerts";
 
 interface dataModal {
@@ -160,6 +159,7 @@ dataModal) {
           </div>
         </Dialog>
       </Transition>
+
       {/* alert error message */}
       <Alert
         type="error"
@@ -167,6 +167,7 @@ dataModal) {
         open={messageError}
         onClose={() => setMessageError(false)}
       />
+
       {/* alert success message */}
       <Alert
         type="success"
@@ -174,7 +175,6 @@ dataModal) {
         open={showMessageSuccess}
         onClose={() => setShowMessageSuccess(false)}
       />
-      ;
     </>
   );
 }

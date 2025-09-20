@@ -84,22 +84,38 @@ const SignUpMentor = () => {
         return;
       }
 
+      // Validate that start time is in the future
+      const startDate = new Date(startTimeIso);
+      const now = new Date();
+      if (startDate <= now) {
+        setGeneralError("Availability start time must be in the future.");
+        return;
+      }
+
+      // Validate that end time is after start time
+      const endDate = new Date(endTimeIso);
+      if (endDate <= startDate) {
+        setGeneralError("Availability end time must be after start time.");
+        return;
+      }
+
       // Build payload; other not-in-form fields can remain null as requested
       const payload = {
         name: (userData as any)?.name ?? null,
+        field: (userData as any)?.field ?? null,
+        companyName: (userData as any)?.companyName ?? null,
         description: (userData as any)?.description ?? null,
-        email: (userData as any)?.email ?? null,
-        password: (userData as any)?.password ?? null,
         experiences:
           (userData as any)?.experience !== undefined && (userData as any)?.experience !== ""
             ? Number((userData as any)?.experience)
             : null,
-        field: (userData as any)?.field ?? null,
-        stripeAccountId,
         price:
           (userData as any)?.price !== undefined && (userData as any)?.price !== ""
             ? Number((userData as any)?.price)
             : null,
+        stripeAccountId,
+        email: (userData as any)?.email ?? null,
+        password: (userData as any)?.password ?? null,
         skillIds,
         availabilities: [
           {
