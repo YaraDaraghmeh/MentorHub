@@ -10,7 +10,9 @@ const FormateDate = (date: string) => {
     return date;
   }
 
-  const newDate = new Date();
+  const [startRaw] = parts.map((s) => s.trim());
+
+  const newDate = new Date(startRaw);
 
   const startFormatted = `${newDate.getDate()}.${
     newDate.getMonth() + 1

@@ -9,6 +9,9 @@ import urlAdmin from "../../Utilities/Admin/urlAdmin";
 import FormateDate from "./date";
 import { MdOutlineBlock } from "react-icons/md";
 import Alert from "./alerts";
+import ModalProfile from "../Modal/ModalProfile";
+import ToSend from "../Chatting/iconsToSend";
+import { useNavigate } from "react-router-dom";
 
 interface UserData {
   id: string | number;
@@ -24,12 +27,17 @@ interface UserData {
 interface accoutUser {
   id: string;
   show: boolean;
-  alert: boolean;
+  alert?: boolean;
 }
 
 const TableUser = () => {
   const { isDark } = useTheme();
+  const navigate = useNavigate();
   const [users, setUsers] = useState<UserData[]>([]);
+  const [viewProfile, setViewProfile] = useState<accoutUser>({
+    id: "",
+    show: false,
+  });
   // effective
   const [confirmData, setConfirmData] = useState<accoutUser>({
     id: "",
@@ -75,6 +83,11 @@ const TableUser = () => {
     }
   };
 
+  // view profile
+  const handleView = (id: string) => {
+    setViewProfile({ id: id, show: true });
+  };
+
   const token = localStorage.getItem("accessToken");
 
   if (!token) {
@@ -95,11 +108,19 @@ const TableUser = () => {
         params: { PageNumber: page, PageSize: pageSize },
       });
 
-      // console.log(res.data);
+      console.log(res.data.items);
       setUsers(res.data.items);
     } catch (error: any) {
       console.log("Message error:", error);
     }
+  };
+
+  const handleMessageClick = (id: string, name: string, image: string) => {
+    localStorage.setItem("MessageIdUser", id);
+    localStorage.setItem("MessageUserName", name);
+    localStorage.setItem("imageUser", image);
+
+    navigate("/admin/chatting");
   };
 
   const colums = [
@@ -169,11 +190,21 @@ const TableUser = () => {
       accessor: "id" as keyof UserData,
       render: (row: any) => (
         <div className="flex justify-center items-center gap-2">
-          <Eye className="w-5 h-5 cursor-pointer" />
+          <Eye
+            className="w-5 h-5 cursor-pointer"
+            onClick={() => handleView(row.id)}
+          />
           <MdOutlineBlock
             className="w-5 h-5 cursor-pointer"
             onClick={() => handleBlock(row.id, row.lockoutEnd)}
           />
+          {row.role === "Mentor" && (
+            <ToSend
+              onClick={() =>
+                handleMessageClick(row.id, row.userName, row.imageLink)
+              }
+            />
+          )}
         </div>
       ),
     },
@@ -348,6 +379,13 @@ const TableUser = () => {
           message="User unblocked successfully"
         />
       )}
+
+      {/* Modal view profile */}
+      <ModalProfile
+        open={viewProfile.show}
+        user={viewProfile.id}
+        onClose={() => setViewProfile((prev) => ({ ...prev, show: false }))}
+      />
     </>
   );
 };

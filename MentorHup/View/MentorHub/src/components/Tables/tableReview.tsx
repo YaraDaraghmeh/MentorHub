@@ -1,47 +1,69 @@
 import Table from "./Table";
-import data from "./review.json";
 import profile from "../../assets/avatar-profile.png";
 import StarReview from "../Stars/StarReview";
+import FormateDate from "./date";
+import { useEffect, useState } from "react";
+import Alert from "./alerts";
+import axios from "axios";
+import urlReview from "../../Utilities/Review/urlReview";
 
 interface ReviewData {
   id: number;
-  reviewer: string;
-  mentor: string;
+  bookingId: number;
+  mentorName: string;
+  menteeName: string;
   rating: number;
-  comment: string;
+  comment?: string;
   createdAt: string;
-  image: string | null;
+  menteeImage: string | null;
+  mentorImage: string | null;
 }
 
 const TableReview = () => {
+  const [messageError, setMessageError] = useState(false);
+  const [reviews, setreviews] = useState<ReviewData[]>([]);
+  let comments = "No comment";
   const columns = [
     {
-      id: "id",
+      id: "bookingId",
       header: "Session ID",
-      accessor: "id" as keyof ReviewData,
+      accessor: "bookingId" as keyof ReviewData,
     },
     {
-      id: "reviewer",
+      id: "menteeName",
       header: "Reviewer",
-      accessor: "reviewer" as keyof ReviewData,
+      accessor: "menteeName" as keyof ReviewData,
       render: (row: ReviewData) => (
         <div className="flex items-center gap-3 justify-start text-start">
           <div className="w-12 h-12">
             <img
-              src={row.image || profile}
+              src={row.menteeImage || profile}
               onError={(e) => (e.currentTarget.src = profile)}
               className="hidden lg:block w-full h-full rounded-full"
               alt="profile"
             />
           </div>
-          {row.reviewer}
+          {row.menteeName}
         </div>
       ),
     },
     {
-      id: "mentor",
+      id: "mentorName",
       header: "Mentor",
-      accessor: "mentor" as keyof ReviewData,
+      accessor: "mentorName" as keyof ReviewData,
+      render: (row: ReviewData) => (
+        <div className="flex items-center gap-3 justify-start text-start">
+          <div className="w-12 h-12">
+            <img
+              src={row.mentorImage || profile}
+              onError={(e) => (e.currentTarget.src = profile)}
+              className="hidden lg:block w-full h-full rounded-full"
+              alt="profile"
+            />
+          </div>
+          {row.mentorName}
+        </div>
+      ),
     },
     {
       id: "rating",
@@ -53,18 +75,52 @@ const TableReview = () => {
       id: "comment",
       header: "Comment",
       accessor: "comment" as keyof ReviewData,
+      render: (row: ReviewData) => <>{row.comment || comments}</>,
     },
     {
       id: "createdAt",
       header: "Date",
       accessor: "createdAt" as keyof ReviewData,
+      render: (row: ReviewData) => <>{FormateDate(row.createdAt)}</>,
     },
   ];
 
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) {
+      setMessageError(true);
+      return;
+    }
+
+    // const getreview = async () => {
+    //   try {
+    //     const res = await axios.get(urlReview.GET_ALL_REVIEWS, {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     });
+
+    //     setreviews(res.data.items);
+    //     console.log(reviews);
+    //   } catch (error: any) {
+    //     console.log(error);
+    //   }
+    // };
+
+    // getreview();
+  }, []);
+
   return (
-    <div className="pt-7 w-full">
-      <Table<ReviewData> titleTable="Reviews" data={data} columns={columns} />
-    </div>
+    <>
+      <div className="pt-7 w-full">
+        <Table titleTable="Reviews" data={reviews} columns={columns} />
+      </div>
+
+      {/* alert error */}
+      {messageError && (
+        <Alert open={messageError} type="error" message="Not Authorized!" />
+      )}
+    </>
   );
 };
 
