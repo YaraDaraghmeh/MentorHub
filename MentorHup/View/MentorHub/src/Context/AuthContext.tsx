@@ -118,8 +118,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("refreshToken");
     localStorage.removeItem("email");
     localStorage.removeItem("userId");
+    localStorage.removeItem("MessageIdUser");
+    localStorage.removeItem("MessageUserName");
+    localStorage.removeItem("imageUser");
 
-    navigate("/login");
+
+    navigate("/home");
   };
 
   // Check authentication on app start
