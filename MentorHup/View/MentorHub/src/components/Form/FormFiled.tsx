@@ -6,6 +6,8 @@ type ListItemProps = {
   name: string;
   placeholder?: string;
   type: string;
+  min?: string;
+  max?: string;
   onChange?: (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => void;
@@ -18,6 +20,8 @@ const FormFiled = ({
   name,
   placeholder,
   type = "text",
+  min,
+  max,
   onChange,
   error,
 }: ListItemProps) => {
@@ -32,6 +36,8 @@ const FormFiled = ({
         name={name}
         type={type}
         placeholder={placeholder}
+        min={min}
+        max={max}
         className={`flex w-full items-center text-[var(--primary)] ${
           error ? "outline outline-1 outline-red-400" : ""
         }`}
