@@ -1,4 +1,5 @@
 export interface skills {
   id: number;
-  skillName: string;
+  name: string;
+  show?: boolean;
 }

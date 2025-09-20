@@ -5,6 +5,8 @@ import axios from "axios";
 import urlSkills from "../../Utilities/Skills/urlSkills";
 import ModalEdit from "../Modal/ModalEdit";
 import type { skills } from "./interfaces";
+import ConfirmModal from "../Modal/ModalConfirm";
+import Alert from "./alerts";
 
 const TableSkills = () => {
   const token = localStorage.getItem("accessToken")?.trim();
@@ -15,9 +17,15 @@ const TableSkills = () => {
 
   const [skill, setSkill] = useState<skills[]>([]);
   const [open, setOpen] = useState(false);
-  const [skillEdit, setSkillEdit] = useState<skills>({ id: 0, skillName: "" });
+  const [skillEdit, setSkillEdit] = useState<skills>({ id: 0, name: "" });
+  const [messageSuccess, setMessageSuccess] = useState(false);
+  const [deleteSkill, setDeleteSkill] = useState<skills>({
+    id: 0,
+    name: "",
+    show: false,
+  });
   const [currentPage, setCurrentPage] = useState(1);
-  const rowsPage = 20;
+  const rowsPage = 44;
 
   useEffect(() => {
     fetchSkills(currentPage, rowsPage);
@@ -36,16 +44,17 @@ const TableSkills = () => {
     setSkill(res.data.items);
   };
 
-  const handleEdit = (id: number, skillName: string) => {
+  // edit skill
+  const handleEdit = (id: number, name: string) => {
     setOpen(true);
-    const skill = {
-      id: id,
-      skillName: skillName,
-    };
+    console.log({ id, name });
 
-    console.log(skill);
+    setSkillEdit({ id, name });
+  };
 
-    setSkillEdit(skill);
+  // delete skill
+  const handleDelete = (id: number, name: string) => {
+    setDeleteSkill({ id, name, show: true });
   };
 
   const columns = [
@@ -67,11 +76,14 @@ const TableSkills = () => {
         <div className="flex flex-row" key={row.id}>
           <button
             className="p-2 w-9 h-9"
-            onClick={() => handleEdit(row.id, row.skillName)}
+            onClick={() => handleEdit(row.id, row.name)}
           >
             <MdModeEdit className="w-full h-full" />
           </button>
-          <button className="p-2 w-9 h-9">
+          <button
+            onClick={() => handleDelete(row.id, row.name)}
+            className="p-2 w-9 h-9"
+          >
             <MdDelete className="w-full h-full" />
           </button>
         </div>
@@ -88,8 +100,49 @@ const TableSkills = () => {
         open={open}
         value={skillEdit}
         onClose={() => setOpen(false)}
-        onConfirm={() => setOpen(false)}
+        onConfirm={(updated) => {
+          setSkill((prev) =>
+            prev.map((s) => (s.id === updated.id ? updated : s))
+          );
+        }}
       />
+
+      {/* Modal delete skills */}
+      <ConfirmModal
+        open={deleteSkill.show}
+        message="Are you sure you want delete this skill?"
+        title={`Delete skill: ${deleteSkill.name}`}
+        onClose={() => setDeleteSkill((prev) => ({ ...prev, show: false }))}
+        onConfirm={async () => {
+          try {
+            const res = await axios.delete(
+              `${urlSkills.SKILLS}/${deleteSkill.id}`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              }
+            );
+
+            if (res.status === 204) {
+              setSkill((prev) => prev.filter((id) => id.id !== deleteSkill.id));
+              setDeleteSkill((prev) => ({ ...prev, show: false }));
+              setMessageSuccess(true);
+            }
+          } catch (error: any) {
+            console.log("Delete skill", error);
+          }
+        }}
+      />
+
+      {/* Alert success */}
+      {messageSuccess && (
+        <Alert
+          open={messageSuccess}
+          type="success"
+          message="The skill has been successfully deleted"
+        />
+      )}
     </div>
   );
 };

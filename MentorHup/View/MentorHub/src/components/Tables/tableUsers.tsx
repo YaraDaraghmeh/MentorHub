@@ -8,6 +8,7 @@ import axios from "axios";
 import urlAdmin from "../../Utilities/Admin/urlAdmin";
 import FormateDate from "./date";
 import { MdOutlineBlock } from "react-icons/md";
+import Alert from "./alerts";
 
 interface UserData {
   id: string | number;
@@ -15,21 +16,43 @@ interface UserData {
   role: string;
   email: string;
   isDeleted: boolean;
-  image: string;
+  imageLink: string;
   createdAt: string;
+  lockoutEnd?: string | null;
+}
+
+interface accoutUser {
+  id: string;
+  show: boolean;
+  alert: boolean;
 }
 
 const TableUser = () => {
   const { isDark } = useTheme();
   const [users, setUsers] = useState<UserData[]>([]);
   // effective
-  const [confirmData, setConfirmData] = useState<{ id: string; show: boolean }>(
-    { id: "", show: false }
-  );
-  // block user
-  const [modalBlock, setModalBlock] = useState<{ id: string; show: boolean }>({
+  const [confirmData, setConfirmData] = useState<accoutUser>({
     id: "",
     show: false,
+    alert: false,
+  });
+  // block user
+  const [modalBlock, setModalBlock] = useState<accoutUser>({
+    id: "",
+    show: false,
+    alert: false,
+  });
+  //unblock user
+  const [modalUnBlock, setModalUnBlock] = useState<accoutUser>({
+    id: "",
+    show: false,
+    alert: false,
+  });
+  // restore user
+  const [restoreUser, setRestoreUser] = useState<accoutUser>({
+    id: "",
+    show: false,
+    alert: false,
   });
   const [currentPage, setCurrentPage] = useState(1);
   const rowsPage = 130;
@@ -37,14 +60,20 @@ const TableUser = () => {
   // soft delete
   const removeUser = (id: string, isDeleted: boolean) => {
     if (isDeleted === false) {
-      setConfirmData({ id, show: true });
+      setConfirmData({ id, show: true, alert: false });
+    } else {
+      setRestoreUser({ id, show: true, alert: false });
     }
-    // else{
-    //alert message
-    // }
   };
 
-  // const handleBlock = (id: string) => {};
+  // Block User
+  const handleBlock = (id: string, lockoutEnd: string) => {
+    if (lockoutEnd === null) {
+      setModalBlock({ id, show: true, alert: false });
+    } else {
+      setModalUnBlock({ id, show: true, alert: false });
+    }
+  };
 
   const token = localStorage.getItem("accessToken");
 
@@ -83,7 +112,7 @@ const TableUser = () => {
           <div className="flex items-center gap-3 justify-start text-start">
             <div className="w-12 h-12">
               <img
-                src={row.image || profile}
+                src={row.imageLink || profile}
                 className="hidden lg:block w-full h-full rounded-full"
                 alt="profile"
               />
@@ -138,12 +167,12 @@ const TableUser = () => {
       id: "id",
       header: "Action",
       accessor: "id" as keyof UserData,
-      render: () => (
+      render: (row: any) => (
         <div className="flex justify-center items-center gap-2">
           <Eye className="w-5 h-5 cursor-pointer" />
           <MdOutlineBlock
             className="w-5 h-5 cursor-pointer"
-            // onClick={() => handleBlock(row.id)}
+            onClick={() => handleBlock(row.id, row.lockoutEnd)}
           />
         </div>
       ),
@@ -172,51 +201,153 @@ const TableUser = () => {
             );
 
             if (res.status === 200) {
-              setConfirmData((prev) => ({ ...prev, show: false }));
+              setConfirmData((prev) => ({ ...prev, show: false, alert: true }));
               setUsers((prev) =>
                 prev.map((u) =>
                   u.id == confirmData.id ? { ...u, isDeleted: !u.isDeleted } : u
                 )
               );
             }
-
-            console.log("User deleted successfully");
           } catch (error) {
             console.log("delete user: ", error);
           }
         }}
       />
+      {/* alert soft delete */}
+      {confirmData.alert && (
+        <Alert
+          open={confirmData.alert}
+          type="success"
+          message="User deleted successfully"
+        />
+      )}
 
-      {/* Modal block user */}
+      {/* Modal restore user */}
       <ConfirmModal
-        open={modalBlock.show}
-        title="Block User"
-        message="Are you sure you want to perform this action?"
-        onClose={() => setModalBlock((prev) => ({ ...prev, show: false }))}
+        open={restoreUser.show}
+        title="Restore User"
+        message="This user is temporarily deleted. Do you want to restore this user"
+        onClose={() => setRestoreUser((prev) => ({ ...prev, show: false }))}
         onConfirm={async () => {
           try {
-            const res = await axios.delete(
-              `${urlAdmin.USERSAC}/${modalBlock.id}/block`,
+            const res = await axios.patch(
+              `${urlAdmin.USERSAC}/${restoreUser.id}/restore`,
+              {},
               {
                 headers: { Authorization: `Bearer ${token}` },
               }
             );
 
-            // if (res.status === 200) {
-            //   setModalBlock((prev) => ({ ...prev, show: false }));
-            //   setUsers((prev) =>
-            //     prev.map((u) =>
-            //       u.id == confirmData.id ? { ...u, isDeleted: !u.isDeleted } : u
-            //     )
-            //   );
-            // }
+            if (res.status === 200) {
+              setRestoreUser((prev) => ({ ...prev, show: false, alert: true }));
+              setUsers((prev) =>
+                prev.map((u) =>
+                  u.id == restoreUser.id ? { ...u, isDeleted: !u.isDeleted } : u
+                )
+              );
+            }
 
-            console.log("User blocked successfully");
+            console.log("User restored successfully");
+          } catch (error) {
+            console.log("restore user: ", error);
+          }
+        }}
+      />
+      {/* alert restore user */}
+      {restoreUser.alert && (
+        <Alert
+          open={restoreUser.alert}
+          type="success"
+          message="User restored successfully"
+        />
+      )}
+
+      {/* Modal block user */}
+      <ConfirmModal
+        open={modalBlock.show}
+        title="Block User"
+        message="Are you sure you want to block this user?"
+        onClose={() => setModalBlock((prev) => ({ ...prev, show: false }))}
+        onConfirm={async () => {
+          try {
+            const res = await axios.patch(
+              `${urlAdmin.USERSAC}/${modalBlock.id}/block`,
+              {},
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+
+            if (res.status === 200) {
+              setModalBlock((prev) => ({ ...prev, show: false, alert: true }));
+              setUsers((prev) =>
+                prev.map((u) =>
+                  u.id == modalBlock.id
+                    ? { ...u, lockoutEnd: new Date().toISOString() }
+                    : u
+                )
+              );
+            }
+
+            console.log("User blocked");
           } catch (error) {
             console.log("delete user: ", error);
           }
         }}
       />
+      {/* alert block user */}
+      {modalBlock.alert && (
+        <Alert
+          open={modalBlock.alert}
+          type="success"
+          message="User blocked successfully"
+        />
+      )}
+
+      {/* Modal unblock user */}
+      <ConfirmModal
+        open={modalUnBlock.show}
+        title="Unblock User"
+        message="Are you sure you want to unblock this user?"
+        onClose={() => setModalUnBlock((prev) => ({ ...prev, show: false }))}
+        onConfirm={async () => {
+          try {
+            const res = await axios.patch(
+              `${urlAdmin.USERSAC}/${modalUnBlock.id}/unblock`,
+              {},
+              {
+                headers: { Authorization: `Bearer ${token}` },
+              }
+            );
+
+            if (res.status === 200) {
+              setModalUnBlock((prev) => ({
+                ...prev,
+                show: false,
+                alert: true,
+              }));
+              setUsers((prev) =>
+                prev.map((u) =>
+                  u.id == modalUnBlock.id ? { ...u, lockoutEnd: null } : u
+                )
+              );
+            }
+
+            console.log("User unblocked");
+          } catch (error) {
+            console.log("delete user: ", error);
+          }
+        }}
+      />
+
+      {/* alert unblock user */}
+      {modalUnBlock.alert && (
+        <Alert
+          open={modalUnBlock.alert}
+          type="success"
+          message="User unblocked successfully"
+        />
+      )}
     </>
   );
 };
