@@ -3,23 +3,18 @@ type listData = {
 };
 import { useTheme } from "../../Context/ThemeContext";
 
-
-const MessageSend = ({  message }: listData) => {
+const MessageSend = ({ message }: listData) => {
   const { isDark } = useTheme();
   return (
-    <div className="w-full inline-flex flex-col h-auto flex-wrap justify-center items-end gap-2 text-end">
-      <div className="w-96 h-auto inline-flex justify-center items-start gap-3">
-        <div className="w-auto flex-1 inline-flex flex-col justify-center items-end gap-[5px]">
-          <div
-            className={`w-auto h-auto self-stretch p-3 rounded-3xl flex flex-col justify-start items-start gap-3 overflow-hidden ${
-              isDark ? "bg-[var(--System-Gray-700)]" : "bg-[var(--primary)]"
-            }`}
-          >
-            <p className="self-stretch justify-start text-base font-medium">
-              {message}
-            </p>
-          </div>
-        </div>
+    <div className="w-full flex justify-end mb-2">
+      <div
+        className={`max-w-xs p-3 rounded-3xl ${
+          isDark
+            ? "bg-[var(--System-Gray-700)] text-white"
+            : "bg-[var(--primary)] text-white"
+        }`}
+      >
+        <p className="text-base font-medium">{message}</p>
       </div>
     </div>
   );
