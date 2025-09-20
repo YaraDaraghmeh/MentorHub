@@ -12,6 +12,38 @@ export interface Mentor {
   successRate: number;
   specialties: string[];
   isOnline: boolean;
+  responseTime?: string;
+  location?: string;
+  badge?: string;
+  description?: string;
+  availabilities?: Availability[];
+}
+
+// API Types for backend integration - Updated to match real API schema
+export interface ApiMentor {
+  id: number;
+  name: string;
+  email: string;
+  companyName: string;
+  description: string;
+  price: number;
+  experiences: number;
+  field: string;
+  reviewCount: number;
+  createdAt: string;
+  imageLink: string;
+  cvLink: string;
+  skills: string[];
+  availabilities: Availability[];
+}
+
+export interface Availability {
+  mentorAvailabilityId: number;
+  dayOfWeek: string;
+  startTime: string; // ISO string
+  endTime: string; // ISO string
+  durationInMinutes: number;
+  isBooked: boolean;
 }
 
 export interface Testimonial {
