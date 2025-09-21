@@ -4,14 +4,6 @@ using MentorHup.Exceptions;
 using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
 using MentorHup.Infrastructure.Hubs;
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-using MentorHup.Infrastructure.Mapping;
-=======
-
->>>>>>> 611f2f9de6f3549106e72898017f7effe8966312
->>>>>>> 1b8dd2cfa46e37962a969a0d52ce92926d6a8ab2
 using MentorHup.Infrastructure.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -100,11 +92,6 @@ app.UseExceptionHandler();
 app.UseRouting();
 app.UseCors("CorsPolicy");
 app.UseAuthentication();
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 611f2f9de6f3549106e72898017f7effe8966312
 app.UseAuthorization();
 
 app.UseStaticFiles(); // allow browser to outline images
