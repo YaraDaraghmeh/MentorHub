@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MentorHup.APPLICATION.Dtos.Mentee;
+﻿using MentorHup.APPLICATION.Dtos.Mentee;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
@@ -17,8 +16,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ApplicationDbContext _context;
-        private readonly ITokenService _tokenService;
-        private readonly IMapper _mapper;
         private readonly IEmailSender emailSender;
         private readonly IHttpContextAccessor httpContextAccessor;
         private readonly IWebHostEnvironment _webHostEnvironment;
@@ -39,7 +36,6 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             _userManager = userManager;
             _roleManager = roleManager;
             _context = context;
-            _tokenService = tokenService;
             this.emailSender = emailSender;
             this.httpContextAccessor = httpContextAccessor;
             this._webHostEnvironment = _webHostEnvironment;

@@ -128,7 +128,7 @@ namespace MentorHup.Infrastructure.Context
 
             builder.Entity<ApplicationUser>()
                 .Property(u => u.CreatedAt)
-                .HasDefaultValueSql("GETUTCDATE()"); // every user register in our Mentor Hub site, take the CreatedAt field the current date he/she registerd
+                .HasDefaultValueSql("GETDATE()"); // every user register in our Mentor Hub site, take the CreatedAt field the current date he/she registerd
 
 
         }

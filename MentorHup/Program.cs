@@ -61,7 +61,7 @@ builder.Services.ConfigureGoogleAuth(builder.Configuration);
 builder.Services.ConfigureCors();
 builder.Services.ConfigureSomeServices();
 builder.Services.AddSignalR();
-builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("stripe"));
+builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings"));
 
 var app = builder.Build();
 //  Seed Roles , Admin

@@ -42,7 +42,6 @@ namespace MentorHup.Extensions
         }
         public static void ConfigureSomeServices(this IServiceCollection services)
         {
-            services.AddAutoMapper(cfg => { }, Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() })
                 .AddFluentValidationAutoValidation();
 
@@ -185,8 +184,6 @@ namespace MentorHup.Extensions
                 googleOptions.SignInScheme = IdentityConstants.ExternalScheme; // أو CookieAuthenticationDefaults.AuthenticationScheme
             });
         }
-
-
 
 
 
