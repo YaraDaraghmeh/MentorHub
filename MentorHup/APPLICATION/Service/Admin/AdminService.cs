@@ -358,7 +358,7 @@ namespace MentorHup.APPLICATION.Service.Admin
 
         public async Task<AdminDashboardStats> GetDashboardStatisticsAsync()
         {
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
             var monthStart = new DateTime(now.Year, now.Month, 1);
 
             // Users
@@ -366,7 +366,7 @@ namespace MentorHup.APPLICATION.Service.Admin
             var totalMentees = await dbContext.Mentees.CountAsync();
             var activeUsers = await dbContext.Users.CountAsync(u => !u.IsDeleted);
             //var deactiveUsers = await dbContext.Users.CountAsync(u => u.IsDeleted); فقط يعرض النشطين ApplicationDbContext مش رح يتم تطبيقها دايما رح تطلع صفر لاني انا عامل بال
-            var blockedUsers = await dbContext.Users.CountAsync(u => u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTimeOffset.UtcNow);
+            var blockedUsers = await dbContext.Users.CountAsync(u => u.LockoutEnd.HasValue && u.LockoutEnd.Value > DateTimeOffset.Now);
             var emailNotConfirmed = await dbContext.Users.CountAsync(u => !u.EmailConfirmed);
 
             // Bookings

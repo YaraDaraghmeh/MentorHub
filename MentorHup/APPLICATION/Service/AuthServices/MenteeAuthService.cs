@@ -155,7 +155,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     ImageLink = mentee.ImageUrl,
                     Email = user.Email!,
                     Roles = roles.ToList(),
-                    Expires = DateTime.UtcNow.AddHours(3) 
+                    Expires = DateTime.Now.AddHours(3) 
                 }
             };
         }

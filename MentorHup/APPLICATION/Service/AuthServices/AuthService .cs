@@ -72,7 +72,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     };
 
                 // check for blocking
-                if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.UtcNow)
+                if (user.LockoutEnabled && user.LockoutEnd.HasValue && user.LockoutEnd.Value > DateTimeOffset.Now)
                     return new LoginResponse
                     {
                         IsSuccess = false,
@@ -110,7 +110,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 var refreshToken = new RefreshToken
                 {
                     Token = Guid.NewGuid().ToString(),
-                    Expires = DateTime.UtcNow.AddDays(7),
+                    Expires = DateTime.Now.AddDays(7),
                     UserId = user.Id,
                     IsRevoked = false
                 };
@@ -130,7 +130,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Roles = roles.ToList(),
                     AccessToken = accessToken,
                     RefreshToken = refreshToken.Token,
-                    Expires = DateTime.UtcNow.AddHours(3)
+                    Expires = DateTime.Now.AddHours(3)
                 };
             }
 
@@ -165,7 +165,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                         Email = email,
                         EmailConfirmed = true,
                         IsDeleted = false, // by default (extra line)
-                        CreatedAt = DateTime.UtcNow,
+                        CreatedAt = DateTime.Now,
                     };
 
                     var createResult = await _userManager.CreateAsync(user);
@@ -194,7 +194,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 var refreshToken = new RefreshToken
                 {
                     Token = Guid.NewGuid().ToString(),
-                    Expires = DateTime.UtcNow.AddDays(7),
+                    Expires = DateTime.Now.AddDays(7),
                     UserId = user.Id,
                     IsRevoked = false
                 };
@@ -215,7 +215,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Roles = roles.ToList(),
                     AccessToken = accessToken,
                     RefreshToken = refreshToken.Token,
-                    Expires = DateTime.UtcNow.AddHours(3)
+                    Expires = DateTime.Now.AddHours(3)
                 };
             }
 
@@ -227,7 +227,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 var storedToken = await _context.RefreshTokens
                     .FirstOrDefaultAsync(t => t.Token == refreshToken);
                 
-                if (storedToken == null || storedToken.Expires < DateTime.UtcNow || storedToken.IsRevoked)
+                if (storedToken == null || storedToken.Expires < DateTime.Now || storedToken.IsRevoked)
                     return null;
 
                 var user = await _userManager.FindByIdAsync(storedToken.UserId);
@@ -240,7 +240,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 {
                     AccessToken = newAccessToken,
                     RefreshToken = storedToken.Token,
-                    ExpireAt = DateTime.UtcNow.AddHours(3)
+                    ExpireAt = DateTime.Now.AddHours(3)
                 };
             }
 
@@ -285,7 +285,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                       If you didn't request a password reset, you can ignore this email — your password will stay the same.
                     </p>
                     <hr style='margin:20px 0;border:none;border-top:1px solid #e6e9ee' />
-                    <p style='font-size:12px;color:#9ca3af'>&copy; {DateTime.UtcNow.Year} MentorHub</p>
+                    <p style='font-size:12px;color:#9ca3af'>&copy; {DateTime.Now.Year} MentorHub</p>
                   </div>
                 </body>
                 </html>";

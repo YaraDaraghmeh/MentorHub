@@ -32,7 +32,7 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
         if (role == "Mentor" && booking.Mentor.ApplicationUserId != appUserId)
             return ApiResponse<string>.FailResponse("You can only cancel your own bookings.");
 
-        if (booking.StartTime <= DateTime.UtcNow.AddHours(1))
+        if (booking.StartTime <= DateTime.Now.AddHours(1))
             return ApiResponse<string>.FailResponse("Cannot cancel less than 1 hour before session.");
 
         using var transaction = await context.Database.BeginTransactionAsync();
@@ -46,7 +46,7 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
                     return ApiResponse<string>.FailResponse("Refund failed in Stripe.");
 
                 booking.Payment.Status = PaymentStatus.Refunded;
-                booking.Payment.RefundedAt = DateTime.UtcNow;
+                booking.Payment.RefundedAt = DateTime.Now;
             }
 
             booking.Status = BookingStatus.Cancelled;

@@ -25,7 +25,7 @@ namespace MentorHup.APPLICATION.Service.Dashboard
 
             var result = new List<WeeklyBookingDto>();
 
-            var today = DateTime.UtcNow.Date;
+            var today = DateTime.Now.Date;
             var currentWeekStart = today.AddDays(-(int)today.DayOfWeek + (int)DayOfWeek.Monday);
 
             var startDate = currentWeekStart.AddDays(-(weeks - 1) * 7);

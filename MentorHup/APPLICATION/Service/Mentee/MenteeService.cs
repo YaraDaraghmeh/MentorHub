@@ -90,7 +90,7 @@ namespace MentorHup.APPLICATION.Service.Mentee
                 return null;
 
             var menteeId = user.Mentee.Id;
-            var now = DateTime.UtcNow;
+            var now = DateTime.Now;
 
             var bookings = await _context.Bookings
                 .Where(b => b.MenteeId == menteeId && b.Status == BookingStatus.Confirmed)

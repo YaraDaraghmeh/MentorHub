@@ -15,7 +15,7 @@ namespace MentorHup.APPLICATION.Service.Notification
                 UserId = dto.UserId,
                 Title = dto.Title,
                 Message = dto.Message,
-                CreatedAt = DateTime.UtcNow,
+                CreatedAt = DateTime.Now,
                 IsRead = false
             };
 

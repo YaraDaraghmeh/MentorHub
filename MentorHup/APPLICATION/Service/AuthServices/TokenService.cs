@@ -42,7 +42,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
             var token = new JwtSecurityToken(
                 issuer: _jwtSettings.ValidIssuer,
                 audience: _jwtSettings.ValidAudience,
-                expires: DateTime.UtcNow.AddHours(_jwtSettings.Expires),
+                expires: DateTime.Now.AddHours(_jwtSettings.Expires),
                 claims: authClaims,
                 signingCredentials: new SigningCredentials(authSigningKey, SecurityAlgorithms.HmacSha256)
             );

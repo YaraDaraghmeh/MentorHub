@@ -30,7 +30,7 @@ public class ReviewService : IReviewService
             return ApiResponse<ReviewDto>.FailResponse("You can't review a cancelled booking.");
         }
 
-        if (booking.EndTime > DateTime.UtcNow)
+        if (booking.EndTime > DateTime.Now)
             return ApiResponse<ReviewDto>.FailResponse("Cannot review before session ends.");
 
         if (booking.Review != null)
@@ -41,7 +41,7 @@ public class ReviewService : IReviewService
             BookingId = booking.Id,
             Rating = dto.Rating,
             Comment = dto.Comment,
-            CreatedAt = DateTime.UtcNow
+            CreatedAt = DateTime.Now
         };
 
         _context.Reviews.Add(review);

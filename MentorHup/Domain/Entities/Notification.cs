@@ -8,7 +8,7 @@
 
         public string Title { get; set; } = null!;
         public string Message { get; set; } = null!;
-        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
         public bool IsRead { get; set; } = false;
     }
 }
