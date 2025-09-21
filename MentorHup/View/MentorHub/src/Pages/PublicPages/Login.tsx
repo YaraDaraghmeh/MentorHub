@@ -99,7 +99,8 @@ const LoginContent = () => {
 
       console.log(" Server Response :", response.data);
 
-      const { roles, email, userId, accessToken, refreshToken } = response.data;
+      const { roles, email, userName, userId, accessToken, refreshToken } =
+        response.data;
 
       // تأكد من أن roles هو array وخذ أول عنصر
       const roleString = Array.isArray(roles)
@@ -112,6 +113,7 @@ const LoginContent = () => {
         userId,
         roles: roleString,
         email,
+        userName,
         accessToken,
         refreshToken,
       });

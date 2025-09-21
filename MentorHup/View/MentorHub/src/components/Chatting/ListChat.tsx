@@ -86,13 +86,16 @@ const ListOfChat = ({ onSelectChat }: listOfChat) => {
 
   // edit time
   const formatTime = (datetime: string) => {
-    const [, time] = datetime.split("T");
-    return time.split(".")[0];
+    if (!datetime) return "";
+    const date = new Date(datetime);
+    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
   // choice specific conversation
   const handleSpecifcMessage = async (chat: conv) => {
     try {
+      setActiveChatId(chat.conversationWithId);
+
       const getConver = await axios.get(
         `${urlChatting.GET_MESSAGE}/${chat.conversationWithId}`,
         {
@@ -118,7 +121,7 @@ const ListOfChat = ({ onSelectChat }: listOfChat) => {
 
   return (
     <div
-      className={`shadow col-span-1 md:h-full h-full justify-start items-start lg:gap-[24px] gap-3 px-[22px] py-[12px] rounded-[54px] overflow-hidden ${
+      className={`shadow col-span-1 md:h-full h-full flex flex-col justify-start items-start lg:gap-[24px] gap-3 px-[22px] py-[12px] rounded-[54px] overflow-hidden ${
         isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--secondary-light)]"
       }`}
     >
@@ -153,26 +156,42 @@ const ListOfChat = ({ onSelectChat }: listOfChat) => {
       </div>
 
       {/* List Chatting */}
-      <div
-        className={`w-full h-full pb-2 flex-col flex self-stretch justify-start items-start gap-2 overflow-y-auto scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent 
+      {conversation.length > 0 ? (
+        <div
+          className={`w-full h-[400px] pb-2 flex flex-col self-stretch justify-start items-start gap-2 overflow-y-auto scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent 
          ${
            isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--secondary-light)]"
          }`}
-      >
-        {conversation.map((chat) => (
-          <CardChat
-            key={chat.conversationWithId}
-            isRead={chat.isRead}
-            name={chat.conversationWithName}
-            time={formatTime(chat.lastMessageTime)}
-            message={chat.lastMessage}
-            picture={chat.conversationWithAvatar || profile}
-            isDark={isDark}
-            isActive={activeChatId === chat.conversationWithId}
-            onClick={() => handleSpecifcMessage(chat)}
-          />
-        ))}
-      </div>
+        >
+          {conversation.map((chat) => (
+            <CardChat
+              key={chat.conversationWithId}
+              isRead={chat.isRead}
+              name={chat.conversationWithName}
+              time={formatTime(chat.lastMessageTime)}
+              message={chat.lastMessage}
+              picture={chat.conversationWithAvatar || profile}
+              isDark={isDark}
+              isActive={activeChatId === chat.conversationWithId}
+              onClick={() => handleSpecifcMessage(chat)}
+            />
+          ))}
+        </div>
+      ) : (
+        <div>
+          <div className="w-full h-[300px] flex justify-center items-center p-4">
+            <h2
+              className={`text-2xl font-bold text-center ${
+                isDark
+                  ? "text-[var(--gray-light)]"
+                  : "text-[var(--primary-rgba)]"
+              }`}
+            >
+              <span>There are no messages yet. </span>
+            </h2>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

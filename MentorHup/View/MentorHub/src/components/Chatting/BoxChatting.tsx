@@ -28,19 +28,21 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
     ReceiverId: ReceiverId,
     Content: "",
   });
+  const [localMessage, setLocalMessage] = useState<message[]>(messages);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // Scroll to bottom whenever messages change
-    messagesEndRef.current?.scrollIntoView({ behavior: "auto" });
+    setMessage((prev) => ({ ...prev, ReceiverId }));
+  }, [ReceiverId]);
+
+  useEffect(() => {
+    setLocalMessage(messages);
   }, [messages]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setMessage((pr) => ({ ...pr, [name]: value }));
-
-    console.log(message);
   };
 
   // button send
@@ -50,7 +52,10 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
     try {
       const resp = await axios.post(
         urlChatting.GET_MESSAGE,
-        { message },
+        {
+          ReceiverId: message.ReceiverId,
+          Content: message.Content,
+        },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,7 +63,8 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
         }
       );
 
-      console.log("response data:", resp.data);
+      setLocalMessage((prev) => [...prev, resp.data]);
+      setMessage((prev) => ({ ...prev, Content: "" }));
     } catch (error: any) {
       console.log("send message", error);
     }
@@ -80,9 +86,13 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
             <img
               className="w-14 h-14 rounded-full"
               src={picture || pictureProfile}
-              alt={picture}
+              alt={pictureProfile}
             />
-            <h3 className="text-[var(--secondary)] text-base font-medium">
+            <h3
+              className={`text-base font-bold ${
+                isDark ? "text-[var(--secondary)]" : "text-[var(--primary)]"
+              }`}
+            >
               {name}
             </h3>
           </div>
@@ -105,24 +115,21 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
               isDark ? "scrollDark" : "scrollLi"
             }`}
           >
-            {messages
+            {localMessage
               .slice()
               .reverse()
               .map((msg) =>
                 msg.senderId === userId ? (
                   <MessageSend message={msg.content} />
                 ) : (
-                  <MessageReceive
-                    message={msg.content}
-                    picture={picture || pictureProfile}
-                  />
+                  <MessageReceive message={msg.content} picture={picture} />
                 )
               )}
             <div ref={messagesEndRef} />
           </div>
 
           {/* Input */}
-          <div className="p-4">
+          <div className="px-4 pb-4">
             <div
               className={`flex w-full items-center px-4 py-2 shadow rounded-3xl ${
                 isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--white)]"

@@ -12,10 +12,9 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 import { useAuth } from "../../Context/AuthContext"; // استيراد useAuth
-import { NavLink } from "react-router-dom";
 
 interface profile {
-  name: string | null;
+  userName: string | null;
   email: string | null;
   userId: string | null;
 }
@@ -30,7 +29,7 @@ interface sideProps {
 }
 
 const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
-  const { logout } = useAuth(); // استخدام logout من AuthContext
+  const { logout } = useAuth();
 
   const menuItems = {
     Admin: [
@@ -131,7 +130,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
               }`}
             >
               {role && (
-                <a href={`${role}/profile`}>
+                <a href={`/${role}/profile`}>
                   <img
                     src={expended ? profilePicture : avatar}
                     alt="User Avatar"
@@ -143,7 +142,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
             {expended ? (
               <div className="flex flex-col gap-1 items-center">
                 <span className="text-[var(--secondary-light)] text-base font-bold">
-                  {profile.name || "المستخدم"}
+                  {profile.userName || "المستخدم"}
                 </span>
                 <span className="text-[var(--primary-green-light)] text-sm font-normal">
                   {profile.email}
