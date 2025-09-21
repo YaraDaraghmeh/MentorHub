@@ -4,6 +4,6 @@ namespace MentorHup.APPLICATION.Service.Conversation
 {
     public interface IConversationService
     {
-        Task<List<ConversationDto>> GetConversationsListAsync(string userId);
+        Task<List<ConversationDto>> GetConversationsListAsync(string userId, string? searchTerm = null);
     }
 }
