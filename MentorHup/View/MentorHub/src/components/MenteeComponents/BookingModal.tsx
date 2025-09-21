@@ -351,7 +351,7 @@ const BookingModal = ({
                   </div>
 
                   {/* Duration */}
-                  <div>
+                  {/* <div>
                     <label className="block text-sm font-medium mb-3">
                       Duration
                     </label>
@@ -370,42 +370,42 @@ const BookingModal = ({
                       <option value="90">1.5 hours</option>
                     </select>
                   </div>
-                </div>
+                </div> */}
 
-                {/* Right Column */}
-                <div className="space-y-6">
-                  {/* Date Selection */}
-                  <div>
-                    <label className="block text-sm font-medium mb-3">
-                      Select Date
-                    </label>
-                    <div className="grid grid-cols-2 gap-2">
-                      {getNextWeekDates().map((date) => (
-                        <button
-                          key={date.value}
-                          onClick={() => setSelectedDate(date.value)}
-                          className={`p-3 rounded-lg text-sm font-medium transition-colors ${
-                            selectedDate === date.value
-                              ? isDark
-                                ? "bg-[#27b467] text-white"
-                                : "bg-[#27b467] text-white"
-                              : isDark
-                              ? "bg-gray-700 hover:bg-gray-600"
-                              : "bg-gray-100 hover:bg-gray-200"
-                          }`}
-                        >
-                          {date.label}
-                        </button>
-                      ))}
+                  {/* Right Column */}
+                  <div className="space-y-6">
+                    {/* Date Selection */}
+                    <div>
+                      <label className="block text-sm font-medium mb-3">
+                        Select Date
+                      </label>
+                      <div className="grid grid-cols-2 gap-2">
+                        {getNextWeekDates().map((date) => (
+                          <button
+                            key={date.value}
+                            onClick={() => setSelectedDate(date.value)}
+                            className={`p-3 rounded-lg text-sm font-medium transition-colors ${
+                              selectedDate === date.value
+                                ? isDark
+                                  ? "bg-[#27b467] text-white"
+                                  : "bg-[#27b467] text-white"
+                                : isDark
+                                ? "bg-gray-700 hover:bg-gray-600"
+                                : "bg-gray-100 hover:bg-gray-200"
+                            }`}
+                          >
+                            {date.label}
+                          </button>
+                        ))}
+                      </div>
                     </div>
-                  </div>
 
-                  {/* Time Selection */}
-                  <div>
-                    <label className="block text-sm font-medium mb-3">
-                      Select Time
-                    </label>
-                    {/* <div className="grid grid-cols-2 gap-2">
+                    {/* Time Selection */}
+                    <div>
+                      <label className="block text-sm font-medium mb-3">
+                        Select Time
+                      </label>
+                      {/* <div className="grid grid-cols-2 gap-2">
                       {availableTimes.map((time) => (
                         <button
                           key={time}
@@ -424,58 +424,41 @@ const BookingModal = ({
                         </button>
                       ))}
                     </div> */}
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              {/* Additional Notes */}
-              <div className="mt-6">
-                <label className="block text-sm font-medium mb-3">
-                  Additional Notes (Optional)
-                </label>
-                <textarea
-                  value={additionalNotes}
-                  onChange={(e) => setAdditionalNotes(e.target.value)}
-                  placeholder="Any specific topics or questions you'd like to discuss?"
-                  rows={4}
-                  className={`w-full p-3 rounded-lg border resize-none ${
-                    isDark
-                      ? "bg-gray-700 border-gray-600 text-white placeholder-gray-400"
-                      : "bg-white border-gray-200 placeholder-gray-500"
+                {/* Booking Summary */}
+                <div
+                  className={`mt-6 p-4 rounded-xl ${
+                    isDark ? "bg-gray-700" : "bg-gray-50"
                   }`}
-                />
-              </div>
-
-              {/* Booking Summary */}
-              <div
-                className={`mt-6 p-4 rounded-xl ${
-                  isDark ? "bg-gray-700" : "bg-gray-50"
-                }`}
-              >
-                <div className="flex justify-between items-center mb-2">
-                  <span>Session ({duration} minutes)</span>
-                  <span>${calculateTotal()}</span>
+                >
+                  <div className="flex justify-between items-center mb-2">
+                    <span>Session ({duration} minutes)</span>
+                    <span>${calculateTotal()}</span>
+                  </div>
+                  <div className="flex justify-between items-center text-lg font-semibold pt-2 border-t border-gray-300">
+                    <span>Total</span>
+                    <span>${calculateTotal()}</span>
+                  </div>
                 </div>
-                <div className="flex justify-between items-center text-lg font-semibold pt-2 border-t border-gray-300">
-                  <span>Total</span>
-                  <span>${calculateTotal()}</span>
-                </div>
-              </div>
 
-              {/* Continue Button */}
-              <button
-                onClick={handleBooking}
-                disabled={!selectedDate || !selectedTime}
-                className={`w-full mt-6 py-4 px-6 rounded-lg font-semibold text-lg transition-colors ${
-                  selectedDate && selectedTime
-                    ? "bg-[#27b467] hover:bg-[#1e874e]text-white"
-                    : isDark
-                    ? "bg-gray-700 text-gray-500 cursor-not-allowed"
-                    : "bg-gray-200 text-gray-400 cursor-not-allowed"
-                }`}
-              >
-                Continue to Payment
-              </button>
+                {/* Continue Button */}
+                <button
+                  onClick={handleBooking}
+                  disabled={!selectedDate || !selectedTime}
+                  className={`w-full mt-6 py-4 px-6 rounded-lg font-semibold text-lg transition-colors ${
+                    selectedDate && selectedTime
+                      ? "bg-[#27b467] hover:bg-[#1e874e]text-white"
+                      : isDark
+                      ? "bg-gray-700 text-gray-500 cursor-not-allowed"
+                      : "bg-gray-200 text-gray-400 cursor-not-allowed"
+                  }`}
+                >
+                  Continue to Payment
+                </button>
+              </div>
             </>
           )}
 

@@ -9,38 +9,73 @@ import Table from "../../components/Tables/Table";
 import data from "../../components/Tables/dataTable.json";
 import Eye from "../../components/Tables/eyeicon";
 import { useNavigate } from "react-router-dom";
+import { useDashboardStats } from "../../hooks/useDashboardStats";
 
 const DashboardMentee = () => {
   const { isDark } = useTheme();
   const navigate = useNavigate();
+  const { stats, loading, error, refetch } = useDashboardStats();
 
-  const state = [
-    {
-      title: "My Mentors",
-      value: "3",
-      icon: <FaUserTie />,
-      color: "",
-    },
-    {
-      title: "Scheduled Sessions",
-      value: "8",
-      icon: <BsFillCalendar2CheckFill />,
-      color: "",
-    },
-    {
-      title: "Completed Sessions",
-      value: "15",
-      icon: <MdOutlineCheckCircle />,
-      color: "",
-    },
-    {
-      title: "Learning Hours",
-      value: "42",
-      icon: <FaClock />,
-      color: "",
-    },
-  ];
+  // Create dashboard cards with real data or loading state
+  const getDashboardCards = () => {
+    if (loading) {
+      return [
+        {
+          title: "My Mentors",
+          value: "...",
+          icon: <FaUserTie />,
+          color: "",
+        },
+        {
+          title: "Scheduled Sessions",
+          value: "...",
+          icon: <BsFillCalendar2CheckFill />,
+          color: "",
+        },
+        {
+          title: "Completed Sessions",
+          value: "...",
+          icon: <MdOutlineCheckCircle />,
+          color: "",
+        },
+        {
+          title: "Learning Hours",
+          value: "...",
+          icon: <FaClock />,
+          color: "",
+        },
+      ];
+    }
 
+    return [
+      {
+        title: "My Mentors",
+        value: stats?.myMentors.toString() || "0",
+        icon: <FaUserTie />,
+        color: "",
+      },
+      {
+        title: "Scheduled Sessions",
+        value: stats?.scheduledSessions.toString() || "0",
+        icon: <BsFillCalendar2CheckFill />,
+        color: "",
+      },
+      {
+        title: "Completed Sessions",
+        value: stats?.completedSessions.toString() || "0",
+        icon: <MdOutlineCheckCircle />,
+        color: "",
+      },
+      {
+        title: "Learning Hours",
+        value: stats?.learningHours.toString() || "0",
+        icon: <FaClock />,
+        color: "",
+      },
+    ];
+  };
+
+  const dashboardCards = getDashboardCards();
 
   const learningProgress = [
     { label: "Week 1", value: 2 },
@@ -50,8 +85,6 @@ const DashboardMentee = () => {
     { label: "Week 5", value: 4 },
     { label: "Week 6", value: 6 },
   ];
-
- 
 
   const columns = [
     {
@@ -114,16 +147,29 @@ const DashboardMentee = () => {
         <p className={`mt-2 ${isDark ? 'text-gray-300' : 'text-gray-600'}`}>
           Track your progress and manage your mentoring sessions
         </p>
+        {error && (
+          <div className="mt-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+            <div className="flex items-center justify-between">
+              <span>Failed to load dashboard statistics: {error}</span>
+              <button
+                onClick={refetch}
+                className="ml-4 px-3 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+              >
+                Retry
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-6">
-        {state.map((state, index) => (
+        {dashboardCards.map((card, index) => (
           <CardDash
             key={index}
-            title={state.title}
-            icon={state.icon}
-            value={state.value}
+            title={card.title}
+            icon={card.icon}
+            value={card.value}
             isDark={isDark}
           />
         ))}

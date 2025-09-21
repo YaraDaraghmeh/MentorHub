@@ -10,7 +10,7 @@ export interface availability {
 export interface Mentor {
   id: number;
   name: string;
-  field: string;//title
+  field: string;
   companyName: string;
   email: string;
   imageLink: string;
