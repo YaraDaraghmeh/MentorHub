@@ -60,11 +60,7 @@ namespace MentorHup.Extensions
             services.AddScoped<IProfileService, ProfileService>();
             services.AddScoped<IConversationService, ConversationService>();
             services.AddScoped<INotificationService, NotificationService>();
-<<<<<<< HEAD
-=======
 
-
->>>>>>> 611f2f9de6f3549106e72898017f7effe8966312
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IWeeklyDashboardService, WeeklyDashboardService>();
 
