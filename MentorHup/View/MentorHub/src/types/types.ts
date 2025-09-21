@@ -115,4 +115,24 @@ export interface PaymentDetails {
   email: string;
 }
 
+// Mentor Registration Types
+export interface MentorRegistrationPayload {
+  name: string;
+  field: string;
+  companyName: string;
+  description: string;
+  experiences: number;
+  price: number;
+  stripeAccountId: string;
+  email: string;
+  password: string;
+  skillIds: number[];
+  availabilities: AvailabilityRegistration[];
+}
+
+export interface AvailabilityRegistration {
+  startTime: string; // ISO string
+  endTime: string; // ISO string
+}
+
 

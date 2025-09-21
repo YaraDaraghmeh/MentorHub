@@ -33,6 +33,14 @@ const ProfileInfo = () => {
       />
       <FormFiled
         onChange={handleChange}
+        value={userData["companyName"] || ""}
+        type="text"
+        label="Company Name"
+        name="companyName"
+        placeholder="Google, Microsoft, Apple..."
+      />
+      <FormFiled
+        onChange={handleChange}
         value={userData["description"] || ""}
         type="text"
         label="Description"

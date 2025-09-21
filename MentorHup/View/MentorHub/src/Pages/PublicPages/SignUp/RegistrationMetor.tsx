@@ -10,6 +10,7 @@ import { StepperContext } from "../../../Context/StepperContext";
 import axios from "axios";
 import urlMentor from "../../../Utilities/Mentor/urlMentor";
 import { useNavigate } from "react-router-dom";
+import type { MentorRegistrationPayload } from "../../../types/types";
 
 const SignUpMentor = () => {
   const navigate = useNavigate();
@@ -83,6 +84,26 @@ const SignUpMentor = () => {
         setGeneralError("Availability start and end times are required.");
         return;
       }
+      if (!(userData as any)?.name?.trim()) {
+        setGeneralError("Name is required.");
+        return;
+      }
+      if (!(userData as any)?.email?.trim()) {
+        setGeneralError("Email is required.");
+        return;
+      }
+      if (!(userData as any)?.password?.trim()) {
+        setGeneralError("Password is required.");
+        return;
+      }
+      if (!(userData as any)?.companyName?.trim()) {
+        setGeneralError("Company Name is required.");
+        return;
+      }
+      if (!(userData as any)?.field?.trim()) {
+        setGeneralError("Field is required.");
+        return;
+      }
 
       // Validate that start time is in the future
       const startDate = new Date(startTimeIso);
@@ -99,23 +120,23 @@ const SignUpMentor = () => {
         return;
       }
 
-      // Build payload; other not-in-form fields can remain null as requested
-      const payload = {
-        name: (userData as any)?.name ?? null,
-        field: (userData as any)?.field ?? null,
-        companyName: (userData as any)?.companyName ?? null,
-        description: (userData as any)?.description ?? null,
+      // Build payload with required fields
+      const payload: MentorRegistrationPayload = {
+        name: (userData as any)?.name?.trim() || "",
+        field: (userData as any)?.field?.trim() || "",
+        companyName: (userData as any)?.companyName?.trim() || "",
+        description: (userData as any)?.description?.trim() || "",
         experiences:
           (userData as any)?.experience !== undefined && (userData as any)?.experience !== ""
             ? Number((userData as any)?.experience)
-            : null,
+            : 0,
         price:
           (userData as any)?.price !== undefined && (userData as any)?.price !== ""
             ? Number((userData as any)?.price)
-            : null,
+            : 0,
         stripeAccountId,
-        email: (userData as any)?.email ?? null,
-        password: (userData as any)?.password ?? null,
+        email: (userData as any)?.email?.trim() || "",
+        password: (userData as any)?.password?.trim() || "",
         skillIds,
         availabilities: [
           {
