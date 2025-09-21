@@ -148,7 +148,7 @@ function App() {
               </Route>
 
               {/* Admin Profile (without Sidebar) */}
-              <Route
+              {/* <Route
                 path="/admin/"
                 element={
                   <ProtectedRoute allowedRoles={["Admin"]}>
@@ -157,7 +157,7 @@ function App() {
                 }
               >
                 <Route path="profile" element={<ProfileAdmin />} />
-              </Route>
+              </Route> */}
 
               {/* Catch all - redirect to home or login */}
               <Route path="*" element={<Navigate to="/" replace />} />

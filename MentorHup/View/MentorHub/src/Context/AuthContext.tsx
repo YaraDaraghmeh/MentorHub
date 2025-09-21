@@ -1,4 +1,10 @@
-import { createContext, useContext, useState, type ReactNode, useEffect } from "react";
+import {
+  createContext,
+  useContext,
+  useState,
+  type ReactNode,
+  useEffect,
+} from "react";
 import { useNavigate } from "react-router-dom";
 
 interface AuthContextType {
@@ -7,6 +13,7 @@ interface AuthContextType {
   refreshToken: string | null;
   roles: "Admin" | "Mentor" | "Mentee" | null;
   userId: string | null;
+  userName: string | null;
   isAuthenticated: boolean;
   setAuth: (data: {
     userId: string;
@@ -14,6 +21,7 @@ interface AuthContextType {
     email: string;
     accessToken: string;
     refreshToken: string;
+    userName: string;
   }) => void;
   logout: () => void;
   updateAccessToken: (token: string) => void;
@@ -23,7 +31,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const navigate = useNavigate();
-  
+
   const [roles, setRoles] = useState<"Admin" | "Mentor" | "Mentee" | null>(
     (localStorage.getItem("roles") as "Admin" | "Mentor" | "Mentee") || null
   );
@@ -38,6 +46,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
   const [userId, setUserId] = useState<string | null>(
     localStorage.getItem("userId")
+  );
+  const [userName, setUserName] = useState<string | null>(
+    localStorage.getItem("userName")
   );
 
   // Check if user is authenticated
@@ -67,12 +78,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     email,
     accessToken,
     refreshToken,
+    userName,
   }: {
     userId: string;
     roles: "Admin" | "Mentor" | "Mentee";
     email: string;
     accessToken: string;
     refreshToken: string;
+    userName: string;
   }) => {
     console.log("setAuth called with:", { userId, roles, email });
 
@@ -82,6 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("email", email);
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
+    localStorage.setItem("userName", userName);
 
     // Update state - هذا سيؤدي لإعادة render للـ components
     setUserId(userId);
@@ -89,9 +103,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setEmail(email);
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
+    setUserName(userName);
 
     console.log("Auth state updated, navigating...");
-    
+
     // Navigate to appropriate page with a slight delay to ensure state update
     setTimeout(() => {
       console.log("Navigating to role:", roles);
@@ -121,7 +136,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("MessageIdUser");
     localStorage.removeItem("MessageUserName");
     localStorage.removeItem("imageUser");
-
+    localStorage.removeItem("userName");
 
     navigate("/home");
   };
@@ -146,6 +161,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         email,
         userId,
         isAuthenticated,
+        userName,
       }}
     >
       {children}

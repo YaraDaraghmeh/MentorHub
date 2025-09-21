@@ -1,4 +1,4 @@
-import pictureProfile from "../../assets/avatar-girl-with-glasses.png";
+import pictureProfile from "../../assets/avatar-profile.png";
 import { useTheme } from "../../Context/ThemeContext";
 
 type listData = {
@@ -13,8 +13,8 @@ const MessageReceive = ({ message, picture }: listData) => {
       {/* picture */}
       <img
         className="w-10 h-10 rounded-full"
-        src={picture || pictureProfile}
-        alt="profile"
+        src={picture ?? pictureProfile}
+        alt={pictureProfile}
       />
 
       {/* message */}
