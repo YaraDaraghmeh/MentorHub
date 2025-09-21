@@ -28,7 +28,7 @@ public class PaymentsWebhookController : ControllerBase
         Stripe.Event stripeEvent = Stripe.EventUtility.ConstructEvent(
                         json,
                         Request.Headers["Stripe-Signature"],
-                        "whsec_TCX5H5uP2lRZjRStpOg2ze6bxNg9zDre",
+                        stripeOptions.Value.WebhookSecret,
                         throwOnApiVersionMismatch: false
         );
 
@@ -111,61 +111,61 @@ public class PaymentsWebhookController : ControllerBase
 
                 //Console.WriteLine("Booking saved with ID: " + booking.Id);
 
-                //var mentee = await _context.Mentees
-                //    .Include(ment => ment.ApplicationUser)
-                //    .FirstOrDefaultAsync(ment => ment.Id == menteeId);
+                var mentee = await _context.Mentees
+                    .Include(ment => ment.ApplicationUser)
+                    .FirstOrDefaultAsync(ment => ment.Id == menteeId);
 
-                //if (mentee == null)
-                //{
-                //    //Console.WriteLine("⚠️ Mentee not found");
-                //    return BadRequest();
-                //}
+                if (mentee == null)
+                {
+                    //Console.WriteLine("⚠️ Mentee not found");
+                    return BadRequest();
+                }
 
 
-                //if (mentee == null || mentee.ApplicationUser == null)
-                //{
-                //    //Console.WriteLine("⚠️ Mentee or ApplicationUser not found");
-                //    return BadRequest();
-                //}
+                if (mentee == null || mentee.ApplicationUser == null)
+                {
+                    //Console.WriteLine("⚠️ Mentee or ApplicationUser not found");
+                    return BadRequest();
+                }
 
-                //if (availability.Mentor.ApplicationUser == null)
-                //{
-                //    //Console.WriteLine("⚠️ Mentor ApplicationUser not found");
-                //    return BadRequest();
-                //}
+                if (availability.Mentor.ApplicationUser == null)
+                {
+                    //Console.WriteLine("⚠️ Mentor ApplicationUser not found");
+                    return BadRequest();
+                }
 
-                //var menteeEmail = mentee.ApplicationUser.Email;
-                //var mentorEmail = availability.Mentor.ApplicationUser.Email;
+                var menteeEmail = mentee.ApplicationUser.Email;
+                var mentorEmail = availability.Mentor.ApplicationUser.Email;
 
-                //string menteeSubject = "Booking Confirmed!";
-                //string body = $@"
-                //    Hello {booking.Mentee.Name},
+                string menteeSubject = "Booking Confirmed!";
+                string body = $@"
+                    Hello {booking.Mentee.Name},
 
-                //    Your session with {availability.Mentor.Name} is confirmed.
-                //    Start Time: {booking.StartTime:yyyy-MM-dd HH:mm}
-                //    End Time: {booking.EndTime:yyyy-MM-dd HH:mm}
-                //    Meeting URL: {booking.MeetingUrl}
-                //    Amount Paid: ${booking.Amount}
+                    Your session with {availability.Mentor.Name} is confirmed.
+                    Start Time: {booking.StartTime:yyyy-MM-dd HH:mm}
+                    End Time: {booking.EndTime:yyyy-MM-dd HH:mm}
+                    Meeting URL: {booking.MeetingUrl}
+                    Amount Paid: ${booking.Amount}
 
-                //    Thank you for using our platform!
-                //";
+                    Thank you for using our platform!
+                ";
 
-                // await emailSender.SendEmailAsync(menteeEmail.Trim(), menteeSubject, body);
+                 await emailSender.SendEmailAsync(menteeEmail.Trim(), menteeSubject, body);
 
-                //string mentorSubject = "New Session Scheduled!";
-                //string mentorBody = $@"
-                //    Hello {availability.Mentor.Name},
+                string mentorSubject = "New Session Scheduled!";
+                string mentorBody = $@"
+                    Hello {availability.Mentor.Name},
 
-                //    You have a new confirmed session with {booking.Mentee.Name}.
-                //    Start Time: {booking.StartTime:yyyy-MM-dd HH:mm}
-                //    End Time: {booking.EndTime:yyyy-MM-dd HH:mm}
-                //    Meeting URL: {booking.MeetingUrl}
-                //    Amount Received: ${booking.Amount - 1} (after platform commission)
+                    You have a new confirmed session with {booking.Mentee.Name}.
+                    Start Time: {booking.StartTime:yyyy-MM-dd HH:mm}
+                    End Time: {booking.EndTime:yyyy-MM-dd HH:mm}
+                    Meeting URL: {booking.MeetingUrl}
+                    Amount Received: ${booking.Amount - 1} (after platform commission)
 
-                //    Thank you!
-                //";
+                    Thank you!
+                ";
 
-                //await emailSender.SendEmailAsync(mentorEmail.Trim(), mentorSubject, mentorBody);
+                await emailSender.SendEmailAsync(mentorEmail.Trim(), mentorSubject, mentorBody);
 
 
             }
