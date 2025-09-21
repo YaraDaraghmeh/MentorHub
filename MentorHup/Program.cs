@@ -4,7 +4,6 @@ using MentorHup.Exceptions;
 using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
 using MentorHup.Infrastructure.Hubs;
-
 using MentorHup.Infrastructure.Seed;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -25,8 +24,8 @@ builder.Services.AddCors(options =>
     {
         builder.WithOrigins("http://localhost:5175") // frontend HTTP „Õœœ
                       .AllowAnyMethod()
-                      .AllowAnyHeader();
-        // .AllowCredentials() „⁄ÿ· ·√‰Â frontend HTTP + backend HTTPS
+                      .AllowAnyHeader()
+                      .AllowCredentials(); // »Ì‰ «·›—Ê‰  Ê«·»«ﬂ http/https ›Ì Õ«· ⁄œ„  Ê«›ﬁ ‰Ê⁄ «· cookies / JWT Ì”„Õ »≈—”«· 
     });
 });
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -57,8 +56,8 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 
 builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-
-builder.Services.ConfigureJwt(builder.Configuration);
+builder.Services.ConfigureGoogleAuth(builder.Configuration);
+// builder.Services.ConfigureJwt(builder.Configuration);
 builder.Services.ConfigureCors();
 builder.Services.ConfigureSomeServices();
 builder.Services.AddSignalR();

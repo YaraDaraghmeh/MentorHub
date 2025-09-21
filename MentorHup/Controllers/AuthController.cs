@@ -2,10 +2,15 @@
 using MentorHup.APPLICATION.DTOs.Token;
 using MentorHup.APPLICATION.DTOs.Unified_Login;
 using MentorHup.APPLICATION.Service.AuthServices;
+using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MentorHup.Exceptions;
 
 namespace MentorHup.Controllers
 {
@@ -14,10 +19,16 @@ namespace MentorHup.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly SignInManager<ApplicationUser> signInManager;
+        private readonly LinkGenerator linkGenerator;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService,
+                              SignInManager<ApplicationUser> signInManager,
+                              LinkGenerator linkGenerator)
         {
             _authService = authService;
+            this.signInManager = signInManager;
+            this.linkGenerator = linkGenerator;
         }
 
         [HttpGet("confirm-email")]
@@ -42,6 +53,61 @@ namespace MentorHup.Controllers
                 return Unauthorized(new { message = "Invalid email or password" });
 
             return Ok(result);
+        }
+
+        // Endpoint to start Google login process
+        [HttpGet("login/google")]
+        public async Task<IActionResult> LoginWithGoogle([FromQuery] string returnUrl = "/")
+        {
+            // Generate the URL where Google will redirect after login (callback)
+            var redirectUrl = linkGenerator.GetPathByAction(HttpContext,
+                               action: nameof(GoogleLoginCallback), // the callback action
+                               controller: "Auth",
+                               values: new {returnUrl}); // pass returnUrl for redirect after login
+
+            // Configure external authentication properties for Google
+            var properties = signInManager.ConfigureExternalAuthenticationProperties("Google", redirectUrl);
+            // Challenge the user with Google login
+            // This sends the user to Google's login page
+            return Challenge(properties, new[] { "Google" });
+        }
+
+        // Callback endpoint that Google redirects to after login
+        [HttpGet("login/google/callback")]
+        public async Task<IActionResult> GoogleLoginCallback([FromQuery] string returnUrl = "/")
+        {
+            try
+            {
+                // Get the authentication result from Google
+                var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
+
+                if (!result.Succeeded)
+                    return Unauthorized(new { message = "Google authentication failed" });
+
+                // Pass the Google claims to your AuthService to handle JWT creation
+                var response = await _authService.LoginWithGoogleAsync(result.Principal);
+
+                if (response == null)
+                    return Unauthorized(new { message = "Failed to login with Google" });
+
+                // Return the JWT and Refresh Token as JSON
+                return Ok(response);
+            }
+            catch(ExternalLoginProviderException ex)
+            {
+                // Handle custom exceptions from AuthService
+                return BadRequest(new
+                {
+                    Provider = ex.Provider,
+                    Message = ex.Message
+                });
+            }
+            catch (Exception ex)
+            {
+                // Handle any unexpected exceptions
+                return StatusCode(500, new { Message = "Internal server error", Details = ex.Message });
+            }
+
         }
 
 

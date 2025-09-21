@@ -2,11 +2,13 @@
 using MentorHup.APPLICATION.DTOs.Token;
 using MentorHup.APPLICATION.DTOs.Unified_Login;
 using MentorHup.Domain.Entities;
+using MentorHup.Exceptions;
 using MentorHup.Infrastructure.Context;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 using System.Text;
 
 namespace MentorHup.APPLICATION.Service.AuthServices
@@ -131,6 +133,92 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Expires = DateTime.UtcNow.AddHours(3)
                 };
             }
+
+            public async Task<LoginResponse?> LoginWithGoogleAsync(ClaimsPrincipal principal)
+            {
+                // Check if the ClaimsPrincipal from Google is null
+                if (principal is null)
+                    throw new ExternalLoginProviderException("Google", "ClaimsPrincipal is null!!");
+
+                // 1. Get email and unique Google ID from claims
+                var email = principal.FindFirstValue(ClaimTypes.Email);
+                var googleId = principal.FindFirstValue(ClaimTypes.NameIdentifier); // unique Google ID (from Google)
+
+                if (email == null)
+                    throw new ExternalLoginProviderException("Google", "Email is null!!");
+
+                if(googleId is null)
+                    throw new ExternalLoginProviderException("Google", "User Id is null!!");
+
+                // 2. Search for existing user in database by email
+                var user = await _userManager.Users
+                    .Include(u => u.Mentee)
+                    .Include(u => u.Mentor)
+                    .FirstOrDefaultAsync(u => u.Email == email);
+
+                if (user == null)
+                {
+                    // If user does not exist, create a new one
+                    user = new ApplicationUser
+                    {
+                        UserName = email,
+                        Email = email,
+                        EmailConfirmed = true,
+                        IsDeleted = false, // by default (extra line)
+                        CreatedAt = DateTime.UtcNow,
+                    };
+
+                    var createResult = await _userManager.CreateAsync(user);
+                    if (!createResult.Succeeded)
+                        throw new ExternalLoginProviderException("Google", $"Unable to create user: {string.Join(", ", createResult.Errors.Select(err => err.Description))}");
+                }
+
+                // 3. Check if Google login is already linked
+                var logins = await _userManager.GetLoginsAsync(user);
+                var googleLogin = logins.FirstOrDefault(l => l.LoginProvider == "Google" && l.ProviderKey == googleId);
+
+                if (googleLogin == null)
+                {
+                    // Link Google account with the user
+                    var info = new UserLoginInfo("Google", googleId, "Google");
+                    var addLoginResult = await _userManager.AddLoginAsync(user, info); // link with Identity (AspNetUserLogins table)
+
+                    if (!addLoginResult.Succeeded)
+                        throw new ExternalLoginProviderException("Google", $"Unable to login the user: {string.Join(", ", addLoginResult.Errors.Select(err => err.Description))}");
+                }
+
+                // 4. Create JWT access token
+                var accessToken = await _tokenService.CreateTokenAsync(user);
+
+                // 5. Create refresh token and save in database
+                var refreshToken = new RefreshToken
+                {
+                    Token = Guid.NewGuid().ToString(),
+                    Expires = DateTime.UtcNow.AddDays(7),
+                    UserId = user.Id,
+                    IsRevoked = false
+                };
+
+                await _context.RefreshTokens.AddAsync(refreshToken);
+                await _context.SaveChangesAsync();
+
+                // 6. Get user roles
+                var roles = await _userManager.GetRolesAsync(user);
+
+                // 7. Return response with JWT, refresh token, and user info
+                return new LoginResponse
+                {
+                    IsSuccess = true,
+                    UserId = user.Id,
+                    Email = user.Email!,
+                    UserName = user.UserName,
+                    Roles = roles.ToList(),
+                    AccessToken = accessToken,
+                    RefreshToken = refreshToken.Token,
+                    Expires = DateTime.UtcNow.AddHours(3)
+                };
+            }
+
 
 
 
