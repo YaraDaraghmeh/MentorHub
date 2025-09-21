@@ -5,8 +5,6 @@ interface sendeProps {
 }
 
 const ToSend = ({ onClick }: sendeProps) => {
-  const token = localStorage.getItem("accessToken");
-
   return (
     <>
       <TbMessageCircleFilled className="cursor-pointer" onClick={onClick} />

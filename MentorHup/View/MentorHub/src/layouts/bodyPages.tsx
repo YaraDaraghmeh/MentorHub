@@ -8,24 +8,25 @@ import { FaTools } from "react-icons/fa";
 import { useAuth } from "../Context/AuthContext";
 import ModalSkills from "../components/Modal/ModalSkills";
 import TableSkills from "../components/Tables/tableSkills";
+import { FaFacebookMessenger } from "react-icons/fa";
 
 type UserRole = "Admin" | "Mentor" | "Mentee";
 
 const BodySystem = () => {
   const { isDark, toggle } = useTheme();
-  const { roles, email, userId, isAuthenticated } = useAuth(); // أضفت isAuthenticated
+  const { roles, email, userId, isAuthenticated, userName } = useAuth(); // أضفت isAuthenticated
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
-  // إضافة useEffect للتأكد من أن البيانات محدثة
   useEffect(() => {
     console.log("BodySystem - Auth data updated:", {
       isAuthenticated,
       roles,
       email,
       userId,
+      userName,
     });
-  }, [isAuthenticated, roles, email, userId]);
+  }, [isAuthenticated, roles, email, userId, userName]);
 
   // إذا مش مسجل دخول، ما تعرض الـ component
   if (!isAuthenticated) {
@@ -43,7 +44,7 @@ const BodySystem = () => {
         profile={{
           email,
           userId,
-          name: email?.split("@")[0] || null, // استخراج اسم من الإيميل كـ fallback
+          userName: userName,
         }}
         role={roles as UserRole}
         expended={isSidebarOpen}
@@ -75,7 +76,7 @@ const BodySystem = () => {
                       : "text-[var(--secondary-dark)]"
                   }`}
                 >
-                  {email || "User"}
+                  {userName || "User"}
                 </span>
                 <span>, Welcome Back!</span>
               </div>
@@ -100,13 +101,28 @@ const BodySystem = () => {
 
             {/* Icons Container */}
             <div className="flex items-center gap-2 justify-center sm:justify-end flex-shrink-0">
+              {/* Notifiaction Messages */}
+              <button
+                className={`transition-colors duration-200 ${
+                  isDark
+                    ? "hover:text-gray-100 text-gray-300"
+                    : "hover:text-gray-800 text-gray-600"
+                }`}
+              >
+                <FaFacebookMessenger className="w-6 h-6" />
+              </button>
+
+              <div className="flex flex-col">
+                <div></div>
+              </div>
+
               {/* Theme Toggle */}
               <button
                 onClick={toggle}
                 className={`p-2 rounded-lg transition-colors duration-200 ${
                   isDark
-                    ? "hover:bg-gray-700 text-yellow-300"
-                    : "hover:bg-gray-100 text-gray-600"
+                    ? "hover:text-yellow-100 text-yellow-300"
+                    : "hover:text-gray-800 text-gray-600"
                 }`}
                 aria-label="Toggle theme"
               >

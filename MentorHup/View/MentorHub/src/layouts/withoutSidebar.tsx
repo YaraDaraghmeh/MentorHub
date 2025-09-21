@@ -11,7 +11,7 @@ type UserRole = "Admin" | "Mentor" | "Mentee";
 
 const WithoutHeader = () => {
   const { isDark } = useTheme();
-  const { roles, email, userId, isAuthenticated } = useAuth(); // أضفت isAuthenticated
+  const { roles, email, userId, isAuthenticated } = useAuth();
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
 
@@ -39,7 +39,7 @@ const WithoutHeader = () => {
         profile={{
           email,
           userId,
-          name: email?.split("@")[0] || null,
+          userName: email?.split("@")[0] || null,
         }}
         role={roles as UserRole}
         expended={isSidebarOpen}

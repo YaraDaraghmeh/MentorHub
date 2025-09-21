@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import type { Mentor } from "../../types/types";
+
 import {
   X,
   Star,
@@ -12,16 +14,7 @@ import {
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  mentor: {
-    id: string;
-    name: string;
-    title: string;
-    company: string;
-    avatar: string;
-    rating: number;
-    location: string;
-    hourlyRate: number;
-  };
+  mentor: Mentor;
   isDark: boolean;
 }
 
@@ -32,7 +25,7 @@ interface MockPaymentIntent {
 }
 
 interface BookingData {
-  mentorId: string;
+  id: number;
   date: string;
   time: string;
   sessionType: string;
@@ -126,39 +119,39 @@ const BookingModal = ({
     {
       value: "interview-prep",
       label: "Interview Preparation",
-      price: mentor.hourlyRate,
+      price: mentor.price,
       disabled: true, // Disabled
     },
     {
       value: "resume-review",
       label: "Resume Review",
-      price: mentor.hourlyRate * 0.8,
+      price: mentor.price * 0.8,
       disabled: true, // Disabled
     },
     {
       value: "career-guidance",
       label: "Career Guidance",
-      price: mentor.hourlyRate * 0.9,
+      price: mentor.price * 0.9,
       disabled: true, // Disabled
     },
     {
       value: "mock-interview",
       label: "Mock Interview",
-      price: mentor.hourlyRate * 1.1,
+      price: mentor.price * 1.1,
       disabled: false, // Only this one is enabled
     },
   ];
 
-  const availableTimes = [
-    "09:00 AM",
-    "10:00 AM",
-    "11:00 AM",
-    "01:00 PM",
-    "02:00 PM",
-    "03:00 PM",
-    "04:00 PM",
-    "05:00 PM",
-  ];
+  // const availableTimes = [
+  //   "09:00 AM",
+  //   "10:00 AM",
+  //   "11:00 AM",
+  //   "01:00 PM",
+  //   "02:00 PM",
+  //   "03:00 PM",
+  //   "04:00 PM",
+  //   "05:00 PM",
+  // ];
 
   const getNextWeekDates = () => {
     const dates = [];
@@ -181,7 +174,7 @@ const BookingModal = ({
   const calculateTotal = () => {
     const sessionPrice =
       sessionTypes.find((type) => type.value === sessionType)?.price ||
-      mentor.hourlyRate;
+      mentor.price;
     const durationMultiplier = parseInt(duration) / 60;
     return Math.round(sessionPrice * durationMultiplier);
   };
@@ -213,7 +206,7 @@ const BookingModal = ({
   };
 
   const bookingData: BookingData = {
-    mentorId: mentor.id,
+    id: mentor.id,
     date: selectedDate,
     time: selectedTime,
     sessionType,
@@ -271,7 +264,7 @@ const BookingModal = ({
                         : "bg-blue-100 text-blue-600"
                     }`}
                   >
-                    {mentor.avatar}
+                    {mentor.imageLink}
                   </div>
                   <div className="flex-1">
                     <h3 className="text-xl font-semibold">{mentor.name}</h3>
@@ -280,20 +273,16 @@ const BookingModal = ({
                         isDark ? "text-gray-300" : "text-gray-600"
                       }`}
                     >
-                      {mentor.title} at {mentor.company}
+                      {mentor.field} at {mentor.companyName}
                     </p>
                     <div className="flex items-center space-x-4 mt-2 text-sm">
                       <div className="flex items-center">
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>{mentor.rating}</span>
-                      </div>
-                      <div className="flex items-center">
-                        <MapPin className="w-4 h-4 mr-1" />
-                        <span>{mentor.location}</span>
+                        <span>{mentor.reviewCount}</span>
                       </div>
                       <div className="flex items-center">
                         <DollarSign className="w-4 h-4 mr-1" />
-                        <span>${mentor.hourlyRate}/hour</span>
+                        <span>${mentor.price}/hour</span>
                       </div>
                     </div>
                   </div>
@@ -416,7 +405,7 @@ const BookingModal = ({
                     <label className="block text-sm font-medium mb-3">
                       Select Time
                     </label>
-                    <div className="grid grid-cols-2 gap-2">
+                    {/* <div className="grid grid-cols-2 gap-2">
                       {availableTimes.map((time) => (
                         <button
                           key={time}
@@ -434,7 +423,7 @@ const BookingModal = ({
                           {time}
                         </button>
                       ))}
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               </div>
