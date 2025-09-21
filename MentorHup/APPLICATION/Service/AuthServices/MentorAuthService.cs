@@ -176,7 +176,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Skills = skills,
                     Field = mentor.Field,
                     // Availabilities = availabilities,
-                    Expires = DateTime.UtcNow.AddHours(3)
+                    Expires = DateTime.Now.AddHours(3)
                 }
             };
         }

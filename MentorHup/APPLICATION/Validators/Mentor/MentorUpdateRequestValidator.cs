@@ -35,11 +35,11 @@ namespace MentorHup.APPLICATION.Validators.Mentor
                         .WithMessage("StartTime must be before EndTime");
 
                     a.RuleFor(av => av.StartTime)
-                        .Must(start => start > DateTime.UtcNow)
+                        .Must(start => start > DateTime.Now)
                         .WithMessage("StartTime cannot be in the past.");
 
                     a.RuleFor(av => av.EndTime)
-                        .Must(end => end > DateTime.UtcNow)
+                        .Must(end => end > DateTime.Now)
                         .WithMessage("EndTime cannot be in the past.");
                 });
 

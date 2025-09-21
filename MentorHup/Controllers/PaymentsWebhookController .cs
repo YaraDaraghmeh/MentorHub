@@ -83,7 +83,7 @@ public class PaymentsWebhookController : ControllerBase
                 Amount = availability.Mentor.Price,
                 IsConfirmed = true,
                 Status = BookingStatus.Confirmed,
-                MeetingUrl = $"https://meet.jit.si/mentohup-session-{menteeId}-{mentorAvailabilityId}-{DateTime.UtcNow.Ticks}"
+                MeetingUrl = $"https://meet.jit.si/mentohup-session-{menteeId}-{mentorAvailabilityId}-{DateTime.Now.Ticks}"
             };
 
             booking.Payment = new Payment

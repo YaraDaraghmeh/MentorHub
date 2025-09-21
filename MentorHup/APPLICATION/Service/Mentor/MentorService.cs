@@ -61,7 +61,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                     CVLink = m.CVUrl,
                     Skills = m.MentorSkills.Select(ms => ms.Skill.SkillName).ToList(),
                     Availabilities = m.Availabilities
-                    .Where(a => a.StartTime > DateTime.UtcNow) // give all mentors ignoring IsBooked or not
+                    .Where(a => a.StartTime > DateTime.Now) // give all mentors ignoring IsBooked or not
                     .Select(a => new MentorAvailabilityResponse
                     {
                         MentorAvailabilityId = a.Id,
@@ -312,7 +312,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                 .SumAsync(b => (decimal?)b.Amount) ?? 0;
 
             var upcomingBookings = await context.Bookings
-                .CountAsync(b => b.Mentor.ApplicationUserId == mentorId && b.StartTime > DateTime.UtcNow);
+                .CountAsync(b => b.Mentor.ApplicationUserId == mentorId && b.StartTime > DateTime.Now);
 
             return new MentorDashboardDto
             {

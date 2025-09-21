@@ -16,7 +16,7 @@ public class Booking
 
     public decimal Amount { get; set; } 
     public bool IsConfirmed { get; set; } = false; 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
     public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
     public string? MeetingUrl { get; set; }

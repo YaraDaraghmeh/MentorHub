@@ -13,7 +13,7 @@ public class Payment
 
     // Pending, Succeeded, Failed
     public PaymentStatus Status { get; set; } = PaymentStatus.Pending; 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
     public DateTime? RefundedAt { get; set; }
 
 }

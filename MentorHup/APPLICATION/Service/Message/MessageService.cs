@@ -17,7 +17,7 @@ public class MessageService(ApplicationDbContext _context , INotificationService
             Content = dto.Content,
             SenderId = senderId,
             ReceiverId = dto.ReceiverId,
-            SentAt = DateTime.UtcNow
+            SentAt = DateTime.Now
         };
         _context.Messages.Add(message);
         await _context.SaveChangesAsync();
