@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MentorHup.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250922043155_Initial")]
-    partial class Initial
+    [Migration("20250918231202_add_CompanyName_property_to_Mentor")]
+    partial class add_CompanyName_property_to_Mentor
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -66,7 +66,7 @@ namespace MentorHup.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDATE()");
+                        .HasDefaultValueSql("GETUTCDATE()");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -217,9 +217,6 @@ namespace MentorHup.Migrations
                     b.Property<string>("ApplicationUserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("CVUrl")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("CompanyName")
                         .IsRequired()
