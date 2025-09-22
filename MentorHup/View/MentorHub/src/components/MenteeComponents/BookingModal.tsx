@@ -1,20 +1,23 @@
-import React, { useState } from "react";
-import type { Mentor } from "../../types/types";
+import { useState, useMemo, useCallback, memo } from "react";
+import type { Availability, Mentor } from "../../types/types";
+import defaultprofileimage from "../../assets/avatar-profile.png";
+import { FormattedDateComponent, formatDateTimeUtils } from "../common/FormattedDateComponent";
 
 import {
   X,
   Star,
-  MapPin,
   DollarSign,
   CheckCircle,
   AlertCircle,
+  Clock,
+  Calendar,
 } from "lucide-react";
 
 // Type definitions
 interface BookingModalProps {
   isOpen: boolean;
   onClose: () => void;
-  mentor: Mentor;
+  mentor: Mentor | null;
   isDark: boolean;
 }
 
@@ -46,29 +49,70 @@ const PaymentForm = ({
   onSuccess,
   onError,
   onBack,
+  availabilityId,
 }: {
   bookingData: BookingData;
   isDark: boolean;
   onSuccess: (paymentIntent: MockPaymentIntent) => void;
   onError: (error: string) => void;
   onBack: () => void;
+  availabilityId: number | null;
 }) => {
-  const handleMockPayment = () => {
-    // Simulate payment processing
-    setTimeout(() => {
-      const success = Math.random() > 0.2; // 80% success rate for demo
-      if (success) {
-        onSuccess({
-          id: `pi_${Date.now()}`,
-          amount: bookingData.total * 100, // Stripe uses cents
-          status: "succeeded",
-        });
-      } else {
-        onError(
-          "Your card was declined. Please try a different payment method."
-        );
+  const [isProcessing, setIsProcessing] = useState(false);
+
+  const handlePayment = async () => {
+    if (!availabilityId) {
+      onError("No availability slot selected. Please select a time slot.");
+      return;
+    }
+
+    setIsProcessing(true);
+    
+    try {
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        onError("Authentication required. Please log in again.");
+        return;
       }
-    }, 2000);
+
+      const response = await fetch("https://mentor-hub.runasp.net/api/bookings/checkout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          mentorAvailabilityId: availabilityId
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || `HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      console.log("Checkout response:", result);
+
+      // Check if we got a Stripe session URL
+      if (result.sessionUrl) {
+        // Redirect to Stripe checkout
+        window.location.href = result.sessionUrl;
+      } else {
+        // Mock success for development/testing
+        const mockPaymentIntent: MockPaymentIntent = {
+          id: result.sessionId || `pi_mock_${Date.now()}`,
+          amount: bookingData.total * 100, // Convert to cents
+          status: "succeeded",
+        };
+        onSuccess(mockPaymentIntent);
+      }
+    } catch (error: any) {
+      console.error("Payment processing error:", error);
+      onError(error.message || "Payment processing failed. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
   };
 
   return (
@@ -85,10 +129,22 @@ const PaymentForm = ({
           Back
         </button>
         <button
-          onClick={handleMockPayment}
-          className="flex-1 py-3 px-6 bg-[#27b467] hover:bg-[#1e874e] text-white rounded-lg font-semibold transition-colors"
+          onClick={handlePayment}
+          disabled={isProcessing}
+          className={`flex-1 py-3 px-6 rounded-lg font-semibold transition-colors ${
+            isProcessing
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#27b467] hover:bg-[#1e874e]"
+          } text-white`}
         >
-          Process Payment (${bookingData.total})
+          {isProcessing ? (
+            <div className="flex items-center justify-center">
+              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+              Processing...
+            </div>
+          ) : (
+            `Process Payment ($${bookingData.total})`
+          )}
         </button>
       </div>
     </div>
@@ -101,6 +157,36 @@ const BookingModal = ({
   mentor,
   isDark,
 }: BookingModalProps) => {
+  // CRITICAL: All early returns must be BEFORE any hooks (including useState)
+  if (!isOpen || !mentor) return null;
+
+  // Validate mentor object structure - only check for critical fields
+  if (!mentor.id || !mentor.name) {
+    console.error('Invalid mentor object - missing id or name:', mentor);
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+        <div className={`relative w-[400px] p-6 rounded-2xl shadow-2xl ${
+          isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        }`}>
+          <div className="text-center">
+            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Invalid mentor data</h3>
+            <p className={`mb-4 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
+              The mentor information is incomplete. Please try again.
+            </p>
+            <button
+              onClick={onClose}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Now all hooks can be called safely - they will always be called in the same order
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
   const [sessionType, setSessionType] = useState("mock-interview"); // Default to mock-interview
@@ -109,38 +195,52 @@ const BookingModal = ({
   const [step, setStep] = useState(1); // 1: form, 2: payment, 3: success, 4: error
   const [paymentError, setPaymentError] = useState("");
   const [paymentIntentId, setPaymentIntentId] = useState("");
+  const [availabilityId, setAvailabilityId] = useState<number | null>(null);
 
   // Get current user from system
   const currentUser = mockUserData;
 
-  if (!isOpen || !mentor) return null;
+  // Memoize sessionTypes to prevent recreation on every render
+  const sessionTypes = useMemo(() => {
+    if (!mentor) return [];
+    
+    const basePrice = typeof mentor.price === 'number' ? mentor.price : 50; // fallback price
+    
+    return [
+      {
+        value: "interview-prep",
+        label: "Interview Preparation",
+        price: basePrice,
+        disabled: true, // Disabled
+      },
+      {
+        value: "resume-review",
+        label: "Resume Review",
+        price: Math.round(basePrice * 0.8),
+        disabled: true, // Disabled
+      },
+      {
+        value: "career-guidance",
+        label: "Career Guidance",
+        price: Math.round(basePrice * 0.9),
+        disabled: true, // Disabled
+      },
+      {
+        value: "mock-interview",
+        label: "Mock Interview",
+        price: Math.round(basePrice * 1.1),
+        disabled: false, // Only this one is enabled
+      },
+    ];
+  }, [mentor?.price]);
 
-  const sessionTypes = [
-    {
-      value: "interview-prep",
-      label: "Interview Preparation",
-      price: mentor.price,
-      disabled: true, // Disabled
-    },
-    {
-      value: "resume-review",
-      label: "Resume Review",
-      price: mentor.price * 0.8,
-      disabled: true, // Disabled
-    },
-    {
-      value: "career-guidance",
-      label: "Career Guidance",
-      price: mentor.price * 0.9,
-      disabled: true, // Disabled
-    },
-    {
-      value: "mock-interview",
-      label: "Mock Interview",
-      price: mentor.price * 1.1,
-      disabled: false, // Only this one is enabled
-    },
-  ];
+  // Add error boundary to prevent white screen
+  // Debug logging
+  console.log('BookingModal render - mentor:', mentor);
+  console.log('BookingModal render - isOpen:', isOpen);
+  console.log('BookingModal render - mentor availabilities:', mentor?.availabilities);
+  
+  try {
 
   // const availableTimes = [
   //   "09:00 AM",
@@ -153,31 +253,55 @@ const BookingModal = ({
   //   "05:00 PM",
   // ];
 
-  const getNextWeekDates = () => {
-    const dates = [];
-    const today = new Date();
-    for (let i = 1; i <= 7; i++) {
-      const date = new Date(today);
-      date.setDate(today.getDate() + i);
-      dates.push({
-        value: date.toISOString().split("T")[0],
-        label: date.toLocaleDateString("en-US", {
-          weekday: "short",
-          month: "short",
-          day: "numeric",
-        }),
-      });
-    }
-    return dates;
-  };
 
-  const calculateTotal = () => {
-    const sessionPrice =
-      sessionTypes.find((type) => type.value === sessionType)?.price ||
-      mentor.price;
-    const durationMultiplier = parseInt(duration) / 60;
-    return Math.round(sessionPrice * durationMultiplier);
-  };
+
+ 
+
+  // Memoize calculateTotal to prevent recalculation on every render
+  const calculateTotal = useCallback(() => {
+    try {
+      if (!mentor) return 0;
+      
+      const sessionPrice =
+        sessionTypes.find((type) => type.value === sessionType)?.price ||
+        mentor.price ||
+        0;
+      
+      // Get duration from selected availability slot or fallback to duration state
+      const selectedSlot = mentor.availabilities?.find(slot => slot.startTime === selectedDate);
+      const actualDuration = selectedSlot?.durationInMinutes || parseInt(duration) || 60;
+      const durationMultiplier = actualDuration / 60;
+      
+      if (isNaN(durationMultiplier) || durationMultiplier <= 0) {
+        return 0;
+      }
+      
+      return Math.round(sessionPrice * durationMultiplier);
+    } catch (error) {
+      console.error('Error calculating total:', error);
+      return 0;
+    }
+  }, [mentor, sessionTypes, sessionType, selectedDate, duration]);
+
+  // Memoize available slots to prevent filtering on every render
+  const availableSlots = useMemo(() => {
+    if (!mentor?.availabilities || !Array.isArray(mentor.availabilities)) return [];
+    return mentor.availabilities.filter(slot => slot && !slot.isBooked);
+  }, [mentor?.availabilities]);
+
+  // Memoize slot selection handler
+  const handleSlotSelection = useCallback((slot: any) => {
+    try {
+      console.log("Selected slot:", slot.mentorAvailabilityId);
+      setAvailabilityId(slot.mentorAvailabilityId);
+      setSelectedDate(slot.startTime);
+      if (slot.startTime) {
+        setSelectedTime(formatDateTimeUtils.getTimeOnly(slot.startTime, true));
+      }
+    } catch (error) {
+      console.error('Error in handleSlotSelection:', error);
+    }
+  }, []);
 
   const handleBooking = () => {
     setStep(2);
@@ -206,7 +330,7 @@ const BookingModal = ({
   };
 
   const bookingData: BookingData = {
-    id: mentor.id,
+    id: mentor?.id || 0,
     date: selectedDate,
     time: selectedTime,
     sessionType,
@@ -214,11 +338,11 @@ const BookingModal = ({
     total: calculateTotal(),
     notes: additionalNotes,
   };
-
   return (
+  
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
       <div
-        className={`relative w-full max-w-2xl max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${
+        className={`relative w-[800px]  max-h-[90vh] overflow-y-auto rounded-2xl shadow-2xl ${
           isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
         }`}
       >
@@ -258,31 +382,31 @@ const BookingModal = ({
               >
                 <div className="flex items-center space-x-4">
                   <div
-                    className={`w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold ${
-                      isDark
-                        ? "bg-blue-600 text-white"
-                        : "bg-blue-100 text-blue-600"
-                    }`}
+                    className={`w-16 h-16 rounded-full flex items-center justify-center text-xl font-bold `}
                   >
-                    {mentor.imageLink}
+                     <img
+                            src={mentor?.imageLink || defaultprofileimage}
+                            alt={mentor?.name || "Mentor"}
+                            className="w-12 h-12 rounded-full object-cover"
+                          />
                   </div>
                   <div className="flex-1">
-                    <h3 className="text-xl font-semibold">{mentor.name}</h3>
+                    <h3 className="text-xl font-semibold">{mentor?.name || "Unknown Mentor"}</h3>
                     <p
                       className={`${
                         isDark ? "text-gray-300" : "text-gray-600"
                       }`}
                     >
-                      {mentor.field} at {mentor.companyName}
+                      {mentor?.field || "Unknown Field"} at {mentor?.companyName || "Unknown Company"}
                     </p>
                     <div className="flex items-center space-x-4 mt-2 text-sm">
                       <div className="flex items-center">
                         <Star className="w-4 h-4 fill-yellow-400 text-yellow-400 mr-1" />
-                        <span>{mentor.reviewCount}</span>
+                        <span>{typeof mentor?.reviewCount === 'number' ? mentor.reviewCount : 0}</span>
                       </div>
                       <div className="flex items-center">
                         <DollarSign className="w-4 h-4 mr-1" />
-                        <span>${mentor.price}/hour</span>
+                        <span>${typeof mentor?.price === 'number' ? mentor.price : 0}/hour</span>
                       </div>
                     </div>
                   </div>
@@ -350,8 +474,8 @@ const BookingModal = ({
                     </div>
                   </div>
 
-                  {/* Duration */}
-                  {/* <div>
+                  {/* Duration
+                  <div>
                     <label className="block text-sm font-medium mb-3">
                       Duration
                     </label>
@@ -360,74 +484,136 @@ const BookingModal = ({
                       onChange={(e) => setDuration(e.target.value)}
                       className={`w-full p-3 rounded-lg border ${
                         isDark
-                          ? "bg-gray-700 border-gray-600 text-black"
+                          ? "bg-gray-700 border-gray-600 text-white"
                           : "bg-white border-gray-200"
                       }`}
                     >
-                      <option value="15">15 minutes</option>
                       <option value="30">30 minutes</option>
                       <option value="60">1 hour</option>
                       <option value="90">1.5 hours</option>
+                      <option value="120">2 hours</option>
                     </select>
                   </div>
-                </div> */}
+                */}
 
-                  {/* Right Column */}
-                  <div className="space-y-6">
-                    {/* Date Selection */}
+               
+                </div>
+ {/* Right Column */}
+                <div className="space-y-6">
+                    {/* Available Time Slots */}
                     <div>
                       <label className="block text-sm font-medium mb-3">
-                        Select Date
+                        Available Time Slots
                       </label>
-                      <div className="grid grid-cols-2 gap-2">
-                        {getNextWeekDates().map((date) => (
-                          <button
-                            key={date.value}
-                            onClick={() => setSelectedDate(date.value)}
-                            className={`p-3 rounded-lg text-sm font-medium transition-colors ${
-                              selectedDate === date.value
-                                ? isDark
-                                  ? "bg-[#27b467] text-white"
-                                  : "bg-[#27b467] text-white"
-                                : isDark
-                                ? "bg-gray-700 hover:bg-gray-600"
-                                : "bg-gray-100 hover:bg-gray-200"
-                            }`}
-                          >
-                            {date.label}
-                          </button>
-                        ))}
+                      <div className="space-y-2 max-h-64 overflow-y-auto">
+                        {availableSlots.length > 0 ? (
+                          availableSlots
+                            .map((slot, index) => {
+                              const slotId = `${slot.mentorAvailabilityId || index}-${slot.startTime}`;
+                              return (
+                                <button
+                                  key={slotId}
+                                  onClick={() => handleSlotSelection(slot)}
+                                  className={`w-full p-3 rounded-lg text-left transition-colors border ${
+                                    selectedDate === slot.startTime
+                                      ? isDark
+                                        ? "bg-[#27b467] text-white border-[#27b467]"
+                                        : "bg-[#27b467] text-white border-[#27b467]"
+                                      : isDark
+                                      ? "bg-gray-700 hover:bg-gray-600 border-gray-600"
+                                      : "bg-gray-50 hover:bg-gray-100 border-gray-200"
+                                  }`}
+                                >
+                                  <div className="flex items-center justify-between">
+                                    <div className="flex items-center space-x-2">
+                                      <Calendar className="h-4 w-4" />
+                                      <div>
+                                        <div className="font-medium">
+                                          {slot.dayOfWeek}
+                                        </div>
+                                        <div className="text-xs opacity-75">
+                                          {slot.startTime ? (
+                                            <FormattedDateComponent 
+                                              isoDateString={slot.startTime}
+                                              showTime={false}
+                                              dateFormat="short"
+                                            />
+                                          ) : (
+                                            <span>Date unavailable</span>
+                                          )}
+                                        </div>
+                                      </div>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                      <Clock className="h-4 w-4" />
+                                      <div className="text-right">
+                                        <div className="font-medium">
+                                          {slot.startTime && slot.endTime ? (
+                                            <>
+                                              <FormattedDateComponent 
+                                                isoDateString={slot.startTime}
+                                                showDate={false}
+                                              />
+                                              {" - "}
+                                              <FormattedDateComponent 
+                                                isoDateString={slot.endTime}
+                                                showDate={false}
+                                              />
+                                            </>
+                                          ) : (
+                                            <span>Time unavailable</span>
+                                          )}
+                                        </div>
+                                        <div className="text-xs opacity-75">
+                                          {slot.durationInMinutes} minutes
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </button>
+                              );
+                            })
+                        ) : (
+                          <div className={`text-center py-8 ${
+                            isDark ? "text-gray-400" : "text-gray-500"
+                          }`}>
+                            <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                            <p>No available time slots</p>
+                            <p className="text-xs mt-1">Please check back later</p>
+                          </div>
+                        )}
                       </div>
                     </div>
 
-                    {/* Time Selection */}
-                    <div>
-                      <label className="block text-sm font-medium mb-3">
-                        Select Time
-                      </label>
-                      {/* <div className="grid grid-cols-2 gap-2">
-                      {availableTimes.map((time) => (
-                        <button
-                          key={time}
-                          onClick={() => setSelectedTime(time)}
-                          className={`p-3 rounded-lg text-sm font-medium transition-colors ${
-                            selectedTime === time
-                              ? isDark
-                                ? "bg-[#27b467] text-white"
-                                : "bg-[#27b467] text-white"
-                              : isDark
-                              ? "bg-gray-700 hover:bg-gray-600"
-                              : "bg-gray-100 hover:bg-gray-200"
-                          }`}
-                        >
-                          {time}
-                        </button>
-                      ))}
-                    </div> */}
-                    </div>
+                    {/* Selected Slot Summary */}
+                    {selectedDate && selectedTime && (
+                      <div className={`p-3 rounded-lg border ${
+                        isDark 
+                          ? "bg-green-900/20 border-green-700 text-green-300" 
+                          : "bg-green-50 border-green-200 text-green-800"
+                      }`}>
+                        <div className="flex items-center space-x-2 mb-1">
+                          <CheckCircle className="h-4 w-4" />
+                          <span className="font-medium text-sm">Selected Time Slot</span>
+                        </div>
+                        <div className="text-sm">
+                          {selectedDate ? (
+                            <FormattedDateComponent 
+                              isoDateString={selectedDate}
+                              dateFormat="long"
+                              className="font-medium"
+                            />
+                          ) : (
+                            <span>No date selected</span>
+                          )}
+                        </div>
+                        <div className="text-xs opacity-75 mt-1">
+                          Duration: {mentor.availabilities?.find(slot => slot.startTime === selectedDate)?.durationInMinutes || duration} minutes
+                        </div>
+                      </div>
+                    )}
+                
                   </div>
-                </div>
-
                 {/* Booking Summary */}
                 <div
                   className={`mt-6 p-4 rounded-xl ${
@@ -435,7 +621,7 @@ const BookingModal = ({
                   }`}
                 >
                   <div className="flex justify-between items-center mb-2">
-                    <span>Session ({duration} minutes)</span>
+                    <span>Session ({mentor.availabilities?.find(slot => slot.startTime === selectedDate)?.durationInMinutes || duration} minutes)</span>
                     <span>${calculateTotal()}</span>
                   </div>
                   <div className="flex justify-between items-center text-lg font-semibold pt-2 border-t border-gray-300">
@@ -450,7 +636,7 @@ const BookingModal = ({
                   disabled={!selectedDate || !selectedTime}
                   className={`w-full mt-6 py-4 px-6 rounded-lg font-semibold text-lg transition-colors ${
                     selectedDate && selectedTime
-                      ? "bg-[#27b467] hover:bg-[#1e874e]text-white"
+                      ? "bg-[#27b467] hover:bg-[#1e874e] text-white"
                       : isDark
                       ? "bg-gray-700 text-gray-500 cursor-not-allowed"
                       : "bg-gray-200 text-gray-400 cursor-not-allowed"
@@ -475,17 +661,23 @@ const BookingModal = ({
                 <div className="space-y-1 text-sm">
                   <div className="flex justify-between">
                     <span>
-                      {mentor.name} -{" "}
-                      {sessionTypes.find((t) => t.value === sessionType)?.label}
+                      {mentor?.name || "Unknown Mentor"} -{" "}
+                      {sessionTypes.find((t) => t.value === sessionType)?.label || "Unknown Session"}
                     </span>
                     <span>${calculateTotal()}</span>
                   </div>
                   <div className="flex justify-between text-xs opacity-75">
                     <span>
-                      {new Date(selectedDate).toLocaleDateString()} at{" "}
-                      {selectedTime}
+                      {selectedDate ? (
+                        <FormattedDateComponent 
+                          isoDateString={selectedDate}
+                          dateFormat="short"
+                        />
+                      ) : (
+                        "No date selected"
+                      )}
                     </span>
-                    <span>{duration} minutes</span>
+                    <span>{mentor?.availabilities?.find(slot => slot.startTime === selectedDate)?.durationInMinutes || duration} minutes</span>
                   </div>
                 </div>
               </div>
@@ -496,6 +688,7 @@ const BookingModal = ({
                 onSuccess={handlePaymentSuccess}
                 onError={handlePaymentError}
                 onBack={() => setStep(1)}
+                availabilityId={availabilityId}
               />
             </>
           )}
@@ -530,19 +723,24 @@ const BookingModal = ({
                   </div>
                   <div className="flex justify-between">
                     <span>Mentor:</span>
-                    <span>{mentor.name}</span>
+                    <span>{mentor?.name || "Unknown Mentor"}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span>Date:</span>
-                    <span>{new Date(selectedDate).toLocaleDateString()}</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Time:</span>
-                    <span>{selectedTime}</span>
+                    <span>Date & Time:</span>
+                    <span>
+                      {selectedDate ? (
+                        <FormattedDateComponent 
+                          isoDateString={selectedDate}
+                          dateFormat="long"
+                        />
+                      ) : (
+                        "No date selected"
+                      )}
+                    </span>
                   </div>
                   <div className="flex justify-between">
                     <span>Duration:</span>
-                    <span>{duration} minutes</span>
+                    <span>{mentor.availabilities?.find(slot => slot.startTime === selectedDate)?.durationInMinutes || duration} minutes</span>
                   </div>
                   <div className="flex justify-between">
                     <span>Type:</span>
@@ -631,6 +829,30 @@ const BookingModal = ({
       </div>
     </div>
   );
+  } catch (error) {
+    console.error('BookingModal render error:', error);
+    return (
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
+        <div className={`relative w-[400px] p-6 rounded-2xl shadow-2xl ${
+          isDark ? "bg-gray-800 text-white" : "bg-white text-gray-900"
+        }`}>
+          <div className="text-center">
+            <AlertCircle className="w-16 h-16 text-red-500 mx-auto mb-4" />
+            <h3 className="text-xl font-semibold mb-2">Something went wrong</h3>
+            <p className={`mb-4 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
+              Unable to load the booking modal. Please try again.
+            </p>
+            <button
+              onClick={onClose}
+              className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 };
 
-export default BookingModal;
+export default memo(BookingModal);
