@@ -1,8 +1,9 @@
 ﻿using MentorHup.APPLICATION.DTOs.DTOs;
 using MentorHup.APPLICATION.Service.Message;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
-using System.Security.Claims;
 
+[Authorize]
 public class ChatHub : Hub
 {
     private readonly IMessageService _messageService;
@@ -14,7 +15,8 @@ public class ChatHub : Hub
 
     public async Task SendMessage(string receiverId, string content)
     {
-        var senderId = Context.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        var senderId = Context.UserIdentifier;
+
         if (senderId == null) throw new Exception("UserIdentifier is null");
 
 
