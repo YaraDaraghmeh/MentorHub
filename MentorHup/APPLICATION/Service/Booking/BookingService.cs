@@ -167,7 +167,9 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
                 EndTime = b.EndTime,
                 Amount = b.Amount,
                 Status = b.Status == BookingStatus.Confirmed ? "Confirmed" : "Cancelled",
-                MeetingUrl = b.MeetingUrl
+                MeetingUrl = b.MeetingUrl,
+                MenteeUserId = role == "Mentee" || role == "Admin" ? b.Mentor.ApplicationUserId : null,
+                MentorUserId = role == "Mentor" || role == "Admin" ? b.Mentee.ApplicationUserId : null
             })
             .ToListAsync();
 

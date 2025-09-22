@@ -12,6 +12,8 @@ namespace MentorHup.APPLICATION.DTOs.Booking
         public decimal Amount { get; set; }
         public string Status { get; set; }
         public string? MeetingUrl { get; set; }
+        public string? MenteeUserId { get; set; }
+        public string? MentorUserId { get; set; }
 
     }
 

@@ -49,6 +49,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                 .Select(m => new MentorOverviewDto
                 {
                     Id = m.Id,
+                    UserId= m.ApplicationUserId,
                     Name = m.Name,
                     Email = m.ApplicationUser.Email,
                     CompanyName = m.CompanyName,
