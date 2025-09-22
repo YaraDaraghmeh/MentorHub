@@ -28,18 +28,7 @@ namespace MentorHup.Extensions
     public static partial class ApplicationService
     {
 
-        public static void ConfigureCors(this IServiceCollection services)
-        {
-            services.AddCors(options =>
-            {
-                options.AddPolicy("CorsPolicy", builder =>
-                {
-                    builder.WithOrigins("http://localhost:5174")
-                               .AllowAnyMethod()
-                               .AllowAnyHeader();
-                });
-            });
-        }
+
         public static void ConfigureSomeServices(this IServiceCollection services)
         {
             services.AddValidatorsFromAssemblies(new[] { Assembly.GetExecutingAssembly() })

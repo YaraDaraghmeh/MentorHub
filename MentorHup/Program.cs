@@ -58,7 +58,6 @@ builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
 builder.Services.ConfigureGoogleAuth(builder.Configuration);
 // builder.Services.ConfigureJwt(builder.Configuration);
-builder.Services.ConfigureCors();
 builder.Services.ConfigureSomeServices();
 builder.Services.AddSignalR();
 builder.Services.Configure<StripeSettings>(builder.Configuration.GetSection("StripeSettings"));
