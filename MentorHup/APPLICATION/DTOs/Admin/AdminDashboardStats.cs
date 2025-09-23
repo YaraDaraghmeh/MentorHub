@@ -22,6 +22,7 @@
         // Payments
         public decimal TotalPayments { get; set; } // assuming you have a Payment table
         public decimal AveragePayment { get; set; }
+        public decimal MyWallet { get; set; }
 
         // Extra
         public int MentorsWithNoBookings { get; set; }

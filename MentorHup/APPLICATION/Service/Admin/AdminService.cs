@@ -380,6 +380,7 @@ namespace MentorHup.APPLICATION.Service.Admin
             // Payments
             var totalPayments = await dbContext.Bookings.Where(b => b.Status == BookingStatus.Confirmed).SumAsync(b => b.Amount);
             var averagePayment = confirmedBookings > 0 ? totalPayments / confirmedBookings : 0;
+            var myWallet = await dbContext.AdminCommissions.SumAsync(adminCommission => adminCommission.Amount);
 
 
             var mentorIdsWithBookings = await dbContext.Bookings.Select(b => b.MentorId).Distinct().ToListAsync();
@@ -403,6 +404,7 @@ namespace MentorHup.APPLICATION.Service.Admin
                 TotalReviews = totalReviews,
                 TotalPayments = totalPayments,
                 AveragePayment = averagePayment,
+                MyWallet = myWallet,
                 MentorsWithNoBookings = mentorsWithNoBookings,
                 NewUsersThisMonth = newUsersThisMonth
             };
