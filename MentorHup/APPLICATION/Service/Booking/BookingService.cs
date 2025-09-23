@@ -123,6 +123,25 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
             .AnyAsync(b => b.MentorAvailabilityId == dto.MentorAvailabilityId && b.IsConfirmed);
         if (isAlreadyBooked) throw new InvalidOperationException("This time slot is already booked.");
 
+        var hasMenteeConflict = await context.Bookings.AnyAsync(booking =>
+            booking.MenteeId == mentee.Id && 
+            booking.IsConfirmed && (
+            availability.StartTime < booking.EndTime &&
+            availability.EndTime > booking.StartTime
+        ));
+        if (hasMenteeConflict)
+            throw new InvalidOperationException("You already have another booking that conflicts with this time.");
+
+        var hasMentorConflict = await context.Bookings.AnyAsync(booking =>
+        booking.MentorId == availability.MentorId &&
+        booking.IsConfirmed &&
+        (
+            availability.StartTime < booking.EndTime &&
+            availability.EndTime > booking.StartTime
+        ));
+        if (hasMentorConflict)
+            throw new InvalidOperationException("This mentor already has another booking at this time.");
+
         return new BookingSessionData
         {
             MenteeId = mentee.Id,
