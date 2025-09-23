@@ -24,7 +24,7 @@ const DashboardAdmin = () => {
     totalBookings: 0,
     totalMentors: 0,
     totalMentees: 0,
-    totalPayments: 0,
+    myWallet: 0,
   });
 
   const [sessions, setSessions] = useState<week[]>([]);
@@ -86,7 +86,7 @@ const DashboardAdmin = () => {
     },
     {
       title: "Revenues",
-      value: statistics.totalPayments,
+      value: "$" + statistics.myWallet,
       icon: <FaUserTie />,
       color: "",
     },

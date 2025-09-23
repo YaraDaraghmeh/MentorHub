@@ -130,7 +130,7 @@ const DashboardMentee = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
+      {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 py-4">
         <button className="bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-lg transition-colors">
           <MdOutlineSchedule className="w-6 h-6 mx-auto mb-2" />
           <span className="text-sm">Book Session</span>
@@ -147,12 +147,12 @@ const DashboardMentee = () => {
           <FaClock className="w-6 h-6 mx-auto mb-2" />
           <span className="text-sm">Schedule</span>
         </button>
-      </div>
+      </div> */}
 
       {/*Charts  */}
       <div className="grid sm:grid-cols-1 lg:grid-cols-3 gap-6 py-6">
         <div className="col-span-2">
-          <BarChartDash data={learningProgress} />
+          {/* <BarChartDash data={learningProgress} /> */}
         </div>
         {/* <div className="col-span-1">
           <ApxChartDash data={sessionTypes} />
