@@ -9,6 +9,6 @@ namespace MentorHup.APPLICATION.Service.Strip
             Task<string> CreateCheckoutSessionAsync(BookingSessionData booking);
             Task<Refund> RefundPaymentAsync(string paymentIntentId);
 
-    }
+        }
 
 }

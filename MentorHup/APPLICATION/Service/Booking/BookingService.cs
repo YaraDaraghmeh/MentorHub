@@ -19,7 +19,6 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
             .Include(b => b.Mentee)
                 .ThenInclude(m => m.ApplicationUser)
             .Include(b => b.Mentor)
-                .ThenInclude(m => m.ApplicationUser)
             .Include(b => b.MentorAvailability)
             .Include(b => b.Payment)
             .FirstOrDefaultAsync(b => b.Id == bookingId);
@@ -165,6 +164,7 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
         var query = context.Bookings
             .Include(b => b.Mentor)
             .Include(b => b.Mentee)
+                .ThenInclude(ment => ment.ApplicationUser)
             .AsQueryable();
 
         if (role == "Mentee")
