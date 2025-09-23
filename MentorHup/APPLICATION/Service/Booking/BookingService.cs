@@ -168,8 +168,8 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
                 Amount = b.Amount,
                 Status = b.Status == BookingStatus.Confirmed ? "Confirmed" : "Cancelled",
                 MeetingUrl = b.MeetingUrl,
-                MenteeUserId = role == "Mentee" || role == "Admin" ? b.Mentor.ApplicationUserId : null,
-                MentorUserId = role == "Mentor" || role == "Admin" ? b.Mentee.ApplicationUserId : null,
+                MentorUserId = role == "Mentee" || role == "Admin" ? b.Mentor.ApplicationUserId : null,
+                MenteeUserId = role == "Mentor" || role == "Admin" ? b.Mentee.ApplicationUserId : null,
                 MenteeImageLink = b.Mentee.ImageUrl,
                 MentorImageLink = b.Mentor.ImageUrl
             })
