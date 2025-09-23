@@ -1,44 +1,76 @@
+import { useEffect, useState } from "react";
 import Table from "./Table";
 import data from "./dataTable.json";
 import Eye from "./eyeicon";
+import { GetBooking } from "../../hooks/getBooking";
+import FormateDate from "./date";
 
 interface BookingData {
   id: number;
-  name: string;
-  date: string;
-  duration: string;
+  bookingId: string;
+  mentorName: string;
+  menteeName: string;
+  startTime: string;
+  endTime: string;
+  amout: string;
   status: string;
-  image: string;
+  // image: string;
+  mentorId: string;
+  menteeId: string;
 }
 
 const TableBooking = () => {
+  const [booking, setBooking] = useState<BookingData[]>([]);
+
+  useEffect(() => {
+    const getBooking = async () => {
+      const data = await GetBooking();
+      setBooking(data);
+    };
+
+    getBooking();
+  }, []);
+
   const columns = [
     {
-      id: "name",
+      id: "menteeName",
       header: "Name Mentee",
-      accessor: "name" as keyof BookingData,
+      accessor: "menteeName" as keyof BookingData,
       render: (row: BookingData) => (
         <div className="flex items-center gap-3 justify-start text-start">
-          <div className="w-12 h-12">
+          {/* <div className="w-12 h-12">
             <img
               src={row.image}
               className="hidden lg:block w-full h-full rounded-full"
               alt="profile"
             />
-          </div>
-          {row.name}
+          </div> */}
+          {row.menteeName}
         </div>
       ),
     },
     {
-      id: "date",
-      header: "Date & time",
-      accessor: "date" as keyof BookingData,
+      id: "mentorName",
+      header: "Name Mentor",
+      accessor: "mentorName" as keyof BookingData,
+      render: (row: BookingData) => (
+        <div className="flex items-center gap-3 justify-start text-start">
+          {/* <div className="w-12 h-12">
+            <img
+              src={row.image}
+              className="hidden lg:block w-full h-full rounded-full"
+              alt="profile"
+            />
+          </div> */}
+          {row.mentorName}
+        </div>
+      ),
     },
     {
-      id: "duration",
-      header: "Duration",
-      accessor: "duration" as keyof BookingData,
+      id: "startTime",
+      header: "Date",
+      accessor: "startTime" as keyof BookingData,
+      render: (row: any) => <>{FormateDate(row.startTime)}</>,
     },
     {
       id: "status",
@@ -71,7 +103,7 @@ const TableBooking = () => {
         <div className="flex justify-center items-center">
           <Eye
             className="w-5 h-5 cursor-pointer"
-            onClick={() => console.log("View details for:", row.id)}
+            onClick={() => console.log("View details for:", row.bookingId)}
           />
         </div>
       ),
@@ -80,7 +112,11 @@ const TableBooking = () => {
 
   return (
     <div className="pt-7 w-full">
-      <Table<BookingData> titleTable="Booking" data={data} columns={columns} />
+      <Table<BookingData>
+        titleTable="Booking"
+        data={booking}
+        columns={columns}
+      />
     </div>
   );
 };

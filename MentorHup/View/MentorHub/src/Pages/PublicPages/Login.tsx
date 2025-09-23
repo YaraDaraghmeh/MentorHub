@@ -23,39 +23,35 @@ const LoginContent = () => {
 
   // Handle Google authentication callback
   useEffect(() => {
-    const handleGoogleCallback = async () => {
-      if (GoogleAuthService.isGoogleAuthCallback()) {
-        setGoogleLoading(true);
-        try {
-          const authData = await GoogleAuthService.handleGoogleCallback();
-          
-          // Process roles similar to regular login
-          const roleString = Array.isArray(authData.roles)
-            ? (authData.roles[0] as "Admin" | "Mentor" | "Mentee")
-            : (authData.roles as "Admin" | "Mentor" | "Mentee");
-
-          await setAuth({
-            userId: authData.userId,
-            roles: roleString,
-            email: authData.email,
-            accessToken: authData.accessToken,
-            refreshToken: authData.refreshToken,
-          });
-
-          // Clean up URL parameters
-          GoogleAuthService.cleanupAuthParams();
-          
-          console.log("Google authentication successful");
-        } catch (error) {
-          console.error("Google authentication failed:", error);
-          setError("Google Sign-In failed. Please try again.");
-        } finally {
-          setGoogleLoading(false);
-        }
-      }
-    };
-
-    handleGoogleCallback();
+    // const handleGoogleCallback = async () => {
+    //   if (GoogleAuthService.isGoogleAuthCallback()) {
+    //     setGoogleLoading(true);
+    //     try {
+    //       const authData = await GoogleAuthService.handleGoogleCallback();
+    //       // Process roles similar to regular login
+    //       const roleString = Array.isArray(authData.roles)
+    //         ? (authData.roles[0] as "Admin" | "Mentor" | "Mentee")
+    //         : (authData.roles as "Admin" | "Mentor" | "Mentee");
+    //       await setAuth({
+    //         userId: authData.userId,
+    //         roles: roleString,
+    //         email: authData.email,
+    //         accessToken: authData.accessToken,
+    //         refreshToken: authData.refreshToken,
+    //         // userName: authData.
+    //       });
+    //       // Clean up URL parameters
+    //       GoogleAuthService.cleanupAuthParams();
+    //       console.log("Google authentication successful");
+    //     } catch (error) {
+    //       console.error("Google authentication failed:", error);
+    //       setError("Google Sign-In failed. Please try again.");
+    //     } finally {
+    //       setGoogleLoading(false);
+    //     }
+    //   }
+    // };
+    // handleGoogleCallback();
   }, [setAuth]);
 
   // Handle Google Sign-In button click
@@ -63,7 +59,7 @@ const LoginContent = () => {
     try {
       setGoogleLoading(true);
       setError("");
-      
+
       // Use redirect method (recommended for OAuth)
       GoogleAuthService.initiateGoogleSignIn("/mentee/main");
     } catch (error) {
@@ -210,7 +206,7 @@ const LoginContent = () => {
             </div>
 
             {/* Sign in with Google */}
-            <button 
+            <button
               onClick={handleGoogleSignIn}
               disabled={googleLoading || loading}
               className={`cursor-pointer gap-3 w-4 h-4 rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--secondary-light)] justify-center text-[var(--primary)] text-lg font-semibold ${
@@ -219,7 +215,9 @@ const LoginContent = () => {
             >
               <FcGoogle />
               <span>
-                {googleLoading ? "Signing in with Google..." : "Sign in with Google"}
+                {googleLoading
+                  ? "Signing in with Google..."
+                  : "Sign in with Google"}
               </span>
             </button>
 

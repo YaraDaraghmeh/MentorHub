@@ -12,6 +12,9 @@ import BarChartDash from "../Charts/BarChart";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import urlMentor from "../../Utilities/Mentor/urlMentor";
+import urlDashboard from "../../Utilities/Dashboard/urlDashboard";
+import type { week } from "../Tables/interfaces";
+import { GetBookingPerWeek } from "../../hooks/getWeeks";
 
 const DashboardMentor = () => {
   const { isDark } = useTheme();
@@ -21,6 +24,7 @@ const DashboardMentor = () => {
     totalEarnings: 0,
     upcomingBookings: 0,
   });
+  const [session, setSessions] = useState<week[]>([]);
 
   useEffect(() => {
     const fetchMentorDashboard = async () => {
@@ -48,22 +52,39 @@ const DashboardMentor = () => {
       }
     };
     fetchMentorDashboard();
+
+    const countBookingPerWeek = async () => {
+      const booking = await GetBookingPerWeek();
+      setSessions(booking);
+    };
+    countBookingPerWeek();
   }, []);
 
   const state = [
-    { title: "Mentees", value: stats.totalMentees, icon: <BsFillPeopleFill />, color: "" },
-    { title: "Reviews", value: stats.totalReviews, icon: <BsStarHalf />, color: "" },
-    { title: "Upcoming Sessions", value: stats.upcomingBookings, icon: <BsFillCalendar2CheckFill />, color: "" },
-    { title: "Earnings", value: `$${stats.totalEarnings}`, icon: <MdOutlineAttachMoney />, color: "" },
-  ];
-
-  const sessions = [
-    { weekLabel: "Week 1", count: 3 },
-    { weekLabel: "Week 2", count: 7 },
-    { weekLabel: "Week 3", count: 6 },
-    { weekLabel: "Week 4", count: 8 },
-    { weekLabel: "Week 5", count: 5 },
-    { weekLabel: "Week 6", count: 3 },
+    {
+      title: "Mentees",
+      value: stats.totalMentees,
+      icon: <BsFillPeopleFill />,
+      color: "",
+    },
+    {
+      title: "Reviews",
+      value: stats.totalReviews,
+      icon: <BsStarHalf />,
+      color: "",
+    },
+    {
+      title: "Upcoming Sessions",
+      value: stats.upcomingBookings,
+      icon: <BsFillCalendar2CheckFill />,
+      color: "",
+    },
+    {
+      title: "Earnings",
+      value: `$${stats.totalEarnings}`,
+      icon: <MdOutlineAttachMoney />,
+      color: "",
+    },
   ];
 
   return (
@@ -75,7 +96,6 @@ const DashboardMentor = () => {
             title={state.title}
             icon={state.icon}
             value={state.value}
-            // bgColor={state.color}
             isDark={isDark}
           />
         ))}
@@ -84,7 +104,7 @@ const DashboardMentor = () => {
       {/*  & Upcoming Secssion */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 py-6">
         <div className="col-span-2">
-          <BarChartDash data={sessions} />
+          <BarChartDash data={session} />
         </div>
         <div className="col-span-1">
           <div className="py-2 flex">

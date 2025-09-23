@@ -1,6 +1,7 @@
 import * as signalR from "@microsoft/signalr";
 import { useEffect, useState, useCallback } from "react";
 import type { message, notification } from "../components/Tables/interfaces";
+import { getAccessToken } from "./AuthToken";
 
 export const useSignalRChat = (token: string) => {
   const [chatConnection, setChatConnction] =

@@ -31,3 +31,8 @@ export interface notification {
   createdAt: string;
   title: string;
 }
+
+export interface week {
+  weekLabel: string;
+  count: number;
+}

@@ -116,20 +116,6 @@ const DashboardMentee = () => {
 
   return (
     <>
-      {/* Welcome Section */}
-      <div className="mb-6">
-        <h1
-          className={`text-2xl font-bold ${
-            isDark ? "text-white" : "text-gray-800"
-          }`}
-        >
-          Welcome back to your learning journey! 🚀
-        </h1>
-        <p className={`mt-2 ${isDark ? "text-gray-300" : "text-gray-600"}`}>
-          Track your progress and manage your mentoring sessions
-        </p>
-      </div>
-
       {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 py-6">
         {state.map((state, index) => (
@@ -168,9 +154,9 @@ const DashboardMentee = () => {
         <div className="col-span-2">
           <BarChartDash data={learningProgress} />
         </div>
-        <div className="col-span-1">
+        {/* <div className="col-span-1">
           <ApxChartDash data={sessionTypes} />
-        </div>
+        </div> */}
       </div>
 
       {/* Table Booking */}
