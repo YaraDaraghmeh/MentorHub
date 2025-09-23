@@ -93,7 +93,7 @@ app.UseCors("CorsPolicy");
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.UseStaticFiles(); // allow browser to outline images
+app.UseStaticFiles(); 
 
 app.MapControllers();
 app.MapHub<ChatHub>("/chatHub");

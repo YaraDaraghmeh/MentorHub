@@ -14,6 +14,8 @@ namespace MentorHup.APPLICATION.DTOs.Booking
         public string? MeetingUrl { get; set; }
         public string? MenteeUserId { get; set; }
         public string? MentorUserId { get; set; }
+        public string? MenteeImageLink { get; set; }
+        public string? MentorImageLink { get; set; }
 
     }
 
