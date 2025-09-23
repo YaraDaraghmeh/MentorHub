@@ -1,11 +1,3 @@
-export interface availability {
-  mentorAvailabilityId: number,
-  dayOfWeek: string,
-  startTime: string,
-  endTime: string,
-  durationInMinutes: number,
-  isBooked: boolean,
-}
 
 export interface Mentor {
   id: number;
@@ -13,6 +5,7 @@ export interface Mentor {
   field: string;
   companyName: string;
   email: string;
+  userName: string;
   imageLink: string;
   createdAt: string;
   reviewCount: number;
@@ -79,10 +72,6 @@ export interface Position {
 }
 
 
-export interface MentorsGridProps {
-  mentors: Mentor[];
-  onBookSession?: (mentor: Mentor) => void;
-}
 
 export interface SessionType {
   value: string;

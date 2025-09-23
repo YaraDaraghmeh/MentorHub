@@ -23,3 +23,11 @@ export type conv = {
   lastMessageTime: string;
   isRead: boolean;
 };
+
+export interface notification {
+  id: number;
+  message: string;
+  isRead: boolean;
+  createdAt: string;
+  title: string;
+}
