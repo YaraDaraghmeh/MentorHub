@@ -21,7 +21,6 @@
 
         // Payments
         public decimal TotalPayments { get; set; } // assuming you have a Payment table
-        public decimal PendingPayments { get; set; }
         public decimal AveragePayment { get; set; }
 
         // Extra
