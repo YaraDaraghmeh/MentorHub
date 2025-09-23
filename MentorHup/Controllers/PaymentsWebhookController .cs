@@ -28,7 +28,7 @@ public class PaymentsWebhookController : ControllerBase
         Stripe.Event stripeEvent = Stripe.EventUtility.ConstructEvent(
                         json,
                         Request.Headers["Stripe-Signature"],
-                        "whsec_izwNCN333TqaRht97UpYCHRXcMKm5wit",
+                        stripeOptions.Value.WebhookSecret,
                         throwOnApiVersionMismatch: false
         );
 
