@@ -8,7 +8,7 @@ import {
 import HomePage from "./Pages/PublicPages/HomePage";
 import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AboutUsPage from "./Pages/PublicPages/AboutUs";
 import PublicMentors from "./Pages/PublicPages/PublicMentors";
 import ContactUs from "./components/ContactUsPageComponents/ContactUs";
@@ -34,8 +34,8 @@ import { AuthProvider } from "./Context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./Context/AuthContext";
 import ProfileAdmin from "./Pages/AdminPages/Profile";
-import WithoutHeader from "./layouts/withoutSidebar";
 import GoogleCallback from "./Pages/Auth/GoogleCallback";
+// import { chatConnection, notificaConnection } from "./Services/chatConnection";
 
 // Component to handle default redirect
 const DefaultRedirect = () => {
@@ -65,15 +65,35 @@ function App() {
     setIsDark(!isDark);
   };
 
-  // const loaction = useLocation();
-  // const hideSidebar = [
-  //   "/profile",
-  //   "/admin/profile",
-  //   "/mentor/profile",
-  //   "/mentee/profile",
-  // ];
+  // useEffect(() => {
+  //   const startConnection = async () => {
+  //     try {
+  //       if (chatConnection.state === "Disconnected") {
+  //         await chatConnection.start();
+  //         console.log("Chat connected!");
+  //       }
+  //       // chatConnection.on("ReceiveMessage", (msg: message) => {
+  //       //   console.log("Received:", msg);
+  //       // });
 
-  // const shouldeHide = hideSidebar.includes(loaction.pathname);
+  //       if (notificaConnection.state === "Disconnected") {
+  //         await notificaConnection.start();
+  //         console.log("Notifications connected!");
+  //       }
+  //     } catch (error: any) {
+  //       console.log("SignleR connection: ", error);
+  //     }
+  //   };
+
+  //   startConnection();
+
+  //   // return () => {
+  //   //   chatConnection.off("ReceiveMessage");
+  //   //   chatConnection.off("MessageRead");
+  //   //   chatConnection.stop();
+  //   //   notificaConnection.stop();
+  //   // };
+  // }, []);
 
   return (
     <>
@@ -95,7 +115,10 @@ function App() {
 
               {/* Login & Registration - public routes */}
               <Route path="/login" element={<LoginUser />} />
-              <Route path="/auth/google/callback" element={<GoogleCallback />} />
+              <Route
+                path="/auth/google/callback"
+                element={<GoogleCallback />}
+              />
               <Route path="/registration" element={<ChooseUser />} />
               <Route path="/SignUp-mentee" element={<SignUpMentee />} />
               <Route path="/SignUp-mentor" element={<SignUpMentor />} />
@@ -146,18 +169,6 @@ function App() {
                 <Route path="chatting" element={<ChateUser />} />
                 <Route path="booking" element={<MenteeBooking />} />
               </Route>
-
-              {/* Admin Profile (without Sidebar) */}
-              {/* <Route
-                path="/admin/"
-                element={
-                  <ProtectedRoute allowedRoles={["Admin"]}>
-                    <WithoutHeader />
-                  </ProtectedRoute>
-                }
-              >
-                <Route path="profile" element={<ProfileAdmin />} />
-              </Route> */}
 
               {/* Catch all - redirect to home or login */}
               <Route path="*" element={<Navigate to="/" replace />} />

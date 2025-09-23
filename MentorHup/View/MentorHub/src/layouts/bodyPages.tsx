@@ -9,6 +9,7 @@ import { useAuth } from "../Context/AuthContext";
 import ModalSkills from "../components/Modal/ModalSkills";
 import TableSkills from "../components/Tables/tableSkills";
 import { FaFacebookMessenger } from "react-icons/fa";
+import NotificationMessages from "../components/Notifications/NotificationMessage";
 
 type UserRole = "Admin" | "Mentor" | "Mentee";
 
@@ -17,6 +18,7 @@ const BodySystem = () => {
   const { roles, email, userId, isAuthenticated, userName } = useAuth(); // أضفت isAuthenticated
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showNoti, setShowNoti] = useState(false);
 
   useEffect(() => {
     console.log("BodySystem - Auth data updated:", {
@@ -100,9 +102,10 @@ const BodySystem = () => {
             </div>
 
             {/* Icons Container */}
-            <div className="flex items-center gap-2 justify-center sm:justify-end flex-shrink-0">
+            <div className="flex items-center gap-3 justify-center sm:justify-end flex-shrink-0">
               {/* Notifiaction Messages */}
               <button
+                onClick={() => setShowNoti((prev) => !prev)}
                 className={`transition-colors duration-200 ${
                   isDark
                     ? "hover:text-gray-100 text-gray-300"
@@ -112,9 +115,7 @@ const BodySystem = () => {
                 <FaFacebookMessenger className="w-6 h-6" />
               </button>
 
-              <div className="flex flex-col">
-                <div></div>
-              </div>
+              {showNoti && <NotificationMessages />}
 
               {/* Theme Toggle */}
               <button

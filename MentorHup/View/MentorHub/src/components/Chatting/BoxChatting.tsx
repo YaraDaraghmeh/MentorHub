@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
 import axios from "axios";
 import urlChatting from "../../Utilities/Chatting/urlChatting";
+import { useSignalRChat } from "../../Services/chatConnection";
 
 type ListInfo = {
   ReceiverId: string;
@@ -28,8 +29,16 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
     ReceiverId: ReceiverId,
     Content: "",
   });
-  const [localMessage, setLocalMessage] = useState<message[]>(messages);
-
+  const {
+    messages: liveMessages,
+    sendMessage,
+    markMessageAsRead,
+    isConnected,
+  } = useSignalRChat(localStorage.getItem("accessToken") || "");
+  const [localMessage, setLocalMessage] = useState<message[]>([
+    ...messages,
+    ...liveMessages,
+  ]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -37,8 +46,16 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
   }, [ReceiverId]);
 
   useEffect(() => {
-    setLocalMessage(messages);
-  }, [messages]);
+    setLocalMessage([...messages, ...liveMessages]);
+  }, [messages, liveMessages]);
+
+  useEffect(() => {
+    liveMessages.forEach((msg) => {
+      if (msg.senderId !== userId && !msg.isRead) {
+        markMessageAsRead(msg.id);
+      }
+    });
+  }, [liveMessages]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -48,22 +65,36 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
   // button send
   const handleSend = async () => {
     const token = localStorage.getItem("accessToken");
+    if (!message.Content.trim()) return;
+
+    sendMessage(ReceiverId, message.Content);
 
     try {
-      const resp = await axios.post(
-        urlChatting.GET_MESSAGE,
-        {
-          ReceiverId: message.ReceiverId,
-          Content: message.Content,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      // await axios.post(
+      //   urlChatting.GET_MESSAGE,
+      //   {
+      //     Content: message.Content,
+      //     ReceiverId: message.ReceiverId,
+      //   },
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   }
+      // );
 
-      setLocalMessage((prev) => [...prev, resp.data]);
+      setLocalMessage((prev) => [
+        ...prev,
+        {
+          id: Date.now(),
+          content: message.Content,
+          senderId: userId!,
+          receiverId: ReceiverId,
+          sentAt: new Date().toISOString(),
+          isRead: false,
+        } as message,
+      ]);
+
       setMessage((prev) => ({ ...prev, Content: "" }));
     } catch (error: any) {
       console.log("send message", error);
@@ -150,7 +181,7 @@ const Chatting = ({ name, ReceiverId, picture, messages }: ListInfo) => {
               {/* button for send */}
               <button
                 onClick={handleSend}
-                disabled={!message.Content.trim()}
+                disabled={!message.Content.trim() || !isConnected}
                 className={`
                     p-2
                     transition-all duration-200 
