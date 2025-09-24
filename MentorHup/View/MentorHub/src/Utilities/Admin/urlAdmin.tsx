@@ -1,5 +1,5 @@
 const API_URL_DEVELOPMENT = "/api/Admin";
-const API_URL_PRODUCTION = "http://appname.azurewebsite.net";
+const API_URL_PRODUCTION = "https://appname.azurewebsite.net";
 
 const ENDPOINT = {
   GET_MENTORS: "mentors",
