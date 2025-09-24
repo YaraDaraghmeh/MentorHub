@@ -22,7 +22,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("CorsPolicy", builder =>
     {
-        builder.WithOrigins("http://localhost:5175") // frontend HTTP „Õœœ
+        builder.WithOrigins("http://localhost:5175", // frontend HTTP „Õœœ (For Development)
+                            "https://mentorhub-zeta.vercel.app") // (For Proudction)
                       .AllowAnyMethod()
                       .AllowAnyHeader()
                       .AllowCredentials(); // »Ì‰ «·›—Ê‰  Ê«·»«ﬂ http/https ›Ì Õ«· ⁄œ„  Ê«›ﬁ ‰Ê⁄ «· cookies / JWT Ì”„Õ »≈—”«· 
