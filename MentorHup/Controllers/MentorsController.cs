@@ -1,4 +1,5 @@
-﻿using MentorHup.APPLICATION.DTOs.Mentor;
+﻿using MentorHub.APPLICATION.DTOs.Availability;
+using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.APPLICATION.DTOs.Pagination;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Mentor;
@@ -137,7 +138,16 @@ namespace MentorHup.API.Controllers
             return Ok(dashboardData);
         }
 
+        [HttpPost("add-availability")]
+        [Authorize(Roles = "Mentor")]
+        public async Task<IActionResult> CreateAvailability([FromBody] CreateAvailabilityRequest createAvailabilityRequest)
+        {
+            var (isSuccess, message) = await _mentorService.CreateAvailabilityAsync(createAvailabilityRequest);
+            if (!isSuccess)
+                return BadRequest(new { message = "Failed to create availability." });
 
+            return Ok(new { message = "Availability created successfully." });
+        }
 
     }
 }

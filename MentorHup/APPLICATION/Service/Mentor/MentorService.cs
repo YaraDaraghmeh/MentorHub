@@ -1,4 +1,5 @@
-﻿using MentorHup.APPLICATION.Common;
+﻿using MentorHub.APPLICATION.DTOs.Availability;
+using MentorHup.APPLICATION.Common;
 using MentorHup.APPLICATION.DTOs.Mentor;
 using MentorHup.Domain.Entities;
 using MentorHup.Infrastructure.Context;
@@ -325,5 +326,50 @@ namespace MentorHup.APPLICATION.Service.Mentor
                 UpcomingBookings = upcomingBookings
             };
         }
+
+
+        public async Task<(bool IsSuccess, string Message)> CreateAvailabilityAsync(CreateAvailabilityRequest request)
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return (false, "User is not authenticated.");
+
+            var mentor = await context.Mentors
+                .Include(mentor => mentor.ApplicationUser)
+                .FirstOrDefaultAsync(mentor => mentor.ApplicationUserId == userId);
+
+            if (mentor is null)
+                return (false, "Mentor profile isn't found.");
+
+            if (request.StartTime <= DateTime.Now)
+                return (false, "Start time must be in the future.");
+
+            if (request.EndTime <= request.StartTime)
+                return (false, "End time must be after start time.");
+
+            var overlapping = await context.MentorAvailabilities
+                .AnyAsync(mentorAvailability => mentorAvailability.EndTime > request.StartTime
+                                             && mentorAvailability.StartTime < request.EndTime);
+
+            if (overlapping)
+                return (false, "This time slot overlaps with an existing availability.");
+
+            var duration = (int)(request.EndTime - request.StartTime).TotalMinutes;
+
+            var availability = new MentorAvailability
+            {
+                MentorId = mentor.Id,
+                StartTime = request.StartTime,
+                EndTime = request.EndTime,
+                DurationInMinutes = duration,
+                IsBooked = false,
+            };
+
+            await context.MentorAvailabilities.AddAsync(availability);
+            await context.SaveChangesAsync();
+
+            return (true, "Availability created successfully.");
+        }
+
     }
 }

@@ -1,4 +1,5 @@
-﻿using MentorHup.APPLICATION.Common;
+﻿using MentorHub.APPLICATION.DTOs.Availability;
+using MentorHup.APPLICATION.Common;
 using MentorHup.APPLICATION.DTOs.Mentor;
 
 namespace MentorHup.APPLICATION.Service.Mentor;
@@ -18,5 +19,6 @@ public interface IMentorService
 
     Task<MentorDashboardDto> GetMentorDashboardAsync(string mentorId);
 
+    Task<(bool IsSuccess, string Message)> CreateAvailabilityAsync(CreateAvailabilityRequest request);
 
 }
