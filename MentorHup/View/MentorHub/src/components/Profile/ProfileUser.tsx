@@ -10,7 +10,6 @@ import { FaCamera } from "react-icons/fa6";
 import FormateDate from "../Tables/date";
 import axios from "axios";
 import urlMentee from "../../Utilities/Mentee/urlMentee";
-import urlMentor from "../../Utilities/Mentor/urlMentor";
 
 interface user {
   applicationUserId: string;
@@ -35,7 +34,7 @@ const ProfileUser = () => {
   const { isDark } = useTheme();
   const token = localStorage.getItem("accessToken");
   const [mentee, setMentee] = useState(0);
-  const [mentor, setMentor] = useState(0);
+  const [file, setFile] = useState<File | null>(null);
 
   useEffect(() => {
     const getInfo = async () => {
@@ -63,6 +62,29 @@ const ProfileUser = () => {
     getCompletedSessions();
   }, []);
 
+  // const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   if (e.target.files) {
+  //     const selectedFile = e.target.files[0];
+  //     setFile(selectedFile);
+
+  //     const formData = new FormData();
+  //     formData.append("Image", selectedFile);
+
+  //     try {
+  //       const res = await axios.post(urlMentor.UPLOADIMG, formData, {
+  //         headers: {
+  //           Authorization: `Bearer ${token}`,
+  //         },
+  //       });
+
+  //       const newImageLink = res.data.imageLink;
+  //       setUserData((prev) => ({ ...prev, imageLink: newImageLink }));
+  //     } catch (err) {
+  //       console.error("Upload failed:", err);
+  //     }
+  //   }
+  // };
+
   return (
     <>
       <div>
@@ -85,7 +107,15 @@ const ProfileUser = () => {
             />
             {userData.role !== "Admin" && (
               <div className="absolute bg-gray-300 top-[87px] left-[90px] p-2 rounded-full">
-                <FaCamera className="text-md text-[var(--primary-light)]" />
+                <label htmlFor="fileInput">
+                  <FaCamera className="text-md text-[var(--primary-light)] cursor-pointer" />
+                </label>
+                <input
+                  id="fileInput"
+                  type="file"
+                  className="hidden"
+                  // onChange={handleFileChange}
+                />
               </div>
             )}
           </div>
@@ -156,7 +186,7 @@ const ProfileUser = () => {
               <BasicInfo
                 role={userData.role}
                 createdAt={FormateDate(userData.createdAt)}
-                sessions={userData.role === "Mentee" ? mentee : mentor}
+                sessions={mentee}
               />
             </div>
           </div>
