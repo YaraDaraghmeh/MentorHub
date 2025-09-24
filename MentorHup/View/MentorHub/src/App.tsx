@@ -5,7 +5,7 @@ import {
   Navigate,
   // useLocation,
 } from "react-router-dom";
-import { useEffect } from "react";
+
 import HomePage from "./Pages/PublicPages/HomePage";
 import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
@@ -36,13 +36,10 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./Context/AuthContext";
 import ProfileAdmin from "./Pages/AdminPages/Profile";
 import GoogleCallback from "./Pages/Auth/GoogleCallback";
-<<<<<<< HEAD
-import PaymentSuccess from './Pages/MenteePages/SuccessPage';
-=======
 import ProfileMentee from "./Pages/MenteePages/ProfileMentee";
 import ProfileMentor from "./Pages/MentorPages/ProfileMentor";
+import PaymentSuccess from "./Pages/MenteePages/SuccessPage";
 // import { chatConnection, notificaConnection } from "./Services/chatConnection";
->>>>>>> d4732729bcd0b2e308bba2b44e31d5306b4f0873
 
 // Component to handle default redirect
 const DefaultRedirect = () => {
