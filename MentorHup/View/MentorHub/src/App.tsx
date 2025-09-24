@@ -5,6 +5,7 @@ import {
   Navigate,
   // useLocation,
 } from "react-router-dom";
+
 import HomePage from "./Pages/PublicPages/HomePage";
 import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
@@ -37,6 +38,7 @@ import ProfileAdmin from "./Pages/AdminPages/Profile";
 import GoogleCallback from "./Pages/Auth/GoogleCallback";
 import ProfileMentee from "./Pages/MenteePages/ProfileMentee";
 import ProfileMentor from "./Pages/MentorPages/ProfileMentor";
+import PaymentSuccess from "./Pages/MenteePages/SuccessPage";
 // import { chatConnection, notificaConnection } from "./Services/chatConnection";
 
 // Component to handle default redirect
@@ -66,37 +68,8 @@ function App() {
   const toggleTheme = () => {
     setIsDark(!isDark);
   };
-
-  // useEffect(() => {
-  //   const startConnection = async () => {
-  //     try {
-  //       if (chatConnection.state === "Disconnected") {
-  //         await chatConnection.start();
-  //         console.log("Chat connected!");
-  //       }
-  //       // chatConnection.on("ReceiveMessage", (msg: message) => {
-  //       //   console.log("Received:", msg);
-  //       // });
-
-  //       if (notificaConnection.state === "Disconnected") {
-  //         await notificaConnection.start();
-  //         console.log("Notifications connected!");
-  //       }
-  //     } catch (error: any) {
-  //       console.log("SignleR connection: ", error);
-  //     }
-  //   };
-
-  //   startConnection();
-
-  //   // return () => {
-  //   //   chatConnection.off("ReceiveMessage");
-  //   //   chatConnection.off("MessageRead");
-  //   //   chatConnection.stop();
-  //   //   notificaConnection.stop();
-  //   // };
-  // }, []);
-
+  
+  
   return (
     <>
       <ThemeProvider>
@@ -173,6 +146,7 @@ function App() {
                 <Route path="booking" element={<MenteeBooking />} />
                 <Route path="profile" element={<ProfileMentee />} />
               </Route>
+              <Route path="/success" element={<PaymentSuccess />} />
 
               {/* Catch all - redirect to home or login */}
               <Route path="*" element={<Navigate to="/" replace />} />

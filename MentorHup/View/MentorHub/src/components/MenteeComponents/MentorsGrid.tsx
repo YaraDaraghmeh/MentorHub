@@ -7,16 +7,18 @@ import {
   Calendar,
   Star,
   Users,
-  Share2,
+  Share2
 } from "lucide-react";
 import { useTheme } from "../../Context/ThemeContext";
-import type { Mentor } from "../../types/types";
+import type { Mentor, FilterState } from "../../types/types";
 import BookingModal from "./BookingModal";
 import defaultprofileimage from "../../assets/avatar-profile.png";
 import { FormattedDateComponent } from "../common/FormattedDateComponent";
-import ToSend from '../../components/Chatting/iconsToSend'
+import ToSend from '../../components/Chatting/iconsToSend';
 import { useNavigate } from "react-router-dom";
-import mentorService from '../../Services/mentorService';
+import mentorService, { type MentorFilters } from '../../Services/mentorService';
+import StarReview from '../Stars/StarReview';
+import SearchFilters from './Filter';
 
 const MentorsGrid = () => {
   console.log('🔍 DEBUG: MentorsGrid component initialized');
@@ -39,11 +41,19 @@ const MentorsGrid = () => {
   const [totalItems, setTotalItems] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const pageSize = 5; // API returns 5 mentors per page
+  const [showFilters, setShowFilters] = useState(false);
 
-  // Get current page mentors - API will return only current page data
+  // Filter states
+  const [filters, setFilters] = useState<FilterState>({
+    searchTerm: '',
+    selectedSpecialty: 'all',
+    selectedExperience: 'all',
+    selectedRating: 'all'
+  });
+
+  
   const mentors = useMemo(() => {
-    // In backend pagination, mentors come directly from API for current page
-    // No need to slice - API already returns only current page data
+    
     console.log('🔍 DEBUG: Current page mentors from API:', {
       currentPage,
       pageSize,
@@ -69,35 +79,49 @@ const MentorsGrid = () => {
     setModalBook((prev) => ({ ...prev, show: false }));
   }, []);
 
-  const getMentors = useCallback(async (pageNumber: number, pageSize: number, retryCount = 0) => {
+  const getMentors = useCallback(async (pageNumber: number, pageSize: number, apiFilters: Partial<MentorFilters> = {}, retryCount = 0) => {
     const MAX_RETRIES = 3;
     const RETRY_DELAY = 1000;
 
     if (!token) {
-      console.error('❌ No authentication token found');
+      console.error(' No authentication token found');
       setError('Authentication required. Please log in again.');
       setLoading(false);
       return;
     }
 
     const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    console.log(`🔍 [${requestId}] Starting to fetch mentors...`, { pageNumber, pageSize, retryCount });
+    
+    // Prepare filter params for API
+    const filterParams: Record<string, any> = {};
+    
+    // Map UI filters to API filters
+    if (apiFilters.skillName) filterParams.skillName = apiFilters.skillName;
+    if (apiFilters.experiences) filterParams.experiences = apiFilters.experiences;
+    if (apiFilters.field) filterParams.field = apiFilters.field;
+
+    console.log(`🔍 [${requestId}] Starting to fetch mentors...`, { 
+      pageNumber, 
+      pageSize, 
+      retryCount,
+      filters: filterParams
+    });
 
     setLoading(true);
     setError(null);
 
     try {
-      console.log(`🔧 [${requestId}] Using mentorService with backend pagination...`);
+      console.log(`🔧 [${requestId}] Using mentorService with backend pagination and filters...`);
 
-      // API call with pagination parameters
-      const result = await mentorService.getMentors(pageNumber, pageSize, token);
+      // API call with pagination and filter parameters
+      const result = await mentorService.getMentors(pageNumber, pageSize, token, filterParams);
 
       if (!result.success) {
-        console.error(`❌ [${requestId}] API call failed:`, result.error);
+        console.error(` [${requestId}] API call failed:`, result.error);
         throw new Error(result.error || 'Failed to fetch mentors');
       }
 
-      console.log(`✅ [${requestId}] API returned:`, {
+      console.log(` [${requestId}] API returned:`, {
         mentorsCount: result.mentors?.length || 0,
         totalItems: result.totalItems,
         totalPages: result.totalPages,
@@ -127,13 +151,13 @@ const MentorsGrid = () => {
       setTotalPages(result.totalPages || Math.ceil((result.totalItems || transformedMentors.length) / pageSize));
 
     } catch (error: any) {
-      console.error(`❌ [${requestId}] Error in getMentors:`, error);
+      console.error(` [${requestId}] Error in getMentors:`, error);
 
       if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
         if (retryCount < MAX_RETRIES) {
           const retryIn = RETRY_DELAY * (retryCount + 1);
           setTimeout(() => {
-            getMentors(pageNumber, pageSize, retryCount + 1);
+            getMentors(pageNumber, pageSize, retryCount+ 1);
           }, retryIn);
           return;
         }
@@ -144,7 +168,7 @@ const MentorsGrid = () => {
     } finally {
       setLoading(false);
     }
-  }, [token]);
+  }, [token, filters]);
 
   useEffect(() => {
     const testApiConnection = async () => {
@@ -160,13 +184,13 @@ const MentorsGrid = () => {
         const result = await mentorService.testApiConnection(token);
 
         if (result.success) {
-          console.log('✅ API connection test successful');
+          console.log('API connection test successful');
         } else {
-          console.error('❌ API connection test failed:', result.error);
+          console.error(' API connection test failed:', result.error);
           setError(result.error || 'API connection failed');
         }
       } catch (error: any) {
-        console.error('❌ API connection test error:', error);
+        console.error('API connection test error:', error);
         setError('Failed to connect to API');
       }
     };
@@ -176,58 +200,102 @@ const MentorsGrid = () => {
 
   // Fetch mentors when component mounts or page changes
   useEffect(() => {
-    console.log('🔍 DEBUG: useEffect triggered - token available:', !!token);
+    console.log(' DEBUG: useEffect triggered - token available:', !!token);
 
     if (token) {
-      console.log('🔍 DEBUG: Calling getMentors with pagination');
+      console.log('DEBUG: Calling getMentors with pagination');
       getMentors(currentPage, pageSize);
     } else {
-      console.log('🔍 DEBUG: No token available, skipping mentor fetch');
+      console.log('DEBUG: No token available, skipping mentor fetch');
       setLoading(false);
       setError('Please log in to view mentors');
     }
   }, [getMentors, currentPage, pageSize, token]);
 
-  // Calculate pagination display values - for backend pagination
-  const startIndex = totalItems > 0 ? ((currentPage - 1) * pageSize + 1) : 0;
-  const endIndex = totalItems > 0 ? Math.min(currentPage * pageSize, totalItems) : 0;
+  // Calculate pagination indices
+  const startIndex = (currentPage - 1) * pageSize + 1;
+  const endIndex = Math.min(currentPage * pageSize, totalItems);
 
   // Generate page numbers for pagination
   const getPageNumbers = () => {
     const pages = [];
-    const maxVisiblePages = 5;
-
-    console.log('🔍 DEBUG: getPageNumbers called:', {
-      totalPages,
-      currentPage,
-      maxVisiblePages
-    });
-
-    if (totalPages <= maxVisiblePages) {
-      for (let i = 1; i <= totalPages; i++) {
-        pages.push(i);
-      }
-    } else {
-      if (currentPage <= 3) {
-        for (let i = 1; i <= 4; i++) pages.push(i);
-        pages.push("...");
-        pages.push(totalPages);
-      } else if (currentPage >= totalPages - 2) {
-        pages.push(1);
-        pages.push("...");
-        for (let i = totalPages - 3; i <= totalPages; i++) pages.push(i);
-      } else {
-        pages.push(1);
-        pages.push("...");
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) pages.push(i);
-        pages.push("...");
-        pages.push(totalPages);
-      }
+    const maxPagesToShow = 5;
+    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
+    const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
+    
+    if (endPage - startPage + 1 < maxPagesToShow) {
+      startPage = Math.max(1, endPage - maxPagesToShow + 1);
     }
-
-    console.log('🔍 DEBUG: getPageNumbers result:', pages);
+    
+    for (let i = startPage; i <= endPage; i++) {
+      pages.push(i);
+    }
     return pages;
   };
+
+  // Handle filter changes from the Filter component
+  const handleFilterChange = (newFilters: Partial<FilterState>) => {
+    setFilters(prev => {
+      const updatedFilters = { ...prev, ...newFilters };
+      
+      // Map the filter values to match the API expected format
+      const apiFilters: Partial<MentorFilters> = {};
+      
+      if (updatedFilters.searchTerm) {
+        apiFilters.skillName = updatedFilters.searchTerm;
+      }
+      
+      if (updatedFilters.selectedExperience !== 'all') {
+        const experience = parseInt(updatedFilters.selectedExperience);
+        if (!isNaN(experience)) {
+          apiFilters.experiences = experience;
+        }
+      }
+      
+      if (updatedFilters.selectedSpecialty !== 'all') {
+        apiFilters.field = updatedFilters.selectedSpecialty;
+      }
+      
+      // Update the filters and reset to first page
+      setCurrentPage(1);
+      
+      // Make the API call with the mapped filters
+      if (token) {
+        getMentors(1, pageSize, apiFilters);
+      }
+      
+      // Return the updated UI filter state
+      return updatedFilters;
+    });
+  };
+
+  // Fetch mentors when component mounts or page changes
+  useEffect(() => {
+    if (token) {
+      console.log('🔍 Fetching mentors with filters:', filters);
+      
+      // Map the UI filters to API filters
+      const apiFilters: Partial<MentorFilters> = {};
+      
+      if (filters.searchTerm) {
+        apiFilters.skillName = filters.searchTerm;
+      }
+      
+      if (filters.selectedExperience !== 'all') {
+        const experience = parseInt(filters.selectedExperience);
+        if (!isNaN(experience)) {
+          apiFilters.experiences = experience;
+        }
+      }
+      
+      if (filters.selectedSpecialty !== 'all') {
+        apiFilters.field = filters.selectedSpecialty;
+      }
+      
+      // Use the mapped filters for the API call
+      getMentors(currentPage, pageSize, apiFilters);
+    }
+  }, [currentPage, pageSize, token, getMentors]);
 
   const handlePageChange = (page: number) => {
     console.log('🔍 DEBUG: handlePageChange called with:', {
@@ -239,7 +307,7 @@ const MentorsGrid = () => {
     });
 
     if (page < 1 || page > totalPages || page === currentPage) {
-      console.log('🔍 DEBUG: Page change blocked:', {
+      console.log(' DEBUG: Page change blocked:', {
         page,
         totalPages,
         currentPage,
@@ -248,7 +316,7 @@ const MentorsGrid = () => {
       return;
     }
 
-    console.log('🔍 DEBUG: Page change allowed:', { from: currentPage, to: page });
+    console.log('DEBUG: Page change allowed:', { from: currentPage, to: page });
     setCurrentPage(page);
     // Scroll to top of mentors section
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -349,6 +417,21 @@ const MentorsGrid = () => {
             </motion.div>
           )}
 
+          {/* Search and Filter Component */}
+          <div className="mb-3 w-full overflow-hidden">
+            <div className="w-full max-w-[100vw] px-1 -mx-1 overflow-x-auto">
+              <div className="min-w-[320px] px-1">
+                <SearchFilters
+                  filters={filters}
+                  onFilterChange={handleFilterChange}
+                  showFilters={showFilters}
+                  onToggleFilters={() => setShowFilters(!showFilters)}
+                  filteredCount={totalItems}
+                />
+              </div>
+            </div>
+          </div>
+
           {/* Mentors Grid */}
           {!loading && !error && mentors.length > 0 && (
             <motion.div
@@ -356,7 +439,7 @@ const MentorsGrid = () => {
               initial="hidden"
               animate="visible"
               key={currentPage} // Re-trigger animation on page change
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4 px-1 sm:px-2 md:px-3 mb-4 w-full"
             >
               {mentors.map((mentor) => (
                 <motion.div
@@ -364,17 +447,17 @@ const MentorsGrid = () => {
                   variants={itemVariants}
                   whileHover={{ y: -5, scale: 1.02 }}
                   transition={{ duration: 0.2 }}
-                  className={`rounded-2xl border transition-all duration-300 hover:shadow-xl relative ${
+                  className={`rounded-xl border transition-all duration-300 hover:shadow-xl relative flex flex-col h-auto min-h-[360px] sm:min-h-[400px] md:min-h-[420px] w-full ${
                     isDark
                       ? "bg-gray-800 border-gray-700 hover:shadow-blue-500/10"
                       : "bg-white border-gray-200 hover:shadow-blue-500/20"
                   }`}
                 >
-                  <div className="p-6">
+                  <div className="p-2.5 sm:p-3.5 md:p-4 flex-1 flex flex-col w-full">
                     {/* Header */}
-                    <div className="flex items-start justify-between mb-4">
+                    <div className="flex items-start justify-between mb-1.5 sm:mb-2.5">
                       <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 rounded-full overflow-hidden">
+                        <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
                           <img
                             src={mentor.imageLink || defaultprofileimage}
                             alt={mentor.name}
@@ -410,7 +493,11 @@ const MentorsGrid = () => {
                               : "hover:bg-gray-100 text-gray-600"
                           }`}
                         >
-                          <ToSend />
+                          <ToSend onClick={() => handleSendIconClick(
+                            mentor.name ,
+                            mentor.id,
+                            mentor.imageLink || defaultprofileimage
+                          )} />
                         </button>
                         <button
                           className={`p-2 rounded-lg transition-colors ${
@@ -443,14 +530,14 @@ const MentorsGrid = () => {
                           <span
                             className={`ml-1 text-sm font-medium ${textClass}`}
                           >
-                            {mentor.reviewCount?.toFixed(1) || '0.0'}
+                            <StarReview rating={mentor.reviewCount || 0} />
                           </span>
                         </div>
                       </div>
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-2 gap-4 mb-4">
+                    <div className="grid grid-cols-2 gap-1.5 sm:gap-2.5 mb-2.5">
                       <div className="text-center">
                         <div className={`text-lg font-semibold ${textClass}`}>
                           {mentor.experience || 0}
@@ -478,7 +565,7 @@ const MentorsGrid = () => {
                     </div>
 
                     {/* Specialties/Skills */}
-                    <div className="mb-4">
+                    <div className="mb-3 sm:mb-4">
                       <div className="flex flex-wrap gap-2">
                         {mentor.skills?.slice(0, 2).map((specialty, index) => (
                           <span
@@ -508,60 +595,63 @@ const MentorsGrid = () => {
 
                     {/* Availability Section */}
                     {mentor.availabilities && mentor.availabilities.length > 0 && (
-                      <div className="mb-4">
-                        <div className="flex items-center mb-2">
-                          <Clock className="h-4 w-4 mr-2 text-green-500" />
+                      <div className="mb-3 sm:mb-4">
+                        <div className="flex items-center mb-1">
+                          <Clock className="h-4 w-4 mr-1.5 text-green-500" />
                           <span className={`text-sm font-medium ${
                             isDark ? "text-gray-300" : "text-gray-700"
                           }`}>
                             Next Available
                           </span>
                         </div>
-                        <div className="space-y-1">
+                        <div className="space-y-1.5">
                           {mentor.availabilities
                             .filter(availability => !availability.isBooked)
-                            .slice(0, 2)
+                            .slice(0, 1)
                             .map((availability, index) => (
                             <div key={availability.mentorAvailabilityId || index}
-                                 className={`text-xs p-2 rounded-lg ${
+                                 className={`text-sm p-2.5 rounded-lg ${
                                    isDark
-                                     ? "bg-gray-700 text-gray-300"
-                                     : "bg-gray-50 text-gray-600"
+                                     ? "bg-gray-700/80 text-gray-200 border border-gray-600"
+                                     : "bg-gray-50 text-gray-700 border border-gray-200"
                                  }`}>
                               <div className="flex items-center justify-between">
                                 <div className="flex items-center space-x-2">
-                                  <Calendar className="h-3 w-3" />
+                                  <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
                                   <span className="font-medium">{availability.dayOfWeek}</span>
                                 </div>
-                                <div className="flex items-center space-x-1">
-                                  <Clock className="h-3 w-3" />
-                                  <FormattedDateComponent
-                                    isoDateString={availability.startTime}
-                                    showDate={false}
-                                    className="font-medium"
-                                  />
-                                  <span>-</span>
-                                  <FormattedDateComponent
-                                    isoDateString={availability.endTime}
-                                    showDate={false}
-                                    className="font-medium"
-                                  />
+                                <div className="flex items-center space-x-1.5">
+                                  <Clock className="h-3.5 w-3.5 flex-shrink-0" />
+                                  <span className="font-medium">
+                                    <FormattedDateComponent
+                                      isoDateString={availability.startTime}
+                                      showDate={false}
+                                      className="font-medium"
+                                    />
+                                    <span className="mx-0.5">-</span>
+                                    <FormattedDateComponent
+                                      isoDateString={availability.endTime}
+                                      showDate={false}
+                                      className="font-medium"
+                                    />
+                                  </span>
                                 </div>
                               </div>
-                              <div className="text-xs text-gray-500 mt-1">
-                                Duration: {availability.durationInMinutes} minutes
+                              <div className="text-xs text-gray-500 mt-1.5 flex items-center">
+                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 mr-1.5"></span>
+                                {availability.durationInMinutes} min session • Available now
                               </div>
                             </div>
                           ))}
-                          {mentor.availabilities.filter(a => !a.isBooked).length > 2 && (
-                            <div className={`text-xs text-center py-1 ${
+                          {mentor.availabilities.filter(a => !a.isBooked).length > 1 && (
+                            <div className={`text-[11px] text-center pt-0.5 ${
                               isDark ? "text-gray-400" : "text-gray-500"
                             }`}>
-                              +{mentor.availabilities.filter(a => !a.isBooked).length - 2} more slots
+                              +{mentor.availabilities.filter(a => !a.isBooked).length - 1} more slots
                             </div>
                           )}
                           {mentor.availabilities.filter(a => !a.isBooked).length === 0 && (
-                            <div className={`text-xs text-center py-2 ${
+                            <div className={`text-[11px] text-center py-1 ${
                               isDark ? "text-gray-400" : "text-gray-500"
                             }`}>
                               No available slots
@@ -571,41 +661,45 @@ const MentorsGrid = () => {
                       </div>
                     )}
 
-                    {/* Member Since */}
-                    <div className="mb-4">
-                      <div className="flex items-center text-xs text-gray-500">
-                        <Calendar className="h-3 w-3 mr-1" />
-                        <span>Member since </span>
-                        <FormattedDateComponent
-                          isoDateString={mentor.createdAt}
-                          showTime={false}
-                          dateFormat="short"
-                          className="ml-1 font-medium"
-                        />
+                    {/* Fixed bottom section with member since and action buttons */}
+                    <div className="mt-auto">
+                      {/* Action buttons */}
+                      <div className="px-2.5 sm:px-3 pb-1.5 pt-1.5 border-t border-gray-200 dark:border-gray-700">
+                        <div className="flex justify-between items-center text-[10px] text-gray-500 mb-1">
+                          <div className="flex items-center">
+                            <Calendar className="h-2 w-2 mr-1 flex-shrink-0" />
+                            <span className="truncate">
+                              Member since{' '}
+                              <span className="font-medium">
+                                <FormattedDateComponent
+                                  isoDateString={mentor.createdAt}
+                                  showTime={false}
+                                  dateFormat="short"
+                                  className="text-[10px]"
+                                />
+                              </span>
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => onBookSession(mentor)}
+                          className="flex-1 bg-gradient-to-r from-teal-950 to-teal-500 hover:from-teal-500 hover:to-teal-950 text-white py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200"
+                        >
+                          Book Session
+                        </motion.button>
+                        <motion.button
+                          whileHover={{ scale: 1.02 }}
+                          whileTap={{ scale: 0.98 }}
+                          onClick={() => navigate(`/mentor/${mentor.id}`)}
+                          className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                        >
+                          View Profile
+                        </motion.button>
                       </div>
                     </div>
-
-                    {/* Actions */}
-                    <div className="flex space-x-3">
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => onBookSession(mentor)}
-                        className="flex-1 bg-gradient-to-r from-teal-950 to-teal-500 hover:from-teal-500 hover:to-teal-950 text-white py-3 px-4 rounded-xl font-medium transition-all duration-200"
-                      >
-                        Book Session
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        className={`px-4 py-3 rounded-xl border font-medium transition-colors ${
-                          isDark
-                            ? "border-gray-600 text-gray-300 hover:bg-gray-700"
-                            : "border-gray-300 text-gray-700 hover:bg-gray-50"
-                        }`}
-                      >
-                        View Profile
-                      </motion.button>
                     </div>
                   </div>
                 </motion.div>
@@ -660,7 +754,7 @@ const MentorsGrid = () => {
                         whileTap={{ scale: 0.9 }}
                         onClick={() => handlePageChange(page as number)}
                         className={`px-3 py-2 rounded-lg border transition-all duration-200 min-w-[2.5rem] ${
-                          currentPage === page
+                          currentPage === (typeof page === 'number' ? page : parseInt(page as string, 10))
                             ? isDark
                               ? "bg-teal-600 border-teal-600 text-white shadow-lg"
                               : "bg-teal-500 border-teal-500 text-white shadow-lg"

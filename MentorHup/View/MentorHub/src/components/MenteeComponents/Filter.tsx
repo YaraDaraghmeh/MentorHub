@@ -21,12 +21,21 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
 }) => {
   const specialties = [
     "all",
+    "Software Engineering",
+    "Hardware Engineering",
+    "Cybersecurity",
+    "Machine Learning",
+    "Artificial Intelligence",
+    "Computer Science",
+    "Frontend Development",
+    "Backend Development",
+    "Fullstack Development",
+    "Business Management",
     "Technical Interviews",
     "Product Management",
     "Design Interviews",
     "Data Science",
-    "Marketing Strategy",
-    "Finance Interviews",
+    "Marketing ",
     "Behavioral Interviews",
   ];
   const { isDark } = useTheme();
@@ -119,7 +128,7 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   }
                   className={`w-full px-3 py-2 rounded-lg border transition-colors text-base ${
                     isDark
-                      ? "bg-gray-700 border-gray-600 text-white"
+                      ? "bg-gray-700 border-gray-600 text-black"
                       : "bg-white border-gray-300 text-gray-900"
                   } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20`}
                 >
@@ -146,11 +155,12 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   }
                   className={`w-full px-3 py-2 rounded-lg border transition-colors text-base ${
                     isDark
-                      ? "bg-gray-700 border-gray-600 text-white"
+                      ? "bg-gray-700 border-gray-600 text-black"
                       : "bg-white border-gray-300 text-gray-900"
                   } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20`}
                 >
                   <option value="all">All Experience Levels</option>
+                  <option value="2+">2+ Years</option>
                   <option value="5+">5+ Years</option>
                   <option value="8+">8+ Years</option>
                   <option value="10+">10+ Years</option>
@@ -172,14 +182,16 @@ const SearchFilters: React.FC<SearchFiltersProps> = ({
                   }
                   className={`w-full px-3 py-2 rounded-lg border transition-colors text-base ${
                     isDark
-                      ? "bg-gray-700 border-gray-600 text-white"
+                      ? "bg-gray-700 border-gray-600 text-black"
                       : "bg-white border-gray-300 text-gray-900"
                   } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20`}
                 >
                   <option value="all">All Ratings</option>
-                  <option value="4.5">4.5+ Stars</option>
-                  <option value="4.7">4.7+ Stars</option>
-                  <option value="4.9">4.9+ Stars</option>
+                  <option value="5">5 Stars</option>
+                  <option value="4">4 Stars</option>
+                  <option value="3">3 Stars</option>
+                  <option value="2">2 Stars</option>
+                  <option value="1">1 Star</option>
                 </select>
               </div>
             </div>
