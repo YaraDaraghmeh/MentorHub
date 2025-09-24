@@ -1,0 +1,10 @@
+# Visual Studio temporary files
+MentorHup/appsettings.json
+appsettings.Development.json
+.vs/
+bin/
+obj/
+*.user
+*.suo
+*.log
+*.dbmdl

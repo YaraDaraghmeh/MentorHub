@@ -2,7 +2,8 @@
 {
     public class MenteeUpdateRequest
     {
-        public string Name { get; set; } = null!;
-        public string Gender { get; set; } = null!;
+        public string? Name { get; set; } = null!;
+        public string? Gender { get; set; } = null!;
+        public IFormFile? ImageForm { get; set; }
     }
 }
