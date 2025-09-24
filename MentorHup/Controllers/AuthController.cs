@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MentorHup.Exceptions;
+using MentorHub.APPLICATION.DTOs.ChangePassword;
+using System.Security.Claims;
 
 namespace MentorHup.Controllers
 {
@@ -137,6 +139,22 @@ namespace MentorHup.Controllers
             await context.SaveChangesAsync();
 
             return Ok(new { message = "Logged out successfully" });
+        }
+
+        [HttpPost("change-password")]
+        [Authorize]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordRequest changePasswordRequest)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (userId == null)
+                return Unauthorized(new { message = "User not found." });
+
+            var response = await _authService.ChangePasswordAsync(userId, changePasswordRequest);
+
+            if(!response.Success)
+                return BadRequest(response);
+
+            return Ok(response);
         }
 
         [HttpPost("forgot-password")]

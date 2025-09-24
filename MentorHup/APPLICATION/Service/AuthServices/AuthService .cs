@@ -1,4 +1,5 @@
-﻿using MentorHup.APPLICATION.DTOs.ForgetPassword;
+﻿using MentorHub.APPLICATION.DTOs.ChangePassword;
+using MentorHup.APPLICATION.DTOs.ForgetPassword;
 using MentorHup.APPLICATION.DTOs.Token;
 using MentorHup.APPLICATION.DTOs.Unified_Login;
 using MentorHup.Domain.Entities;
@@ -244,6 +245,23 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 };
             }
 
+
+            public async Task<ChangePasswordResponse> ChangePasswordAsync(string userId, ChangePasswordRequest request)
+            {
+                var user = await _userManager.FindByIdAsync(userId);
+                if (user == null)
+                    return new ChangePasswordResponse { Success = false, Message = "User not found." };
+
+                var result = await _userManager.ChangePasswordAsync(user, request.CurrentPassword, request.NewPassword);
+                if (!result.Succeeded)
+                {
+                    var errors = string.Join(", ", result.Errors.Select(error => error.Description));
+                    return new ChangePasswordResponse { Success = false, Message = $"Password change failed: {errors}" };
+                }
+
+                return new ChangePasswordResponse { Success = true, Message = "Password change successfully." };
+            }   
+            
             public async Task<ResetPasswordResponse> ForgotPasswordAsync(ForgotPasswordRequest request)
             {
 
