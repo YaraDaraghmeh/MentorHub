@@ -12,7 +12,8 @@ namespace MentorHup.APPLICATION.Validators.Mentee
                 .EmailAddress().WithMessage("Email is invalid");
 
             RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Password is required");
+                .NotEmpty().WithMessage("Password is required")
+                .MinimumLength(8).WithMessage("Password must be at least 8 characters");
         }
     }
 }

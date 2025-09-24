@@ -25,12 +25,40 @@ interface MentorServiceResponse {
   error?: string;
 }
 
+export interface MentorFilters {
+  skillName?: string;
+  experiences?: number;
+  field?: string;
+  minPrice?: number;
+  maxPrice?: number;
+}
+
 class MentorService {
-  async getMentors(pageNumber: number, pageSize: number, token: string): Promise<MentorServiceResponse> {
+  async getMentors(
+    pageNumber: number, 
+    pageSize: number, 
+    token: string,
+    filters?: MentorFilters
+  ): Promise<MentorServiceResponse> {
     try {
-      console.log('🔧 MentorService: Making API request...', { pageNumber, pageSize });
+      console.log('🔧 MentorService: Making API request...', { 
+        pageNumber, 
+        pageSize,
+        filters
+      });
       
-      const url = `${API_BASE_URL}/mentors?PageNumber=${pageNumber}&PageSize=${pageSize}`;
+      // Build query parameters
+      const params = new URLSearchParams({
+        PageNumber: pageNumber.toString(),
+        PageSize: pageSize.toString(),
+        ...(filters?.skillName && { SkillName: filters.skillName }),
+        ...(filters?.experiences && { Experiences: filters.experiences.toString() }),
+        ...(filters?.field && { Field: filters.field }),
+        ...(filters?.minPrice && { MinPrice: filters.minPrice.toString() }),
+        ...(filters?.maxPrice && { MaxPrice: filters.maxPrice.toString() })
+      });
+      
+      const url = `${API_BASE_URL}/mentors?${params.toString()}`;
       console.log('🔧 MentorService: Request URL:', url);
       
       const response = await fetch(url, {
@@ -292,6 +320,15 @@ class MentorService {
       };
     }
   }
+}
+
+// Export the MentorFilters interface
+export interface MentorFilters {
+  skillName?: string;
+  experiences?: number;
+  field?: string;
+  minPrice?: number;
+  maxPrice?: number;
 }
 
 // Create and export a singleton instance

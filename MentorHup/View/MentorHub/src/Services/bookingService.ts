@@ -18,7 +18,12 @@ class BookingService {
   /**
    * Initiate Stripe checkout for a booking
    */
-  async initiateCheckout(mentorAvailabilityId: number, token: string): Promise<BookingServiceResponse> {
+  async initiateCheckout(
+    mentorAvailabilityId: number, 
+    token: string, 
+    successUrl?: string,
+    cancelUrl?: string
+  ): Promise<BookingServiceResponse> {
     try {
       console.log('🔧 BookingService: Initiating checkout...', { mentorAvailabilityId });
 
@@ -36,7 +41,9 @@ class BookingService {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          mentorAvailabilityId: mentorAvailabilityId
+          mentorAvailabilityId: mentorAvailabilityId,
+          successUrl: successUrl,
+          cancelUrl: cancelUrl
         }),
       });
 

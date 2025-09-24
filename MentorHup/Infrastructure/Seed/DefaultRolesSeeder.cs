@@ -1,55 +1,54 @@
-﻿using MentorHup.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+﻿    using MentorHup.Domain.Entities;
+    using Microsoft.AspNetCore.Identity;
 
-namespace MentorHup.Infrastructure.Seed
-{
-    public static class DefaultRolesSeeder
+    namespace MentorHup.Infrastructure.Seed
     {
-        private static readonly string[] Roles = new[] { "Mentee", "Mentor", "Admin" };
-
-        public static async Task SeedAsync(
-            RoleManager<IdentityRole> roleManager,
-            UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
+        public static class DefaultRolesSeeder
         {
-            
-            foreach (var role in Roles)
+            private static readonly string[] Roles = new[] { "Mentee", "Mentor", "Admin" };
+
+            public static async Task SeedAsync(
+                RoleManager<IdentityRole> roleManager,
+                UserManager<ApplicationUser> userManager,
+                IConfiguration configuration)
             {
-                if (!await roleManager.RoleExistsAsync(role))
+            
+                foreach (var role in Roles)
                 {
-                    await roleManager.CreateAsync(new IdentityRole(role));
+                    if (!await roleManager.RoleExistsAsync(role))
+                    {
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                    }
                 }
-            }
 
             
-            var adminEmail = configuration["AdminUser:Email"];
-            var adminPassword = configuration["AdminUser:Password"];
-            var adminRole = configuration["AdminUser:Role"] ?? "Admin";
+                var adminEmail = configuration["AdminUser:Email"];
+                var adminPassword = configuration["AdminUser:Password"];
+                var adminRole = configuration["AdminUser:Role"] ?? "Admin";
 
-            if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
-                throw new Exception("AdminUser configuration is missing in appsettings.json");
+                if (string.IsNullOrWhiteSpace(adminEmail) || string.IsNullOrWhiteSpace(adminPassword))
+                    throw new Exception("AdminUser configuration is missing in appsettings.json");
 
-            var adminUser = await userManager.FindByEmailAsync(adminEmail);
-            if (adminUser == null)
-            {
-                adminUser = new ApplicationUser
+                var adminUser = await userManager.FindByEmailAsync(adminEmail);
+                if (adminUser == null)
                 {
-                    UserName = adminEmail,
-                    Email = adminEmail,
-                    EmailConfirmed = true
-                };
+                    adminUser = new ApplicationUser
+                    {
+                        UserName = "MentorHub-Admin",
+                        Email = adminEmail,
+                        EmailConfirmed = true,
+                    };
 
-                var result = await userManager.CreateAsync(adminUser, adminPassword);
-                if (result.Succeeded)
-                {
-                    await userManager.AddToRoleAsync(adminUser, adminRole);
-                }
-                else
-                {
-                    throw new Exception($"Failed to create default Admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    var result = await userManager.CreateAsync(adminUser, adminPassword);
+                    if (result.Succeeded)
+                    {
+                        await userManager.AddToRoleAsync(adminUser, adminRole);
+                    }
+                    else
+                    {
+                        throw new Exception($"Failed to create default Admin user: {string.Join(", ", result.Errors.Select(e => e.Description))}");
+                    }
                 }
             }
         }
     }
-}

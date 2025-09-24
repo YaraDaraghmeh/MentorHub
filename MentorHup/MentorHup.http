@@ -9,12 +9,11 @@ POST {{MentorHup_HostAddress}}/api/mentees/login
 Content-Type: application/json
 
 {
-  //MenteeLoginRequest
+  "email": "khaled1@string.com",
+  "password": "khaled2@string.com"
 }
 
-###
 
-GET {{MentorHup_HostAddress}}/api/mentees/profile
 
 ###
 
@@ -31,14 +30,78 @@ Content-Type: application/json
 
 
 
+
 ###
 
-POST {{MentorHup_HostAddress}}/api/mentees/login-admin
+POST {{MentorHup_HostAddress}}/api/mentors/login
 Content-Type: application/json
 
 {
-  "email": "admin@mentorhub.com",
-  "password": "Admin@123"
+  //MentorLoginRequest
 }
+
+###
+
+POST {{MentorHup_HostAddress}}/api/mentors/register
+Content-Type: application/json
+
+{
+  "name": "John Doe",
+  "description": "Experienced web development mentor",
+  "email": "john1222@example.com",
+  "password": "StrongPassword123!",
+  "experiences": 5,
+  "field": "Web Development",
+  "price": 50,
+  "skillIds": [1, 2, 3],
+  "availabilities": [
+    {
+      "startTime": "2025-09-04T10:00:00Z",
+      "endTime": "2025-09-04T11:00:00Z",
+      "durationInMinutes": 60
+    },
+    {
+      "startTime": "2025-09-05T14:00:00Z",
+      "endTime": "2025-09-05T15:30:00Z",
+      "durationInMinutes": 90
+    }
+  ]
+}
+{
+  "name": "John Doe",
+  "description": "Experienced web development mentor",
+  "email": "joheee@example.com",
+  "password": "StrongPassword123!",
+  "experiences": 5,
+  "field": "Web Development",
+  "price": 50,
+  "skillIds": [1, 2, 3],
+  "StripeAccountId": "acct_1S4tUdQoXSuVSdNb",
+  "availabilities": [
+    {
+      "startTime": "2025-09-04T10:00:00Z",
+      "endTime": "2025-09-04T11:00:00Z",
+      "durationInMinutes": 60
+    },
+    {
+      "startTime": "2025-09-05T14:00:00Z",
+      "endTime": "2025-09-05T15:30:00Z",
+      "durationInMinutes": 90
+    }
+  ]
+}
+
+
+###
+
+GET https://localhost:7020/api/mentors
+
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6ImM1N2MyZTlmLTBmY2YtNDQ2Yy1iOWE3LTdhNTU1YjJkMmE1MyIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImtoYWxlZDFAc3RyaW5nLmNvbSIsImh0dHA6Ly9zY2hlbWFzLm1pY3Jvc29mdC5jb20vd3MvMjAwOC8wNi9pZGVudGl0eS9jbGFpbXMvcm9sZSI6Ik1lbnRlZSIsImV4cCI6MTc1Njc4MDkxMywiaXNzIjoiTWVudG9ySHVwQVBJIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdCxodHRwczovL2xvY2FsaG9zdCJ9.iDiQwnTxLEpwZ-FKBGSaixKF2J7d6dRI255_EOUI_0k
+POST {{MentorHup_HostAddress}}/api/payments/stripe-webhook
+
+###
+
+@otherUserId=string
+GET {{MentorHup_HostAddress}}/api/messages/{{otherUserId}}
 
 ###
