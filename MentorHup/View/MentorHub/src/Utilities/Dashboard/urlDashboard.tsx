@@ -1,5 +1,5 @@
 const API_URL_DEVELOPMENT = "/api/dashboard";
-const API_URL_PRODUCTION = "http://appname.azurewebsite.net";
+const API_URL_PRODUCTION = "https://mentor-hub.runasp.net/api/dashboard";
 
 const ENDPOINT = {
   BOOKING_PER_WEEK: "weekly-bookings",

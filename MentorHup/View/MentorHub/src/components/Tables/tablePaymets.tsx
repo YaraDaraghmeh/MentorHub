@@ -69,8 +69,6 @@ const PaymentsInSystem = () => {
         const statusColors: Record<string, string> = {
           succeeded: "bg-[var(--secondary-dark)]",
           cancelled: "bg-[var(--red-light)]",
-          // pending: "bg-[#f59e0b]",
-          // refunded: "bg-blue-500",
         };
 
         const bgColor = statusColors[status] || "bg-gray-200";

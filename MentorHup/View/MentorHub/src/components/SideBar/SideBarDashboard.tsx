@@ -1,5 +1,4 @@
-import profilePicture from "../../assets/avatar-girl-with-glasses.png";
-import avatar from "../../assets/avatar-profile.png";
+import profilePicture from "../../assets/avatar-profile.png";
 import { MdOutlinePayment } from "react-icons/md";
 import { HiMenuAlt3 } from "react-icons/hi";
 import ListSide from "./listSide";
@@ -88,7 +87,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
     handleResize();
 
     return () => window.removeEventListener("resize", handleResize);
-  }, [setExpended]); // أضفت setExpended للـ dependency array
+  }, [setExpended]);
 
   const handleLogout = () => {
     console.log("Logging out...");
@@ -132,7 +131,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
               {role && (
                 <a href={`/${role}/profile`}>
                   <img
-                    src={expended ? profilePicture : avatar}
+                    src={expended ? profilePicture : profilePicture}
                     alt="User Avatar"
                     className={`w-full h-full rounded-full overflow-hidden transition`}
                   />
@@ -142,7 +141,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
             {expended ? (
               <div className="flex flex-col gap-1 items-center">
                 <span className="text-[var(--secondary-light)] text-base font-bold">
-                  {profile.userName || "المستخدم"}
+                  {profile.userName || "User"}
                 </span>
                 <span className="text-[var(--primary-green-light)] text-sm font-normal">
                   {profile.email}
