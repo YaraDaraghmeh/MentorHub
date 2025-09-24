@@ -129,6 +129,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                     Email = user.Email!,
                     UserName = user.UserName,
                     Roles = roles.ToList(),
+                    ImageLink = user.Mentor?.ImageUrl ?? user.Mentee?.ImageUrl,
                     AccessToken = accessToken,
                     RefreshToken = refreshToken.Token,
                     Expires = DateTime.Now.AddHours(3)

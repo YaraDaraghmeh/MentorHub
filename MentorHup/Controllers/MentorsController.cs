@@ -11,12 +11,12 @@ namespace MentorHup.API.Controllers
 {
     [ApiController]
     [Route("api/mentors")]
-    public class MentorController : ControllerBase
+    public class MentorsController : ControllerBase
     {
         private readonly IMentorAuthService _mentorAuthService;
         private readonly IMentorService _mentorService;
 
-        public MentorController(IMentorAuthService mentorAuthService , IMentorService mentorService )
+        public MentorsController(IMentorAuthService mentorAuthService , IMentorService mentorService )
         {
             _mentorAuthService = mentorAuthService;
             _mentorService = mentorService;
