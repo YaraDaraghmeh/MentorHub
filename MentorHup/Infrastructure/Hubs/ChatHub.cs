@@ -1,7 +1,9 @@
 ﻿using MentorHup.APPLICATION.DTOs.DTOs;
 using MentorHup.APPLICATION.Service.Message;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.SignalR;
 
+[Authorize]
 public class ChatHub : Hub
 {
     private readonly IMessageService _messageService;
