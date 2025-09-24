@@ -117,7 +117,7 @@ const CalendarBook = ({ userType, user }: CalendarBookProps) => {
                 {userType === "mentor" ? event.menteeName : event.mentorName}
               </span>
 
-              {event.meetingUrl && (
+              {event.meetingUrl && event.status === "Confirmed" && (
                 <a
                   href={event.meetingUrl}
                   target="_blank"

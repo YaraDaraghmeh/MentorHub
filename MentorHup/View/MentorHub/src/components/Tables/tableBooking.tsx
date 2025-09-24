@@ -1,23 +1,10 @@
 import { useEffect, useState } from "react";
 import Table from "./Table";
-import data from "./dataTable.json";
 import Eye from "./eyeicon";
 import { GetBooking } from "../../hooks/getBooking";
 import FormateDate from "./date";
-
-interface BookingData {
-  id: number;
-  bookingId: string;
-  mentorName: string;
-  menteeName: string;
-  startTime: string;
-  endTime: string;
-  amout: string;
-  status: string;
-  // image: string;
-  mentorId: string;
-  menteeId: string;
-}
+import type { BookingData } from "./interfaces";
+import profile from "../../assets/avatar-profile.png";
 
 const TableBooking = () => {
   const [booking, setBooking] = useState<BookingData[]>([]);
@@ -38,13 +25,13 @@ const TableBooking = () => {
       accessor: "menteeName" as keyof BookingData,
       render: (row: BookingData) => (
         <div className="flex items-center gap-3 justify-start text-start">
-          {/* <div className="w-12 h-12">
+          <div className="w-12 h-12">
             <img
-              src={row.image}
+              src={row.menteeImageLink || profile}
               className="hidden lg:block w-full h-full rounded-full"
-              alt="profile"
+              alt={profile}
             />
-          </div> */}
+          </div>
           {row.menteeName}
         </div>
       ),
@@ -55,13 +42,13 @@ const TableBooking = () => {
       accessor: "mentorName" as keyof BookingData,
       render: (row: BookingData) => (
         <div className="flex items-center gap-3 justify-start text-start">
-          {/* <div className="w-12 h-12">
+          <div className="w-12 h-12">
             <img
-              src={row.image}
+              src={row.mentorImageLink || profile}
               className="hidden lg:block w-full h-full rounded-full"
-              alt="profile"
+              alt={profile}
             />
-          </div> */}
+          </div>
           {row.mentorName}
         </div>
       ),

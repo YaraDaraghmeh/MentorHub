@@ -21,11 +21,12 @@ const production = {
 };
 
 // More robust environment detection
-const isDevelopment = import.meta.env.MODE === "development" || import.meta.env.DEV;
+const isDevelopment =
+  import.meta.env.MODE === "development" || import.meta.env.DEV;
 const urlMentor = isDevelopment ? development : production;
 
-console.log('🔧 URL Config: Environment mode:', import.meta.env.MODE);
-console.log('🔧 URL Config: Is development:', isDevelopment);
-console.log('🔧 URL Config: Using URLs:', urlMentor);
+console.log("🔧 URL Config: Environment mode:", import.meta.env.MODE);
+console.log("🔧 URL Config: Is development:", isDevelopment);
+console.log("🔧 URL Config: Using URLs:", urlMentor);
 
 export default urlMentor;

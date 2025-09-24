@@ -35,6 +35,8 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./Context/AuthContext";
 import ProfileAdmin from "./Pages/AdminPages/Profile";
 import GoogleCallback from "./Pages/Auth/GoogleCallback";
+import ProfileMentee from "./Pages/MenteePages/ProfileMentee";
+import ProfileMentor from "./Pages/MentorPages/ProfileMentor";
 // import { chatConnection, notificaConnection } from "./Services/chatConnection";
 
 // Component to handle default redirect
@@ -152,6 +154,7 @@ function App() {
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="chatting" element={<ChateUser />} />
                 <Route path="booking" element={<Booking />} />
+                <Route path="profile" element={<ProfileMentor />} />
               </Route>
 
               {/* Mentee Routes - Protected */}
@@ -168,6 +171,7 @@ function App() {
                 <Route path="mentors" element={<BrowseMentor />} />
                 <Route path="chatting" element={<ChateUser />} />
                 <Route path="booking" element={<MenteeBooking />} />
+                <Route path="profile" element={<ProfileMentee />} />
               </Route>
 
               {/* Catch all - redirect to home or login */}
