@@ -5,9 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "type-check": "tsc --noEmit"
+
   },
   "dependencies": {
     "@fortawesome/free-solid-svg-icons": "^7.0.1",
@@ -16,6 +18,7 @@
     "@heroicons/react": "^2.2.0",
     "@material-tailwind/html": "^3.0.0-beta.7",
     "@material-tailwind/react": "^2.1.10",
+    "@microsoft/signalr": "^9.0.6",
     "@tailwindcss/vite": "^4.1.12",
     "apexcharts": "^5.3.5",
     "axios": "^1.12.2",

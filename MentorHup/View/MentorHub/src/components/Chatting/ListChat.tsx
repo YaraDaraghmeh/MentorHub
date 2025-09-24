@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import urlChatting from "../../Utilities/Chatting/urlChatting";
 import profile from "../../assets/avatar-profile.png";
+import FormatTime from "./FormateTime";
 
 interface conv {
   conversationWithAvatar: string;
@@ -83,13 +84,6 @@ const ListOfChat = ({ onSelectChat }: listOfChat) => {
         .catch((error: any) => console.log("get message: ", error));
     }
   }, []);
-
-  // edit time
-  const formatTime = (datetime: string) => {
-    if (!datetime) return "";
-    const date = new Date(datetime);
-    return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-  };
 
   // choice specific conversation
   const handleSpecifcMessage = async (chat: conv) => {
@@ -168,7 +162,7 @@ const ListOfChat = ({ onSelectChat }: listOfChat) => {
               key={chat.conversationWithId}
               isRead={chat.isRead}
               name={chat.conversationWithName}
-              time={formatTime(chat.lastMessageTime)}
+              time={FormatTime(chat.lastMessageTime)}
               message={chat.lastMessage}
               picture={chat.conversationWithAvatar || profile}
               isDark={isDark}

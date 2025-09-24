@@ -4,7 +4,6 @@ import { useTheme } from "../../Context/ThemeContext";
 import { useState } from "react";
 import type { conv, message } from "../Tables/interfaces";
 import logo from "../../assets/MentorHub-logo (1)/vector/default-monochrome.svg";
-import NotificationMessages from "../Notifications/NotificationMessage";
 // import pictureProfile from "../../assets/avatar-profile.png";
 
 const Chat = () => {

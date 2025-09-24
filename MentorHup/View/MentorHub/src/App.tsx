@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import HomePage from "./Pages/PublicPages/HomePage";
 import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import AboutUsPage from "./Pages/PublicPages/AboutUs";
 import PublicMentors from "./Pages/PublicPages/PublicMentors";
 import ContactUs from "./components/ContactUsPageComponents/ContactUs";
@@ -35,9 +35,14 @@ import { AuthProvider } from "./Context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuth } from "./Context/AuthContext";
 import ProfileAdmin from "./Pages/AdminPages/Profile";
-import WithoutHeader from "./layouts/withoutSidebar";
 import GoogleCallback from "./Pages/Auth/GoogleCallback";
+<<<<<<< HEAD
 import PaymentSuccess from './Pages/MenteePages/SuccessPage';
+=======
+import ProfileMentee from "./Pages/MenteePages/ProfileMentee";
+import ProfileMentor from "./Pages/MentorPages/ProfileMentor";
+// import { chatConnection, notificaConnection } from "./Services/chatConnection";
+>>>>>>> d4732729bcd0b2e308bba2b44e31d5306b4f0873
 
 // Component to handle default redirect
 const DefaultRedirect = () => {
@@ -88,7 +93,10 @@ function App() {
 
               {/* Login & Registration - public routes */}
               <Route path="/login" element={<LoginUser />} />
-              <Route path="/auth/google/callback" element={<GoogleCallback />} />
+              <Route
+                path="/auth/google/callback"
+                element={<GoogleCallback />}
+              />
               <Route path="/registration" element={<ChooseUser />} />
               <Route path="/SignUp-mentee" element={<SignUpMentee />} />
               <Route path="/SignUp-mentor" element={<SignUpMentor />} />
@@ -122,6 +130,7 @@ function App() {
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="chatting" element={<ChateUser />} />
                 <Route path="booking" element={<Booking />} />
+                <Route path="profile" element={<ProfileMentor />} />
               </Route>
 
               {/* Mentee Routes - Protected */}
@@ -138,20 +147,9 @@ function App() {
                 <Route path="mentors" element={<BrowseMentor />} />
                 <Route path="chatting" element={<ChateUser />} />
                 <Route path="booking" element={<MenteeBooking />} />
+                <Route path="profile" element={<ProfileMentee />} />
               </Route>
               <Route path="/success" element={<PaymentSuccess />} />
-
-              {/* Admin Profile (without Sidebar) */}
-              {/* <Route
-                path="/admin/"
-                element={
-                  <ProtectedRoute allowedRoles={["Admin"]}>
-                    <WithoutHeader />
-                  </ProtectedRoute>
-                }
-              >
-                <Route path="profile" element={<ProfileAdmin />} />
-              </Route> */}
 
               {/* Catch all - redirect to home or login */}
               <Route path="*" element={<Navigate to="/" replace />} />

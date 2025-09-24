@@ -3,9 +3,9 @@ using MentorHup.Domain.Entities;
 using MentorHup.Exceptions;
 using MentorHup.Extensions;
 using MentorHup.Infrastructure.Context;
-using MentorHup.Infrastructure.Mapping;
 using MentorHup.Infrastructure.Seed;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,13 +31,25 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
     options.Password.RequireLowercase = true;
     options.Password.RequireUppercase = false;
     options.Password.RequiredLength = 8;
+
+    options.SignIn.RequireConfirmedEmail = true; // Must confirm his/her email after regestration before login
+
+
+    options.Lockout.AllowedForNewUsers = true; // activate blocking
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromDays(365 * 100); // lifetime blocking
+    options.Lockout.MaxFailedAccessAttempts = 5; // max number attempts logining into account before default blocking
 })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+
 builder.Services.ConfigureJwt(builder.Configuration);
 builder.Services.ConfigureCors();
 builder.Services.ConfigureSomeServices();
+builder.Services.AddSignalR();
+builder.Services.Configure<StripSettings>(builder.Configuration.GetSection("stripe"));
 
 var app = builder.Build();
 //  Seed Roles , Admin
@@ -54,15 +66,20 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "MentorHub API V1");
+        c.RoutePrefix = string.Empty;
+    });
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 app.UseExceptionHandler();
 app.UseAuthentication();
 
 app.UseAuthorization();
 
 app.MapControllers();
+app.MapHub<ChatHub>("/chathub");
 
 app.Run();

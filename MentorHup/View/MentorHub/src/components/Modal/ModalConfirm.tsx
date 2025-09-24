@@ -23,10 +23,10 @@ export default function ConfirmModal({
     <Transition show={open} as={Fragment}>
       <Dialog as="div" className="" onClose={onClose}>
         {/* background */}
-        <div className="fixed inset-0 bg-black/50" />
+        <div className="fixed z-54 inset-0 bg-black/50" />
 
         {/* content */}
-        <div className="fixed inset-0 flex items-center justify-center">
+        <div className="fixed z-55 inset-0 flex items-center justify-center">
           <div
             className={`p-7 rounded w-[20rem] ${
               isDark ? "bg-[var(--primary-light)]" : "bg-white"

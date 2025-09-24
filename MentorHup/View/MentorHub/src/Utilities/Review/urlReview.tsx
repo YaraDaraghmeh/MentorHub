@@ -1,5 +1,5 @@
 const API_URL_DEVELOPMENT = "/api";
-const API_URL_PRODUCTION = "http://appname.azurewebsite.net";
+const API_URL_PRODUCTION = "https://mentor-hub.runasp.net/api";
 
 const ENDPOINT = {
   GET_ALL_REVIEWS: "all-reviews",

@@ -1,27 +1,67 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import profile from "../../assets/avatar-profile.png";
-import { FaCamera } from "react-icons/fa6";
 import { useTheme } from "../../Context/ThemeContext";
 import bg from "../../assets/bg-profile-shape.png";
 import { RxDotFilled } from "react-icons/rx";
+import { BasicInfo } from "./basicInfo";
+import { GetMyProfile } from "../../hooks/getMyProfile";
+import { LabelsInfo } from "./LabelInfo";
+import { FaCamera } from "react-icons/fa6";
+import FormateDate from "../Tables/date";
+import axios from "axios";
+import urlMentee from "../../Utilities/Mentee/urlMentee";
+import urlMentor from "../../Utilities/Mentor/urlMentor";
 
 interface user {
-  name: string;
-  role: string;
+  applicationUserId: string;
   email: string;
+  userName: string;
+  imageLink: string | null;
   gender: string;
-  password: string;
-  created: string;
-  numBooking?: number;
-  experience: number;
-  skills: [];
-  imageLinke?: string;
+  role: string;
+  createdAt: string;
 }
 
 const ProfileUser = () => {
-  const [userData, setUserData] = useState<user[]>([]);
-
+  const [userData, setUserData] = useState<user>({
+    applicationUserId: "",
+    email: "",
+    userName: "",
+    imageLink: null,
+    gender: "",
+    role: "",
+    createdAt: "",
+  });
   const { isDark } = useTheme();
+  const token = localStorage.getItem("accessToken");
+  const [mentee, setMentee] = useState(0);
+  const [mentor, setMentor] = useState(0);
+
+  useEffect(() => {
+    const getInfo = async () => {
+      const data = await GetMyProfile();
+      setUserData(data);
+    };
+
+    getInfo();
+
+    // count booking for mentee
+    const getCompletedSessions = async () => {
+      try {
+        const res = await axios.get(urlMentee.DASHBOARD, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setMentee(res.data.completedSessions);
+      } catch (error: any) {
+        console.log("completedSessions error: ", error);
+      }
+    };
+
+    getCompletedSessions();
+  }, []);
 
   return (
     <>
@@ -38,10 +78,16 @@ const ProfileUser = () => {
           ></div>
 
           <div className="relative top-[77px] left-12 z-12 rounded-full border-4 border-white w-32 h-32">
-            <img src={profile} alt={profile} className="w-full h-full" />
-            <div className="absolute bg-gray-300 top-[87px] left-[90px] p-2 rounded-full">
-              <FaCamera className="text-md text-[var(--primary-light)]" />
-            </div>
+            <img
+              src={userData?.imageLink || profile}
+              alt={profile}
+              className="w-full h-full"
+            />
+            {userData.role !== "Admin" && (
+              <div className="absolute bg-gray-300 top-[87px] left-[90px] p-2 rounded-full">
+                <FaCamera className="text-md text-[var(--primary-light)]" />
+              </div>
+            )}
           </div>
         </div>
 
@@ -62,7 +108,7 @@ const ProfileUser = () => {
                     : "border-gray-400 text-[var(--secondary-light)] bg-[var(--primary)]"
                 }`}
               >
-                Mentee
+                {userData.role}
               </span>
             </div>
 
@@ -75,7 +121,7 @@ const ProfileUser = () => {
                     isDark ? "text-white" : "text-[var(--primary)]"
                   }`}
                 >
-                  Sara Sayed Ahmad
+                  {userData.userName}
                 </h1>
                 <span
                   className={`flex flex-row justify-center items-center rounded-md px-1 border-2 gap-0 ${
@@ -101,57 +147,17 @@ const ProfileUser = () => {
                   isDark ? "text-gray-400" : `text-[var(--gray-medium)]`
                 }`}
               >
-                sara.ahmad@gmail.com
+                {userData.email}
               </p>
             </div>
 
             {/* labels */}
             <div className="flex flex-row py-3">
-              <div className="flex flex-col p-2 gap-2 text-start">
-                <h3
-                  className={`text-sm ${
-                    isDark
-                      ? "text-[var(--aqua-green)]"
-                      : "text-[var(--gray-medium)]"
-                  }`}
-                >
-                  Created
-                </h3>
-                <span
-                  className={`${
-                    isDark
-                      ? "text-[var(--secondary-light)]"
-                      : "text-[var(--primary-light)]"
-                  }`}
-                >
-                  12/3/2025
-                </span>
-              </div>
-              <div
-                className={`border border-r-1 h-14 m-2  ${
-                  isDark ? "border-[#383e4085]" : "border-[#8e999d85]"
-                }`}
-              ></div>
-              <div className="flex flex-col p-2 gap-2 text-start">
-                <h3
-                  className={`text-sm ${
-                    isDark
-                      ? "text-[var(--aqua-green)]"
-                      : "text-[var(--gray-medium)]"
-                  }`}
-                >
-                  Sessions
-                </h3>
-                <span
-                  className={`text-center ${
-                    isDark
-                      ? "text-[var(--secondary-light)]"
-                      : "text-[var(--primary-light)]"
-                  }`}
-                >
-                  0
-                </span>
-              </div>
+              <BasicInfo
+                role={userData.role}
+                createdAt={FormateDate(userData.createdAt)}
+                sessions={userData.role === "Mentee" ? mentee : mentor}
+              />
             </div>
           </div>
 
@@ -165,50 +171,31 @@ const ProfileUser = () => {
               isDark ? "text-white" : "text-[var(--primary)]"
             }`}
           >
-            <div className="px-3 py-2">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-                <h4 className="col-span-1 text-start font-semibold">Name</h4>
-                <h5 className="col-span-1 text-start">Sara Sayed Ahmad</h5>
+            {userData && (
+              <div className="px-3 py-2">
+                <LabelsInfo label="Name" value={userData.userName} />
+                <LabelsInfo label="Email" value={userData.email} />
+
+                {userData.role !== "Admin" && (
+                  <LabelsInfo label="Gender" value={userData.gender} />
+                )}
               </div>
-              <hr
-                className={`${
-                  isDark ? "text-[#282d2e85]" : "text-[#8e999d85]"
-                }`}
-              ></hr>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-                <h4 className="col-span-1 text-start font-semibold">Gender</h4>
-                <h5 className="col-span-1 text-start">Female</h5>
-              </div>
-              <hr
-                className={`${
-                  isDark ? "text-[#282d2e85]" : "text-[#8e999d85]"
-                }`}
-              ></hr>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6">
-                <h4 className="col-span-1 text-start font-semibold">Email</h4>
-                <h5 className="col-span-1 text-start">
-                  sarasayedahmad24@gmail.com
-                </h5>
-              </div>
-              <hr
-                className={`${
-                  isDark ? "text-[#282d2e85]" : "text-[#8e999d85]"
-                }`}
-              ></hr>
-            </div>
+            )}
           </div>
 
           {/* Edit profile */}
           <div className="flex flex-row gap-3 justify-end items-center px-3">
-            <button
-              className={`text-end border-1 py-2 px-3 rounded-md border-[var(--gray-medium)] ${
-                isDark
-                  ? "text-[var(--secondary)] bg-[var(--primary-dark)]"
-                  : "text-[var(--secondary-light)] bg-[var(--primary)]"
-              }`}
-            >
-              Edit Profile
-            </button>
+            {userData.role !== "Admin" && (
+              <button
+                className={`text-end border-1 py-2 px-3 rounded-md border-[var(--gray-medium)] ${
+                  isDark
+                    ? "text-[var(--secondary)] bg-[var(--primary-dark)]"
+                    : "text-[var(--secondary-light)] bg-[var(--primary)]"
+                }`}
+              >
+                Edit Profile
+              </button>
+            )}
             <button
               className={`text-end border-1 py-2 px-3 rounded-md ${
                 isDark

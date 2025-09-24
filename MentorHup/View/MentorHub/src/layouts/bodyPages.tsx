@@ -9,6 +9,9 @@ import { useAuth } from "../Context/AuthContext";
 import ModalSkills from "../components/Modal/ModalSkills";
 import TableSkills from "../components/Tables/tableSkills";
 import { FaFacebookMessenger } from "react-icons/fa";
+import NotificationMessages from "../components/Notifications/NotificationMessage";
+import axios from "axios";
+import urlNotification from "../Utilities/Chatting/urlNotification";
 
 type UserRole = "Admin" | "Mentor" | "Mentee";
 
@@ -17,6 +20,8 @@ const BodySystem = () => {
   const { roles, email, userId, isAuthenticated, userName } = useAuth(); // أضفت isAuthenticated
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showNoti, setShowNoti] = useState(false);
+  const [countUnRead, setCountUnRead] = useState(0);
 
   useEffect(() => {
     console.log("BodySystem - Auth data updated:", {
@@ -33,6 +38,27 @@ const BodySystem = () => {
     console.log("BodySystem - User not authenticated");
     return <div>Loading...</div>;
   }
+
+  // get count un-read (Notifications)
+  useEffect(() => {
+    const token = localStorage.getItem("accessToken");
+
+    const getUnRead = async () => {
+      try {
+        const resp = await axios.get(urlNotification.UNREAD_COUT, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        setCountUnRead(resp.data);
+      } catch (error: any) {
+        console.log("error get count unread: ", error);
+      }
+    };
+
+    getUnRead();
+  }, []);
 
   return (
     <div
@@ -100,21 +126,31 @@ const BodySystem = () => {
             </div>
 
             {/* Icons Container */}
-            <div className="flex items-center gap-2 justify-center sm:justify-end flex-shrink-0">
+            <div className="flex items-center gap-3 justify-center sm:justify-end flex-shrink-0">
               {/* Notifiaction Messages */}
               <button
-                className={`transition-colors duration-200 ${
+                onClick={() => setShowNoti((prev) => !prev)}
+                className={`realtive transition-colors duration-200 ${
                   isDark
                     ? "hover:text-gray-100 text-gray-300"
                     : "hover:text-gray-800 text-gray-600"
                 }`}
               >
                 <FaFacebookMessenger className="w-6 h-6" />
+                {countUnRead ? (
+                  <span
+                    className={`absolute z-6 top-5 text-[10px] w-4 h-4 flex justify-center items-center p-[2px] rounded-full  ${
+                      isDark
+                        ? "text-white bg-[var(--primary)]"
+                        : "text-[var(--primary-dark)] bg-[var(--System-Gray-200)]"
+                    }`}
+                  >
+                    {countUnRead}
+                  </span>
+                ) : null}
               </button>
 
-              <div className="flex flex-col">
-                <div></div>
-              </div>
+              {showNoti && <NotificationMessages />}
 
               {/* Theme Toggle */}
               <button

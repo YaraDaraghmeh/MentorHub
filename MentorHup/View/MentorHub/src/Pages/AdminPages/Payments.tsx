@@ -19,7 +19,7 @@ const Payments = () => {
   const state = [
     {
       title: "Total Payments",
-      value: statistics.totalPayments,
+      value: `$${statistics.totalPayments}`,
       icon: <FaMoneyCheckDollar />,
       color: "",
     },
@@ -31,7 +31,7 @@ const Payments = () => {
     },
     {
       title: "Average Payment",
-      value: statistics.averagePayment,
+      value: `$${statistics.averagePayment}`,
       icon: <IoStatsChartSharp />,
       color: "",
     },

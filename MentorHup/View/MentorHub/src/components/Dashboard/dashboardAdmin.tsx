@@ -13,13 +13,8 @@ import TableReview from "../Tables/tableReview";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import urlAdmin from "../../Utilities/Admin/urlAdmin";
-import FormateWeekly from "./formateWeekly";
-import urlDashboard from "../../Utilities/Dashboard/urlDashboard";
-
-interface week {
-  weekLabel: string;
-  count: number;
-}
+import type { week } from "../Tables/interfaces";
+import { GetBookingPerWeek } from "../../hooks/getWeeks";
 
 const DashboardAdmin = () => {
   const { isDark } = useTheme();
@@ -29,7 +24,7 @@ const DashboardAdmin = () => {
     totalBookings: 0,
     totalMentors: 0,
     totalMentees: 0,
-    totalPayments: 0,
+    myWallet: 0,
   });
 
   const [sessions, setSessions] = useState<week[]>([]);
@@ -47,8 +42,6 @@ const DashboardAdmin = () => {
       return;
     }
 
-    console.log(token);
-
     const getDataUsers = async () => {
       try {
         const numbers = await axios.get(urlAdmin.GET_STATISTICS, {
@@ -65,17 +58,10 @@ const DashboardAdmin = () => {
     getDataUsers();
 
     const countBookingPerWeek = async () => {
-      try {
-        const booking = await axios.get(urlDashboard.BOOKING_PER_WEEK, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setSessions(booking.data);
-      } catch (error: any) {
-        console.log("Booking:", error);
-      }
+      const booking = await GetBookingPerWeek();
+      setSessions(booking);
     };
+
     countBookingPerWeek();
   }, []);
 
@@ -100,7 +86,7 @@ const DashboardAdmin = () => {
     },
     {
       title: "Revenues",
-      value: statistics.totalPayments,
+      value: "$" + statistics.myWallet,
       icon: <FaUserTie />,
       color: "",
     },
