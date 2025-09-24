@@ -1,6 +1,6 @@
 ﻿using MentorHup.APPLICATION.DTOs.Booking;
 
-namespace MentorHup.APPLICATION.Service.Dashboard
+namespace MentorHup.APPLICATION.Service.Dashboard.WeeklyService
 {
     public interface IWeeklyDashboardService
     {

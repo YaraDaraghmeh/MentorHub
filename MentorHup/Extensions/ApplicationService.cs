@@ -4,7 +4,8 @@ using MentorHup.APPLICATION.Service.Admin;
 using MentorHup.APPLICATION.Service.AuthServices;
 using MentorHup.APPLICATION.Service.Booking;
 using MentorHup.APPLICATION.Service.Conversation;
-using MentorHup.APPLICATION.Service.Dashboard;
+using MentorHup.APPLICATION.Service.Dashboard.EarningsService;
+using MentorHup.APPLICATION.Service.Dashboard.WeeklyService;
 using MentorHup.APPLICATION.Service.Mentee;
 using MentorHup.APPLICATION.Service.Mentor;
 using MentorHup.APPLICATION.Service.Message;
@@ -51,6 +52,7 @@ namespace MentorHup.Extensions
 
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IWeeklyDashboardService, WeeklyDashboardService>();
+            services.AddScoped<IEarningsService, EarningsService>();
 
 
 

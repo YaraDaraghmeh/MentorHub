@@ -3,7 +3,7 @@ using MentorHup.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
-namespace MentorHup.APPLICATION.Service.Dashboard
+namespace MentorHup.APPLICATION.Service.Dashboard.WeeklyService
 {
     public class WeeklyDashboardService(ApplicationDbContext _context) : IWeeklyDashboardService
     {
