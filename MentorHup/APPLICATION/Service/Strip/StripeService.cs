@@ -58,9 +58,9 @@ public class StripeService : IStripeService
                 Quantity = 1
             }
         },
-            Mode = "payment",
-            SuccessUrl = "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}",
-            CancelUrl = "http://localhost:3000/cancel",
+            Mode = "payment", 
+            SuccessUrl = "http://localhost:5175/success?session_id={CHECKOUT_SESSION_ID}",
+            CancelUrl = "http://localhost:5175/cancel",
             ClientReferenceId = $"{booking.MenteeId}:{booking.MentorAvailabilityId}", // stripe لتتبع الحجز بين تطبيقي وال
 
             // الأهم 👇
