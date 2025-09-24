@@ -92,6 +92,7 @@ namespace MentorHup.APPLICATION.Service.Profile
                         Id = admin.Id,
                         Email = admin.Email,
                         UserName = admin.UserName,
+                        CreatedAt = admin.CreatedAt,
                         Role = "Admin"
                     };
 
