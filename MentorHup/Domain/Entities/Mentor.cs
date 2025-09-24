@@ -20,7 +20,7 @@
         public ICollection<MentorSkill> MentorSkills { get; set; } = new List<MentorSkill>();
         public ICollection<MentorAvailability> Availabilities { get; set; } = new List<MentorAvailability>();
 
-        public ICollection<Booking>? Bookings { get; set; }
+        public ICollection<Booking> Bookings { get; set; }
 
     }
 }

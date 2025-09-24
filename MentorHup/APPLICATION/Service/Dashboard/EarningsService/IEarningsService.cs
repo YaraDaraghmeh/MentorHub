@@ -1,5 +1,4 @@
 ﻿using MentorHup.APPLICATION.DTOs.Booking;
-using MentorHup.APPLICATION.Service.Dashboard;
 
 namespace MentorHup.APPLICATION.Service.Dashboard.EarningsService
 {

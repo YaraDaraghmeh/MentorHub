@@ -33,6 +33,7 @@ namespace MentorHup.APPLICATION.Service.Profile
                         UserName = mentee.ApplicationUser.UserName,
                         ImageLink = mentee.ImageUrl,
                         Gender = mentee.Gender,
+                        CreatedAt = mentee.ApplicationUser.CreatedAt,
                         Role = "Mentee"
                     };
 
@@ -40,8 +41,11 @@ namespace MentorHup.APPLICATION.Service.Profile
                     var mentor = await dbContext.Mentors
                         .AsNoTracking()
                         .Include(ment => ment.ApplicationUser)
+                        .Include(ment => ment.Bookings)
+                            .ThenInclude(ment => ment.Review)
                         .Include(ment => ment.MentorSkills)
                             .ThenInclude(mentSkill => mentSkill.Skill)
+                        .Include(ment => ment.Availabilities)
                         .FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
 
                     if (mentor == null) return null;
@@ -51,14 +55,29 @@ namespace MentorHup.APPLICATION.Service.Profile
                         Id = mentor.Id,
                         ApplicationUserId = mentor.ApplicationUserId,
                         Email = mentor.ApplicationUser.Email,
-                        UserName = mentor.ApplicationUser.UserName,
+                        Name = mentor.Name,
+                        CompanyName = mentor.CompanyName,
                         ImageLink = mentor.ImageUrl,
                         CVLink = mentor.CVUrl,
                         Description = mentor.Description,
-                        CompnayName = mentor.CompanyName,
+                        Experiences = mentor.Experiences,
                         Price = mentor.Price,
+                        Field = mentor.Field,
+                        CreatedAt = mentor.ApplicationUser.CreatedAt,
                         Skills = mentor.MentorSkills.Select(s => s.Skill.SkillName).ToList(),
-                        Role = "Mentor"
+                        Availabilites = mentor.Availabilities
+                        .Where(mentorAvailability => mentorAvailability.StartTime > DateTime.Now)
+                        .Select(mentorAvailability => new DTOs.Mentor.MentorAvailabilityResponse
+                        {
+                            MentorAvailabilityId = mentorAvailability.Id,
+                            DayOfWeek = mentorAvailability.StartTime.DayOfWeek.ToString(),
+                            StartTime = mentorAvailability.StartTime,
+                            EndTime = mentorAvailability.EndTime,
+                            DurationInMinutes = (int)(mentorAvailability.EndTime - mentorAvailability.StartTime).TotalMinutes,
+                            IsBooked = mentorAvailability.IsBooked,
+                        }).ToList(),
+                        ReviewsCount = mentor.Bookings.Count(booking => booking.Review != null),
+                        Role = "Mentor",
                     };
 
                 case "Admin":

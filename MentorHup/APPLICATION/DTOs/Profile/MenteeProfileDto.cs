@@ -10,5 +10,6 @@ namespace MentorHup.APPLICATION.DTOs.Profile
         public string UserName { get; set; }
         public string ImageLink { get; set; }
         public string Gender { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }

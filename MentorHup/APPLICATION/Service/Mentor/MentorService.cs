@@ -22,8 +22,10 @@ namespace MentorHup.APPLICATION.Service.Mentor
             var query =  context.Mentors
                 .Include(m => m.ApplicationUser)
                 .Include(m => m.Bookings)
+                    .ThenInclude(m => m.Review)
                 .Include(m => m.MentorSkills) // Note: Here we can add Include(m => m.ApplicationUser) then we execlude the mentees who own IsDeleted = true, (Review ApplicationDbContext line 123)
-               .ThenInclude(ms => ms.Skill).Include(s => s.Availabilities)
+                    .ThenInclude(ms => ms.Skill)
+                .Include(s => s.Availabilities)
                .AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(field))
