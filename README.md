@@ -67,7 +67,8 @@ The project focuses on delivering a robust, scalable, and user-friendly experien
 - *Analytics & Reporting*: Generate comprehensive platform usage reports
 - *Content Management*: Manage resources, guidelines, and platform policies
 
-![WhatsApp Image 2025-09-24 at 13 35 15_7290e241](https://github.com/user-attachments/assets/8bb10a58-b466-4212-b103-f2e644ae2e32)
+![WhatsApp Image 2025-09-24 at 18 10 36_8cffae4f](https://github.com/user-attachments/assets/95228455-1f4e-45e6-833c-dc72c7570db1)
+
 
 
 ##  System Architecture
