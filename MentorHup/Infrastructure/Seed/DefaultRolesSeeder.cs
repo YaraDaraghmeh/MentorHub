@@ -37,6 +37,7 @@
                         UserName = "MentorHub-Admin",
                         Email = adminEmail,
                         EmailConfirmed = true,
+                        CreatedAt = DateTime.Now,
                     };
 
                     var result = await userManager.CreateAsync(adminUser, adminPassword);
