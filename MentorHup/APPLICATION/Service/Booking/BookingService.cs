@@ -120,7 +120,9 @@ public class BookingService(ApplicationDbContext context, IStripeService stripeS
         if (availability == null) throw new ArgumentException("Mentor availability not found.");
 
         var isAlreadyBooked = await context.Bookings
-            .AnyAsync(b => b.MentorAvailabilityId == dto.MentorAvailabilityId && b.IsConfirmed);
+            .AnyAsync(b => b.MentorAvailabilityId == dto.MentorAvailabilityId
+            && b.IsConfirmed 
+            && b.Status == BookingStatus.Confirmed);
         if (isAlreadyBooked) throw new InvalidOperationException("This time slot is already booked.");
 
         var hasMenteeConflict = await context.Bookings.AnyAsync(booking =>
