@@ -5,6 +5,7 @@ import {
   Navigate,
   // useLocation,
 } from "react-router-dom";
+import { useEffect } from "react";
 import HomePage from "./Pages/PublicPages/HomePage";
 import LoginUser from "./Pages/PublicPages/Login";
 import MainLayout from "./layouts/MainLayout";
@@ -36,6 +37,7 @@ import { useAuth } from "./Context/AuthContext";
 import ProfileAdmin from "./Pages/AdminPages/Profile";
 import WithoutHeader from "./layouts/withoutSidebar";
 import GoogleCallback from "./Pages/Auth/GoogleCallback";
+import PaymentSuccess from './Pages/MenteePages/SuccessPage';
 
 // Component to handle default redirect
 const DefaultRedirect = () => {
@@ -64,17 +66,8 @@ function App() {
   const toggleTheme = () => {
     setIsDark(!isDark);
   };
-
-  // const loaction = useLocation();
-  // const hideSidebar = [
-  //   "/profile",
-  //   "/admin/profile",
-  //   "/mentor/profile",
-  //   "/mentee/profile",
-  // ];
-
-  // const shouldeHide = hideSidebar.includes(loaction.pathname);
-
+  
+  
   return (
     <>
       <ThemeProvider>
@@ -146,6 +139,7 @@ function App() {
                 <Route path="chatting" element={<ChateUser />} />
                 <Route path="booking" element={<MenteeBooking />} />
               </Route>
+              <Route path="/success" element={<PaymentSuccess />} />
 
               {/* Admin Profile (without Sidebar) */}
               {/* <Route
