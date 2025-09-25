@@ -8,12 +8,31 @@ type chartItem = {
   count: number;
 };
 
+type earnItem = {
+  weekLabel: string;
+  totalEarnings: number;
+};
+
+type BarChartData = chartItem | earnItem;
+
 interface BarChartProps {
-  data: chartItem[];
+  data: BarChartData[];
 }
 
 const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
   const { isDark } = useTheme();
+
+  const seriesName = data.some((item) => "totalEarnings" in item)
+    ? "Earnings"
+    : "Value";
+
+  const seriesData = data.map((item) =>
+    "count" in item
+      ? item.count
+      : "totalEarnings" in item
+      ? item.totalEarnings
+      : 0
+  );
 
   const options = {
     chart: { id: "revenue-chart", toolbar: { show: false } },
@@ -26,7 +45,6 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
         hideOverlappingLabels: true,
         showDuplicates: false,
         trim: false,
-        minHeight: undefined,
         maxHeight: 120,
         style: {
           colors: data.map(() =>
@@ -36,26 +54,18 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
           fontWeight: 400,
           cssClass: "apexcharts-xaxis-label",
         },
-        offsetX: 0,
-        offsetY: 0,
       },
     },
     yaxis: {
       labels: {
         show: true,
-        showDuplicates: false,
         align: "right" as const,
-        minWidth: 0,
         maxWidth: 160,
         style: {
           colors: [isDark ? "var(--secondary-light)" : "var(--primary-dark)"],
           fontSize: "14px",
           fontWeight: 400,
-          cssClass: "apexcharts-yaxis-label",
         },
-        offsetX: 0,
-        offsetY: 0,
-        rotate: 0,
       },
     },
     stroke: { curve: "smooth" as const, width: 3 },
@@ -65,13 +75,11 @@ const BarChartDash: React.FC<BarChartProps> = ({ data }) => {
     grid: { show: false },
   };
 
-  const series = [{ name: "Value", data: data.map((item) => item.count ?? 0) }];
-
   return (
     <Chart
       className="transition"
       options={options}
-      series={series}
+      series={[{ name: seriesName, data: seriesData }]}
       type="area"
       height={350}
     />
