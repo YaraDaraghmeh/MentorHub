@@ -103,9 +103,9 @@ MentorHub follows a *Model-View-Controller (MVC) Architecture* combined with *RE
 
 | Principle | Implementation in Code | Example |
 |-----------|----------------------|---------|
-| **S – Single Responsibility** | Each service handles one concern | `BookingService` manages booking logic only |
-| **O – Open/Closed** | Services can be extended without modifying existing code | `AdvancedBookingService` implements `IBookingService` for extra features |
-| **L – Liskov Substitution** | Interfaces can be replaced without breaking code | `IBookingService` implemented by multiple classes |
+| **S – Single Responsibility** | Each service handles one concern | `ProfileService` manages profile logic only |
+| **O – Open/Closed** | Services can be extended without modifying existing code | Changing the email provider or adding SMS notifications can be implemented by creating a new class that implements `IEmailSender` or `INotificationService` without modifying existing classes like `BookingService` |
+| **L – Liskov Substitution** | Interfaces can be replaced without breaking code | Any class using an abstraction (e.g., a service using `IStripeService`) can seamlessly replace the concrete implementation without affecting its core functionality |
 | **I – Interface Segregation** | Interfaces are focused and small | `IBookingService` contains only booking methods |
 | **D – Dependency Inversion** | Controllers depend on abstractions (interfaces), not concrete classes | `BookingController` uses `IBookingService` via DI |
 
@@ -167,8 +167,8 @@ This ensures **maintainability, testability, and scalability** across the projec
 
 
 ## Project Structure
-
-[mentorhub/
+```
+mentorhub/
 ├── frontend/
 │   ├── src/
 │   │   ├── components/          # Reusable UI components
@@ -209,7 +209,7 @@ backend/
 ├── wwwroot/                            # Static files
 └── Program.cs                          # Application entry point
 └── README.md](https://github.com/YaraDaraghmeh/MentorHub/tree/09c3df0e5db08927c1b40ac21944de29e7623f80/MentorHup)
-
+```
 
 ## User Roles
 
@@ -237,7 +237,7 @@ Figure 1 - UI Prototypes and Mockups
 | *Team Lead - Frontend Developer* | Sara Sayed Ahmed  | Overall coordination, architecture decisions |
 | *Frontend Developer* | Yara H Daraghmeh| React development, UI/UX implementation |
 | *Backend Developer* |Khaled Hroub | .NET API, database design, security |
-| *Backend Developer* | Amjad Hamidi | .NET API, database design, security|
+| *Backend Developer* | Amjad Hamidi | .NET API, database design, security |
 
 
 <div align="center">
