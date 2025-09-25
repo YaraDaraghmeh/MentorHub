@@ -18,6 +18,7 @@ import Alert from "../Tables/alerts";
 import ConfirmModal from "../Modal/ModalConfirm";
 import ModalOk from "../Modal/ModalOk";
 import { useAuth } from "../../Context/AuthContext";
+import { AvailabilityModal } from "./AddAvailabilty";
 
 interface user {
   applicationUserId: string;
@@ -76,6 +77,7 @@ const ProfMentor = () => {
   const { isDark } = useTheme();
   const token = localStorage.getItem("accessToken");
   const [mentor, setMentor] = useState(0);
+  const [addAvail, setAddAvail] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [changePassword, setChangePassword] = useState(false);
   const [changeInfo, setChangeInfo] = useState({
@@ -137,6 +139,24 @@ const ProfMentor = () => {
 
   const handleChangePassword = () => {
     setChangePassword(true);
+  };
+
+  const handleAddAvail = () => {
+    setAddAvail(true);
+  };
+
+  const addtime = async (data: { startTime: string; endTime: string }) => {
+    try {
+      const resp = await axios.post(urlMentor.ADD_AVAILABILTY, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      console.log(resp.data);
+    } catch (err: any) {
+      console.log("error add availabilty time", err);
+    }
   };
 
   return (
@@ -462,6 +482,7 @@ const ProfMentor = () => {
                   ? "bg-[var(--gray-light)]"
                   : "bg-[var(--System-Gray-300)]"
               }`}
+              onClick={handleAddAvail}
             >
               <MdOutlineAdd />
               Availabilty Time
@@ -573,6 +594,13 @@ const ProfMentor = () => {
         title="Logout"
         message="Please log out and log in again to continue."
         onConfirm={logout}
+      />
+
+      {/* Modal Add */}
+      <AvailabilityModal
+        open={addAvail}
+        onSubmit={addtime}
+        onclose={() => setAddAvail(false)}
       />
     </>
   );
