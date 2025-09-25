@@ -102,10 +102,15 @@ MentorHub follows a *Model-View-Controller (MVC) Architecture* combined with *RE
 -  *Typewriter Effect 2.22.0* - Dynamic text animations
 
 ### Backend Technologies
-- *.NET Core* - High-performance web API framework
-- *Entity Framework* - Object-relational mapping
-- *Authentication & Authorization* - Secure user management
-- *RESTful APIs* - Standard HTTP-based communication
+- **ASP.NET Core 9** – High-performance, cross-platform framework for building scalable RESTful APIs  
+- **Entity Framework Core 9** – ORM for database operations and migrations with SQL Server  
+- **SQL Server** – Reliable relational database engine for data persistence  
+- **SignalR** – Real-time WebSocket communication for live chat and instant notifications  
+- **ASP.NET Identity with JWT** – Secure authentication and role-based authorization using JSON Web Tokens and external providers (Google Sign-In)  
+- **FluentValidation** – Clean and maintainable model validation  
+- **Stripe .NET SDK** – Secure payment processing for booking transactions  
+- **Email Service (SMTP)** – Automated email notifications for key events such as booking, registration, and cancellations  
+
 
 ### Development Tools
 - *Axios 1.12.2* - HTTP client for API communication
