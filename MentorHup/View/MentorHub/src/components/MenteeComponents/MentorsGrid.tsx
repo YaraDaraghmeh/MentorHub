@@ -694,7 +694,7 @@ const MentorsGrid = () => {
                           whileHover={{ scale: 1.02 }}
                           whileTap={{ scale: 0.98 }}
                           onClick={() => navigate(`/mentor/${mentor.id}`)}
-                          className="flex-1 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
+                          className="flex-1 border border-gray-600 dark:border-gray-600 text-white dark:text-white py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
                         >
                           View Profile
                         </motion.button>
