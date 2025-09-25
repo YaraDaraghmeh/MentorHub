@@ -17,6 +17,12 @@ const LoginContent = () => {
   useEffect(() => {
     console.log('Current route :():', location.pathname);
     console.log('Navigation state():', location.state);
+    localStorage.setItem('accessToken', location.state?.accessToken || '');
+    localStorage.setItem('refreshToken', location.state?.refreshToken || '');
+    localStorage.setItem('userId', location.state?.userId || '');
+    localStorage.setItem('roles', location.state?.roles || '');
+    
+
   }, [location]);
 
   const [loading, setLoading] = useState(false);
@@ -215,7 +221,7 @@ const LoginContent = () => {
                   loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
-                {loading ? ".................Logging In " : "Sign in"}
+                {loading ? "Logging In " : "Sign in"}
               </button>
             </div>
 
