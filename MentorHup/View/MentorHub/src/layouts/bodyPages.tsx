@@ -17,7 +17,8 @@ type UserRole = "Admin" | "Mentor" | "Mentee";
 
 const BodySystem = () => {
   const { isDark, toggle } = useTheme();
-  const { roles, email, userId, isAuthenticated, userName } = useAuth(); // أضفت isAuthenticated
+  const { roles, email, userId, isAuthenticated, userName, imageLink } =
+    useAuth(); // أضفت isAuthenticated
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [showNoti, setShowNoti] = useState(false);
@@ -30,8 +31,9 @@ const BodySystem = () => {
       email,
       userId,
       userName,
+      imageLink,
     });
-  }, [isAuthenticated, roles, email, userId, userName]);
+  }, [isAuthenticated, roles, email, userId, userName, imageLink]);
 
   // إذا مش مسجل دخول، ما تعرض الـ component
   if (!isAuthenticated) {
@@ -71,6 +73,7 @@ const BodySystem = () => {
           email,
           userId,
           userName: userName,
+          imageLink: imageLink,
         }}
         role={roles as UserRole}
         expended={isSidebarOpen}
