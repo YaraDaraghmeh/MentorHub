@@ -12,12 +12,16 @@ import BarChartDash from "../Charts/BarChart";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import urlMentor from "../../Utilities/Mentor/urlMentor";
-import urlDashboard from "../../Utilities/Dashboard/urlDashboard";
-import type { week } from "../Tables/interfaces";
+import type { BookingData, week } from "../Tables/interfaces";
 import { GetBookingPerWeek } from "../../hooks/getWeeks";
+import { GetBooking } from "../../hooks/getBooking";
+import FormateDate from "../Tables/date";
+import FormatTime from "../Chatting/FormateTime";
+import { useNavigate } from "react-router-dom";
 
 const DashboardMentor = () => {
   const { isDark } = useTheme();
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalMentees: 0,
     totalReviews: 0,
@@ -25,6 +29,7 @@ const DashboardMentor = () => {
     upcomingBookings: 0,
   });
   const [sessions, setSessions] = useState<week[]>([]);
+  const [booking, setBooking] = useState<BookingData[]>([]);
 
   useEffect(() => {
     const fetchMentorDashboard = async () => {
@@ -58,6 +63,13 @@ const DashboardMentor = () => {
       setSessions(booking);
     };
     countBookingPerWeek();
+
+    const getBooking = async () => {
+      const data = await GetBooking();
+      setBooking(data);
+    };
+
+    getBooking();
   }, []);
 
   const state = [
@@ -86,6 +98,10 @@ const DashboardMentor = () => {
       color: "",
     },
   ];
+
+  const handleOpen = () => {
+    navigate("/mentor/booking");
+  };
 
   return (
     <>
@@ -118,27 +134,32 @@ const DashboardMentor = () => {
               Interview Schedule
             </h2>
           </div>
-          <CardLabel
-            name="Mr Jone"
-            date="12/11/2025"
-            picture={picture}
-            time="12:00 AM"
-            isDark={isDark}
-          />
-          <CardLabel
-            name="Mr Jone"
-            date="12/11/2025"
-            picture={picture}
-            time="12:00 AM"
-            isDark={isDark}
-          />
-          <CardLabel
-            name="Mr Jone"
-            date="12/11/2025"
-            picture={picture}
-            time="12:00 AM"
-            isDark={isDark}
-          />
+          <>
+            {booking.length > 0 ? (
+              booking.slice(0, 3).map((item, index) => (
+                <span onClick={handleOpen}>
+                  <CardLabel
+                    key={index}
+                    name={item.menteeName}
+                    date={FormateDate(item.startTime)}
+                    picture={item.menteeImageLink || picture}
+                    time={FormatTime(item.startTime)}
+                    isDark={isDark}
+                  />
+                </span>
+              ))
+            ) : (
+              <span
+                className={`flex flex-col h-60 justify-center items-center ${
+                  isDark
+                    ? "text-[var(--secondary-light)]"
+                    : "text-[var(--primary)]"
+                }`}
+              >
+                No Booking
+              </span>
+            )}
+          </>
         </div>
       </div>
     </>

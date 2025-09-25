@@ -13,9 +13,7 @@ import { day, time } from "./FormateAvaila";
 import { MdOutlineAdd } from "react-icons/md";
 import ModalChangePassword from "../Modal/ModalChangePassword";
 import { ChangePassword } from "../../hooks/changePassword";
-import { useNavigate } from "react-router-dom";
 import Alert from "../Tables/alerts";
-import ConfirmModal from "../Modal/ModalConfirm";
 import ModalOk from "../Modal/ModalOk";
 import { useAuth } from "../../Context/AuthContext";
 import { AvailabilityModal } from "./AddAvailabilty";
@@ -34,16 +32,14 @@ interface user {
   cvLink: string;
   skills: [];
   price: number;
-  availabilites: [
-    {
-      mentorAvailabilityId: number;
-      dayOfWeek: string;
-      startTime: string;
-      endTime: string;
-      durationInMinutes: number;
-      isBooked: boolean;
-    }
-  ];
+  availabilites: {
+    mentorAvailabilityId: number;
+    dayOfWeek: string;
+    startTime: string;
+    endTime: string;
+    durationInMinutes: number;
+    isBooked: boolean;
+  }[];
   reviewsCount: [];
 }
 
@@ -79,6 +75,7 @@ const ProfMentor = () => {
   const [mentor, setMentor] = useState(0);
   const [addAvail, setAddAvail] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [cv, setCV] = useState<File | null>(null);
   const [changePassword, setChangePassword] = useState(false);
   const [changeInfo, setChangeInfo] = useState({
     currentPassword: "",
@@ -87,6 +84,8 @@ const ProfMentor = () => {
   const [successChange, setSuccessChange] = useState(false);
   const [logoutNow, setLogoutNow] = useState(false);
   const { logout } = useAuth();
+  const [uploadSuccess, setUploadSuccess] = useState(false);
+  const [addTimeSuccess, setAddTimeSuccess] = useState(false);
 
   useEffect(() => {
     const getInfo = async () => {
@@ -129,8 +128,39 @@ const ProfMentor = () => {
           },
         });
 
-        const newImageLink = res.data.imageLink;
-        setUserData((prev) => ({ ...prev, imageLink: newImageLink }));
+        const newImageLink = `${res.data.imageLink}?v=${Date.now()}`;
+        setUserData((prev) => ({
+          ...prev,
+          imageLink: newImageLink,
+        }));
+      } catch (err) {
+        console.error("Upload failed:", err);
+      }
+    }
+  };
+
+  const handleUploadCV = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const selectedFile = e.target.files[0];
+      setCV(selectedFile);
+
+      const formData = new FormData();
+      formData.append("CV", selectedFile);
+
+      try {
+        const res = await axios.post(urlMentor.UPLOAD_CV, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        console.log(res.data);
+        const newCV = `${res.data.cvLink}?v=${Date.now()}`;
+        setUserData((prev) => ({
+          ...prev,
+          cvLink: newCV,
+        }));
+        setUploadSuccess(true);
       } catch (err) {
         console.error("Upload failed:", err);
       }
@@ -153,7 +183,12 @@ const ProfMentor = () => {
         },
       });
 
-      console.log(resp.data);
+      setUserData((prev) => ({
+        ...prev,
+        availabilites: [...prev.availabilites, resp.data],
+      }));
+
+      setAddTimeSuccess(true);
     } catch (err: any) {
       console.log("error add availabilty time", err);
     }
@@ -350,10 +385,23 @@ const ProfMentor = () => {
               }`}
             >
               {userData.cvLink ? (
-                <>Download CV</>
+                <span className="flex flex-row gap-2">
+                  <label htmlFor="cvUp" className="cursor-pointer">
+                    Change CV
+                  </label>
+                  {/* <span onClick={handleDownloadCV}>Download CV</span> */}
+                </span>
               ) : (
-                <> Do you want upload CV?</>
+                <label htmlFor="cvUp" className="cursor-pointer">
+                  Do you want upload CV?
+                </label>
               )}
+              <input
+                id="cvUp"
+                type="file"
+                className="hidden"
+                onChange={handleUploadCV}
+              />
             </span>
           </div>
 
@@ -467,7 +515,9 @@ const ProfMentor = () => {
                             : "text-[var(--green-dark)]"
                         }`}
                       >
-                        {day(boo.dayOfWeek)}, {FormateDate(boo.startTime)}
+                        {boo.dayOfWeek ? day(boo.dayOfWeek) : "N/A"},
+                        {boo.endTime ? FormateDate(boo.endTime) : ""}
+                        {/* {day(boo.dayOfWeek)}, {FormateDate(boo.startTime)} */}
                         {time(boo.startTime, boo.endTime)}
                       </label>
                     ))
@@ -586,6 +636,20 @@ const ProfMentor = () => {
         open={successChange}
         type="success"
         message="Password changed successfully!"
+      />
+
+      {/* Alert Upload CV */}
+      <Alert
+        open={uploadSuccess}
+        type="success"
+        message="Uploaded CV successfully!"
+      />
+
+      {/* Alert add avail */}
+      <Alert
+        open={addTimeSuccess}
+        type="success"
+        message="Added availabilty time successfully!"
       />
 
       {/* logout */}
