@@ -13,6 +13,11 @@ import { day, time } from "./FormateAvaila";
 import { MdOutlineAdd } from "react-icons/md";
 import ModalChangePassword from "../Modal/ModalChangePassword";
 import { ChangePassword } from "../../hooks/changePassword";
+import { useNavigate } from "react-router-dom";
+import Alert from "../Tables/alerts";
+import ConfirmModal from "../Modal/ModalConfirm";
+import ModalOk from "../Modal/ModalOk";
+import { useAuth } from "../../Context/AuthContext";
 
 interface user {
   applicationUserId: string;
@@ -73,10 +78,13 @@ const ProfMentor = () => {
   const [mentor, setMentor] = useState(0);
   const [file, setFile] = useState<File | null>(null);
   const [changePassword, setChangePassword] = useState(false);
-  const [changeData, setChangeData] = useState({
+  const [changeInfo, setChangeInfo] = useState({
     currentPassword: "",
-    NewPassword: "",
+    newPassword: "",
   });
+  const [successChange, setSuccessChange] = useState(false);
+  const [logoutNow, setLogoutNow] = useState(false);
+  const { logout } = useAuth();
 
   useEffect(() => {
     const getInfo = async () => {
@@ -494,50 +502,78 @@ const ProfMentor = () => {
         title="Change Password"
         onConfirm={async () => {
           try {
-            const resp = await ChangePassword(changeData);
-            console.log(resp.data);
+            const resp = await ChangePassword(changeInfo);
+
+            if (resp === 200) {
+              setChangePassword(false);
+              setSuccessChange(true);
+              setLogoutNow(true);
+            }
           } catch (err: any) {
             console.log("error change password: ", err);
           }
         }}
       >
-        <div className="self-stretch inline-flex flex-col w-full justify-between items-start gap-3.5">
-          <div className="flex flex-col">
-            <label className="text-center justify-center text-[var(--primary)] text-base font-medium">
+        <div className="flex flex-col w-full justify-between items-start gap-4">
+          <div className="flex flex-col gap-2 w-full">
+            <label
+              className={`text-start justify-center text-base font-medium ${
+                isDark ? "text-gray-200" : "text-[var(--primary)]"
+              }`}
+            >
               Current Password
             </label>
             <input
-              value={changeData.currentPassword}
+              value={changeInfo.currentPassword}
               onChange={(e) =>
-                setChangeData({
-                  ...changeData,
+                setChangeInfo({
+                  ...changeInfo,
                   currentPassword: e.target.value,
                 })
               }
               name="currentPassword"
               type="password"
               placeholder="**********"
-              className={`flex w-full items-center text-[var(--primary)]`}
+              className={`flex w-full items-center text-[var(--primary)] rounded-md h-12 p-2 w-full border-1 bg-gray-100 border-[var(--System-Gray-300)] }`}
             />
           </div>
 
-          <div className="flex flex-col">
-            <label className="text-center justify-center text-[var(--primary)] text-base font-medium">
+          <div className="flex flex-col gap-2 w-full">
+            <label
+              className={`text-start justify-center text-base font-medium ${
+                isDark ? "text-gray-200" : "text-[var(--primary)]"
+              }`}
+            >
               New Password
             </label>
             <input
               onChange={(e) =>
-                setChangeData({ ...changeData, NewPassword: e.target.value })
+                setChangeInfo({ ...changeInfo, newPassword: e.target.value })
               }
-              value={changeData.NewPassword}
+              value={changeInfo.newPassword}
               name="NewPassword"
               type="password"
               placeholder="**********"
-              className={`flex w-full items-center text-[var(--primary)]`}
+              className={`flex w-full items-center text-[var(--primary)] rounded-md h-12 p-2 w-full border-1 bg-gray-100 border-[var(--System-Gray-300)] }`}
             />
           </div>
         </div>
       </ModalChangePassword>
+
+      {/* alert success */}
+      <Alert
+        open={successChange}
+        type="success"
+        message="Password changed successfully!"
+      />
+
+      {/* logout */}
+      <ModalOk
+        open={logoutNow}
+        title="Logout"
+        message="Please log out and log in again to continue."
+        onConfirm={logout}
+      />
     </>
   );
 };

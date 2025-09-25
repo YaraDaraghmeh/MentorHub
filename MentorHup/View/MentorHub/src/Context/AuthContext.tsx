@@ -6,6 +6,7 @@ import {
   useEffect,
 } from "react";
 import { useNavigate } from "react-router-dom";
+import { Logout } from "../hooks/logout";
 
 interface AuthContextType {
   accessToken: string | null;
@@ -15,6 +16,7 @@ interface AuthContextType {
   userId: string | null;
   userName: string | null;
   isAuthenticated: boolean;
+  imageLink: string | null;
   setAuth: (data: {
     userId: string;
     roles: "Admin" | "Mentor" | "Mentee";
@@ -22,6 +24,7 @@ interface AuthContextType {
     accessToken: string;
     refreshToken: string;
     userName: string;
+    imageLink: string;
   }) => void;
   logout: () => void;
   updateAccessToken: (token: string) => void;
@@ -43,6 +46,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   );
   const [email, setEmail] = useState<string | null>(
     localStorage.getItem("email")
+  );
+  const [imageLink, setImageLink] = useState<string | null>(
+    localStorage.getItem("imageLink")
   );
   const [userId, setUserId] = useState<string | null>(
     localStorage.getItem("userId")
@@ -79,6 +85,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     accessToken,
     refreshToken,
     userName,
+    imageLink,
   }: {
     userId: string;
     roles: "Admin" | "Mentor" | "Mentee";
@@ -86,6 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     accessToken: string;
     refreshToken: string;
     userName: string;
+    imageLink: string;
   }) => {
     console.log("setAuth called with:", { userId, roles, email });
 
@@ -96,6 +104,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
     localStorage.setItem("userName", userName);
+    localStorage.setItem("imageLink", imageLink);
 
     // Update state - هذا سيؤدي لإعادة render للـ components
     setUserId(userId);
@@ -104,6 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setAccessToken(accessToken);
     setRefreshToken(refreshToken);
     setUserName(userName);
+    setImageLink(imageLink);
 
     console.log("Auth state updated, navigating...");
 
@@ -114,6 +124,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, 200);
   };
 
+  console.log("image", imageLink);
+
   // When renewing, update token
   const updateAccessToken = (token: string) => {
     setAccessToken(token);
@@ -121,12 +133,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   // Logout
-  const logout = () => {
+  const logout = async () => {
+    await Logout();
     setRoles(null);
     setAccessToken(null);
     setRefreshToken(null);
     setEmail(null);
     setUserId(null);
+    setUserName(null);
+    setImageLink(null);
 
     localStorage.removeItem("roles");
     localStorage.removeItem("accessToken");
@@ -137,6 +152,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     localStorage.removeItem("MessageUserName");
     localStorage.removeItem("imageUser");
     localStorage.removeItem("userName");
+    localStorage.removeItem("imageLink");
 
     navigate("/home");
   };
@@ -162,6 +178,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         userId,
         isAuthenticated,
         userName,
+        imageLink,
       }}
     >
       {children}

@@ -10,6 +10,11 @@ import { FaCamera } from "react-icons/fa6";
 import FormateDate from "../Tables/date";
 import axios from "axios";
 import urlMentee from "../../Utilities/Mentee/urlMentee";
+import ModalOk from "../Modal/ModalOk";
+import Alert from "../Tables/alerts";
+import ModalChangePassword from "../Modal/ModalChangePassword";
+import { useAuth } from "../../Context/AuthContext";
+import { ChangePassword } from "../../hooks/changePassword";
 
 interface user {
   applicationUserId: string;
@@ -35,6 +40,14 @@ const ProfileUser = () => {
   const token = localStorage.getItem("accessToken");
   const [mentee, setMentee] = useState(0);
   const [file, setFile] = useState<File | null>(null);
+  const [changePassword, setChangePassword] = useState(false);
+  const [changeInfo, setChangeInfo] = useState({
+    currentPassword: "",
+    newPassword: "",
+  });
+  const [successChange, setSuccessChange] = useState(false);
+  const [logoutNow, setLogoutNow] = useState(false);
+  const { logout } = useAuth();
 
   useEffect(() => {
     const getInfo = async () => {
@@ -84,6 +97,10 @@ const ProfileUser = () => {
   //     }
   //   }
   // };
+
+  const handleChangePassword = () => {
+    setChangePassword(true);
+  };
 
   return (
     <>
@@ -232,12 +249,93 @@ const ProfileUser = () => {
                   ? "text-[var(--secondary)] bg-[var(--primary-dark)] border-[var(--gray-medium)]"
                   : "text-[var(--secondary-light)] bg-[var(--primary)]"
               }`}
+              onClick={handleChangePassword}
             >
               Change Password
             </button>
           </div>
         </div>
       </div>
+
+      {/* Modal Change Password */}
+      <ModalChangePassword
+        open={changePassword}
+        onClose={() => setChangePassword(false)}
+        title="Change Password"
+        onConfirm={async () => {
+          try {
+            const resp = await ChangePassword(changeInfo);
+
+            if (resp === 200) {
+              setChangePassword(false);
+              setSuccessChange(true);
+              setLogoutNow(true);
+            }
+          } catch (err: any) {
+            console.log("error change password: ", err);
+          }
+        }}
+      >
+        <div className="flex flex-col w-full justify-between items-start gap-4">
+          <div className="flex flex-col gap-2 w-full">
+            <label
+              className={`text-start justify-center text-base font-medium ${
+                isDark ? "text-gray-200" : "text-[var(--primary)]"
+              }`}
+            >
+              Current Password
+            </label>
+            <input
+              value={changeInfo.currentPassword}
+              onChange={(e) =>
+                setChangeInfo({
+                  ...changeInfo,
+                  currentPassword: e.target.value,
+                })
+              }
+              name="currentPassword"
+              type="password"
+              placeholder="**********"
+              className={`flex w-full items-center text-[var(--primary)] rounded-md h-12 p-2 w-full border-1 bg-gray-100 border-[var(--System-Gray-300)] }`}
+            />
+          </div>
+
+          <div className="flex flex-col gap-2 w-full">
+            <label
+              className={`text-start justify-center text-base font-medium ${
+                isDark ? "text-gray-200" : "text-[var(--primary)]"
+              }`}
+            >
+              New Password
+            </label>
+            <input
+              onChange={(e) =>
+                setChangeInfo({ ...changeInfo, newPassword: e.target.value })
+              }
+              value={changeInfo.newPassword}
+              name="NewPassword"
+              type="password"
+              placeholder="**********"
+              className={`flex w-full items-center text-[var(--primary)] rounded-md h-12 p-2 w-full border-1 bg-gray-100 border-[var(--System-Gray-300)] }`}
+            />
+          </div>
+        </div>
+      </ModalChangePassword>
+
+      {/* alert success */}
+      <Alert
+        open={successChange}
+        type="success"
+        message="Password changed successfully!"
+      />
+
+      {/* logout */}
+      <ModalOk
+        open={logoutNow}
+        title="Logout"
+        message="Please log out and log in again to continue."
+        onConfirm={logout}
+      />
     </>
   );
 };
