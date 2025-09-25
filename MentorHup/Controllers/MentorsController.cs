@@ -144,7 +144,7 @@ namespace MentorHup.API.Controllers
         {
             var (isSuccess, message) = await _mentorService.CreateAvailabilityAsync(createAvailabilityRequest);
             if (!isSuccess)
-                return BadRequest(new { message = "Failed to create availability." });
+                return BadRequest(new { message });
 
             return Ok(new { message = "Availability created successfully." });
         }
