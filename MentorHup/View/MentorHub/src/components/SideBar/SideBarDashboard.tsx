@@ -135,7 +135,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
                     src={
                       expended
                         ? profile.imageLink || profilePicture
-                        : profilePicture
+                        : profile.imageLink || profilePicture
                     }
                     alt="User Avatar"
                     className={`w-full h-full rounded-full overflow-hidden transition`}
