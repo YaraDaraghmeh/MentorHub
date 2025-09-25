@@ -55,4 +55,6 @@ export interface BookingData {
   mentorImageLink: string;
   mentorId: string;
   menteeId: string;
+  mentorUserId: string;
+  menteeUserId: string;
 }

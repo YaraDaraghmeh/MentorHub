@@ -201,7 +201,11 @@ const TableUser = () => {
           {row.role === "Mentor" && (
             <ToSend
               onClick={() =>
-                handleMessageClick(row.id, row.userName, row.imageLink)
+                handleMessageClick(
+                  row.id,
+                  row.userName,
+                  row.imageLink || profile
+                )
               }
             />
           )}

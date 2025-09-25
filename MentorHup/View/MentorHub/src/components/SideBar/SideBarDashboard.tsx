@@ -11,6 +11,7 @@ import { HiMenuAlt2 } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { HiHome } from "react-icons/hi";
 import { useAuth } from "../../Context/AuthContext"; // استيراد useAuth
+import { NavLink } from "react-router-dom";
 
 interface profile {
   userName: string | null;
@@ -130,7 +131,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
               }`}
             >
               {role && (
-                <a href={`/${role}/profile`}>
+                <NavLink to={`/${role}/profile`}>
                   <img
                     src={
                       expended
@@ -140,7 +141,7 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
                     alt="User Avatar"
                     className={`w-full h-full rounded-full overflow-hidden transition`}
                   />
-                </a>
+                </NavLink>
               )}
             </div>
             {expended ? (
