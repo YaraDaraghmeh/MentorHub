@@ -15,14 +15,8 @@ const LoginContent = () => {
   
   // Debug: Log current location
   useEffect(() => {
-    console.log('Current route :():', location.pathname);
-    console.log('Navigation state():', location.state);
-    localStorage.setItem('accessToken', location.state?.accessToken || '');
-    localStorage.setItem('refreshToken', location.state?.refreshToken || '');
-    localStorage.setItem('userId', location.state?.userId || '');
-    localStorage.setItem('roles', location.state?.roles || '');
-    
-
+    console.log('Current route:', location.pathname);
+    console.log('Navigation state:-Here-', location.state);
   }, [location]);
 
   const [loading, setLoading] = useState(false);

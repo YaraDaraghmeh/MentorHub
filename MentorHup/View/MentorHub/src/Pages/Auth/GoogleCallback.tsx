@@ -13,38 +13,40 @@ const GoogleCallback: React.FC = () => {
     const handleCallback = async () => {
       try {
         setLoading(true);
-        
+
         // Check if this is a Google auth callback
         if (!GoogleAuthService.isGoogleAuthCallback()) {
           throw new Error("Invalid callback URL");
         }
 
-        // Handle the callback
-        const authData = await GoogleAuthService.handleGoogleCallback();
-        
+        // Handle the callback using the API method (recommended)
+        const authData = await GoogleAuthService.handleGoogleCallbackViaAPI();
+
         // Process roles similar to regular login
         const roleString = Array.isArray(authData.roles)
           ? (authData.roles[0] as "Admin" | "Mentor" | "Mentee")
           : (authData.roles as "Admin" | "Mentor" | "Mentee");
 
-        // Set authentication data
+        // Set authentication data using AuthContext
         await setAuth({
           userId: authData.userId,
           roles: roleString,
           email: authData.email,
           accessToken: authData.accessToken,
           refreshToken: authData.refreshToken,
+          userName: authData.email.split('@')[0], // Use email prefix as username
+          imageLink: "", // Google auth might not provide image initially
         });
 
         // Clean up URL parameters
         GoogleAuthService.cleanupAuthParams();
-        
+
         console.log("Google authentication successful, redirecting...");
-        
+
         // Get the stored return URL or use role-based default
         const storedReturnUrl = sessionStorage.getItem('googleAuthReturnUrl');
         sessionStorage.removeItem('googleAuthReturnUrl'); // Clean up
-        
+
         if (storedReturnUrl && storedReturnUrl !== "/") {
           navigate(storedReturnUrl, { replace: true });
         } else {
@@ -63,11 +65,11 @@ const GoogleCallback: React.FC = () => {
               navigate("/", { replace: true });
           }
         }
-        
+
       } catch (error) {
         console.error("Google authentication callback failed:", error);
         setError(error instanceof Error ? error.message : "Authentication failed");
-        
+
         // Redirect to login page after a delay
         setTimeout(() => {
           navigate("/login", { replace: true });
