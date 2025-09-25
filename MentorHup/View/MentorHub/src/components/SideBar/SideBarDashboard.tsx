@@ -16,6 +16,7 @@ interface profile {
   userName: string | null;
   email: string | null;
   userId: string | null;
+  imageLink: string | null;
 }
 
 type UserRole = "Admin" | "Mentor" | "Mentee";
@@ -131,7 +132,11 @@ const SideBar = ({ profile, role, expended, setExpended }: sideProps) => {
               {role && (
                 <a href={`/${role}/profile`}>
                   <img
-                    src={expended ? profilePicture : profilePicture}
+                    src={
+                      expended
+                        ? profile.imageLink || profilePicture
+                        : profilePicture
+                    }
                     alt="User Avatar"
                     className={`w-full h-full rounded-full overflow-hidden transition`}
                   />
