@@ -39,7 +39,9 @@ import GoogleCallback from "./Pages/Auth/GoogleCallback";
 import ProfileMentee from "./Pages/MenteePages/ProfileMentee";
 import ProfileMentor from "./Pages/MentorPages/ProfileMentor";
 import PaymentSuccess from "./Pages/MenteePages/SuccessPage";
+import ForgotPassword from "./Pages/PublicPages/ForgotPassword";
 // import { chatConnection, notificaConnection } from "./Services/chatConnection";
+
 
 // Component to handle default redirect
 const DefaultRedirect = () => {
@@ -90,10 +92,12 @@ function App() {
 
               {/* Login & Registration - public routes */}
               <Route path="/login" element={<LoginUser />} />
+            
               <Route
                 path="/auth/google/callback"
                 element={<GoogleCallback />}
               />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
               <Route path="/registration" element={<ChooseUser />} />
               <Route path="/SignUp-mentee" element={<SignUpMentee />} />
               <Route path="/SignUp-mentor" element={<SignUpMentor />} />
