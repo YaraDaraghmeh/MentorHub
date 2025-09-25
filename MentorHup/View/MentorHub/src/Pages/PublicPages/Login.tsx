@@ -1,4 +1,4 @@
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Link, useLocation, Navigate } from "react-router-dom";
 import AppForm from "../../components/Form/Form";
 import FormFiled from "../../components/Form/FormFiled";
 import logo from "/src/assets/MentorHub-logo (1)/vector/default-monochrome.svg";
@@ -11,6 +11,13 @@ import GoogleAuthService from "../../Services/googleAuthService";
 
 const LoginContent = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Debug: Log current location
+  useEffect(() => {
+    console.log('Current route:', location.pathname);
+    console.log('Navigation state:', location.state);
+  }, [location]);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
@@ -179,9 +186,24 @@ const LoginContent = () => {
 
               {/* forget password */}
               <div className="w-full self-stretch inline-flex justify-end items-center">
-                <span className="justify-center text-[var(--blue-medium)] text-xs underline font-medium cursor-pointer">
-                  forget password?
-                </span>
+                <Link 
+                  to="/forgot-password"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    console.log('Forgot password link clicked');
+                    console.log('Current path before navigation:', window.location.pathname);
+                    console.log('Navigation function available:', !!navigate);
+                    try {
+                      navigate('/forgot-password');
+                    } catch (err) {
+                      console.error('Navigation error:', err);
+                      window.location.href = '/forgot-password';
+                    }
+                  }}
+                  className="justify-center text-[var(--blue-medium)] text-xs underline font-medium cursor-pointer hover:text-[var(--blue-dark)] transition-colors"
+                >
+                  Forgot password?
+                </Link>
               </div>
 
               {/* Sign in */}
