@@ -208,7 +208,7 @@ backend/
 ├── Properties/                        # Project properties
 ├── wwwroot/                            # Static files
 └── Program.cs                          # Application entry point
-└── README.md](https://github.com/YaraDaraghmeh/MentorHub/tree/09c3df0e5db08927c1b40ac21944de29e7623f80/MentorHup)
+└── README.md
 ```
 
 ## User Roles
