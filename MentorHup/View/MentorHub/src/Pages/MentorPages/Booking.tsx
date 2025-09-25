@@ -1,5 +1,5 @@
-import TableBooking from "../../components/Tables/tableBooking";
 import CalendarBook from "../../components/Calendar/CalendarBooking";
+import MentorTableBooking from "../../components/Tables/tableBooking";
 
 const Booking = () => {
   const userName = localStorage.getItem("userName");
@@ -7,7 +7,7 @@ const Booking = () => {
   return (
     <>
       <CalendarBook userType="mentor" user={userName!} />
-      <TableBooking />
+      <MentorTableBooking />
     </>
   );
 };

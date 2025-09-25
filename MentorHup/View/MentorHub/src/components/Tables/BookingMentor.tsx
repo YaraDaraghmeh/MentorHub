@@ -25,26 +25,26 @@ const MentorTableBooking = () => {
     getBooking();
   }, []);
 
-  // camcel booking
+  // cancel booking
   const handleCancel = (bookingId: number) => {
     setModalCancel({ bookingId: bookingId, show: true });
   };
 
   const columns = [
     {
-      id: "mentorName",
-      header: "Name Mentor",
+      id: "menteeName",
+      header: "Name Mentee",
       accessor: "menteeName" as keyof BookingData,
       render: (row: BookingData) => (
         <div className="flex items-center gap-3 justify-start text-start">
           <div className="w-12 h-12">
             <img
-              src={row.mentorImageLink || profile}
+              src={row.menteeImageLink || profile}
               className="hidden lg:block w-full h-full rounded-full"
               alt={profile}
             />
           </div>
-          {row.mentorName}
+          {row.menteeName}
         </div>
       ),
     },
@@ -113,7 +113,7 @@ const MentorTableBooking = () => {
     localStorage.setItem("MessageUserName", name);
     localStorage.setItem("imageUser", image);
 
-    navigate("/mentor/chatting");
+    navigate("/mentee/chatting");
   };
 
   return (
