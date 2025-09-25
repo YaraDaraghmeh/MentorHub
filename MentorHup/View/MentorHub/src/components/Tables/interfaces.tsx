@@ -37,6 +37,11 @@ export interface week {
   count: number;
 }
 
+export interface earn {
+  weekLabel: string;
+  totalEarnings: number;
+}
+
 export interface BookingData {
   id: number;
   bookingId: number;

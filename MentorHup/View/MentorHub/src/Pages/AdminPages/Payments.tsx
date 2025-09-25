@@ -8,7 +8,7 @@ import axios from "axios";
 import urlAdmin from "../../Utilities/Admin/urlAdmin";
 import BarChartDash from "../../components/Charts/BarChart";
 import urlDashboard from "../../Utilities/Dashboard/urlDashboard";
-import type { week } from "../../components/Tables/interfaces";
+import type { earn } from "../../components/Tables/interfaces";
 
 const Payments = () => {
   const { isDark } = useTheme();
@@ -16,7 +16,7 @@ const Payments = () => {
     averagePayment: 0,
     totalPayments: 0,
   });
-  const [earnings, setEarning] = useState<week[]>([]);
+  const [earningPerWeek, setEarningPerWeek] = useState<earn[]>([]);
 
   const state = [
     {
@@ -65,7 +65,8 @@ const Payments = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        setEarning(res.data);
+        setEarningPerWeek(res.data);
+        console.log(res.data);
       } catch (err: any) {
         console.log("get earning per week error", err);
       }
@@ -88,7 +89,7 @@ const Payments = () => {
           />
         ))}
         <div className="col-span-3">
-          <BarChartDash data={earnings} />
+          <BarChartDash data={earningPerWeek} />
         </div>
       </div>
     </>
