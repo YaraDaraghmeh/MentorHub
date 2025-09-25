@@ -173,7 +173,7 @@ namespace MentorHup.Extensions
                 googleOptions.ClientId = configuration["Authentication:Google:ClientId"]!;
                 googleOptions.ClientSecret = configuration["Authentication:Google:ClientSecret"]!;
                 googleOptions.SignInScheme = IdentityConstants.ExternalScheme; // أو CookieAuthenticationDefaults.AuthenticationScheme
-                googleOptions.CallbackPath = "/api/auth/login/google/callback";
+                //googleOptions.CallbackPath = "/api/auth/login/google/callback";
             });
         }
 
