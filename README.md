@@ -28,6 +28,7 @@ Connecting job seekers with experienced interview trainers for personalized mock
   - [ Project Overview](#-project-overview)
   - [ Key Features](#-key-features)
   - [ System Architecture](#-system-architecture)
+  - [Design Patterns & SOLID Principles](#-design-patterns--solid-principles)
   - [ Built With](#-built-with)
   - [ Project Structure](#-project-structure)
   - [ User Roles](#-user-roles)
@@ -77,13 +78,59 @@ MentorHub follows a *Model-View-Controller (MVC) Architecture* combined with *RE
 
 *Frontend (View Layer)*: React with TypeScript serves as the presentation layer, consuming RESTful API endpoints and rendering dynamic user interfaces through reusable components and intelligent state management.
 
-*Backend (Controller & Model Layers)*: 
-- *Controllers*: Handle HTTP requests, implement RESTful endpoints (GET, POST, PUT, DELETE), and orchestrate business logic
-- *Models*: Define data entities, relationships, and business rules using Entity Framework Core
-- *API Layer*: Provides standardized RESTful services for seamless frontend-backend communication
+- **Backend (Controller & Service Layer)**:
+  - Controllers: Handle HTTP requests and orchestrate business logic
+  - Services: All business logic, data handling, and interactions with the database
+  - DTOs: Standardized data structures for API requests/responses (e.g., Notification, Booking, Profile)
+  - Settings: Configuration classes (JwtSettings, StripeSettings)
+  - Validators: FluentValidation rules
+  - Responses: Standardized API responses
+  - Common: Shared utilities (e.g., PageResult)
+- **Domain Layer**: Entities/Models representing database structure
+- **Infrastructure Layer**: Database context, ChatHub, seed data, email sender
+- **Database Layer**: SQL Server 2022 via Entity Framework Core 9.0.8
+  
+---
 
-*Database Layer*: Entity Framework Core with SQL Server manages data persistence, relationships, and migrations with full CRUD operations support.
+## Design Patterns & SOLID Principles
 
+### Design Patterns
+- **Dependency Injection (DI)**: All services injected into controllers for loose coupling.
+- **Factory / Service Pattern**: Services abstract the business logic, centralizing operations per entity type.
+- **Singleton**: For services that maintain state like `NotificationService` or `StripeService`.
+
+### SOLID Principles
+
+| Principle | Implementation in Code | Example |
+|-----------|----------------------|---------|
+| **S – Single Responsibility** | Each service handles one concern | `BookingService` manages booking logic only |
+| **O – Open/Closed** | Services can be extended without modifying existing code | `AdvancedBookingService` implements `IBookingService` for extra features |
+| **L – Liskov Substitution** | Interfaces can be replaced without breaking code | `IBookingService` implemented by multiple classes |
+| **I – Interface Segregation** | Interfaces are focused and small | `IBookingService` contains only booking methods |
+| **D – Dependency Inversion** | Controllers depend on abstractions (interfaces), not concrete classes | `BookingController` uses `IBookingService` via DI |
+
+```csharp
+// Example: Dependency Inversion + Single Responsibility
+public class BookingController : ControllerBase
+{
+    private readonly IBookingService _bookingService; // abstraction
+
+    public BookingController(IBookingService bookingService)
+    {
+        _bookingService = bookingService;
+    }
+
+    [HttpPost]
+    public IActionResult CreateBooking(CreateBookingDto dto)
+    {
+        _bookingService.CreateBooking(dto); // Controller delegates to service
+        return Ok();
+    }
+}
+```
+This ensures **maintainability, testability, and scalability** across the project.
+
+---
 
 ##  Built With
 
@@ -102,15 +149,17 @@ MentorHub follows a *Model-View-Controller (MVC) Architecture* combined with *RE
 -  *Typewriter Effect 2.22.0* - Dynamic text animations
 
 ### Backend Technologies
-- **ASP.NET Core 9** – High-performance, cross-platform framework for building scalable RESTful APIs  
-- **Entity Framework Core 9** – ORM for database operations and migrations with SQL Server  
-- **SQL Server** – Reliable relational database engine for data persistence  
-- **SignalR** – Real-time WebSocket communication for live chat and instant notifications  
-- **ASP.NET Identity with JWT** – Secure authentication and role-based authorization using JSON Web Tokens and external providers (Google Sign-In)  
-- **FluentValidation** – Clean and maintainable model validation  
-- **Stripe .NET SDK** – Secure payment processing for booking transactions  
-- **Email Service (SMTP)** – Automated email notifications for key events such as booking, registration, and cancellations  
-
+- *ASP.NET Core 9.0.0* – High-performance, cross-platform RESTful API framework
+- *Entity Framework Core 9.0.8* – ORM for SQL Server, migrations, CRUD operations
+- *SQL Server 2022* – Relational database engine
+- *SignalR 9.0.8* – Real-time communication (chat, notifications)
+- *ASP.NET Identity with JWT 9.0.8* – Authentication & role-based authorization
+- *FluentValidation 12.0.0 + FluentValidation.AspNetCore 11.3.1* – Model validation
+- *Stripe.NET 48.0.0* – Payment processing for bookings
+- *Microsoft.AspNetCore.Authentication.Google 9.0.9* – External login support
+- *Swashbuckle.AspNetCore 9.0.4* – Swagger documentation
+- *Email Service (SMTP)* – Automated email notifications
+- *Manual DTO Mapping* – We manually map between entities and DTOs instead of using AutoMapper
 
 ### Development Tools
 - *Axios 1.12.2* - HTTP client for API communication
@@ -118,7 +167,6 @@ MentorHub follows a *Model-View-Controller (MVC) Architecture* combined with *RE
 
 
 ## Project Structure
-
 
 [mentorhub/
 ├── frontend/
@@ -142,14 +190,24 @@ MentorHub follows a *Model-View-Controller (MVC) Architecture* combined with *RE
 │   │   └── assets/              # Static assets
 │   ├── public/                  # Public assets
 │   └── package.json             # Frontend dependencies
-├── backend/
-│   ├── Controllers/             # API controllers
-│   ├── Models/                  # Data models
-│   ├── Services/                # Business logic layer
-│   ├── Repositories/            # Data access layer
-│   ├── DTOs/                    # Data transfer objects
-│   ├── Middleware/              # Custom middleware
-│   └── Program.cs               # Application entry point
+backend/
+├── APPLICATION/
+│   ├── DTOs/                        # Data transfer objects
+│   ├── Settings/                     # Configuration classes
+│   ├── Validators/                   # FluentValidation rules
+│   ├── Service/                      # Business logic layer
+│   ├── Responses/                    # Standardized API responses
+│   └── Common/                       # Shared utilities
+├── Controllers/                      # API controllers
+├── Domain/
+│   └── Entities/                     # Database models
+├── Exceptions/                       # Custom exceptions
+├── Extensions/                       # DI, OAuth, JWT, Service setup
+├── Infrastructure/                   # Context, Seed, ChatHub, EmailSender
+├── Migrations/                       # EF Core migrations
+├── Properties/                        # Project properties
+├── wwwroot/                            # Static files
+└── Program.cs                          # Application entry point
 └── README.md](https://github.com/YaraDaraghmeh/MentorHub/tree/09c3df0e5db08927c1b40ac21944de29e7623f80/MentorHup)
 
 
@@ -157,7 +215,7 @@ MentorHub follows a *Model-View-Controller (MVC) Architecture* combined with *RE
 
 | Role | User Type | Key Responsibilities |
 |------|-----------|---------------------|
-| *Mentee* | End User | Book sessions, attend interviews, track |
+| *Mentee* | End User | Book sessions, attend interviews, track progress |
 | *Mentor* | Service Provider | Conduct sessions, provide feedback, manage schedule |
 | *Admin* | System Manager | Platform oversight, user management, quality control |
 
@@ -178,8 +236,8 @@ Figure 1 - UI Prototypes and Mockups
 |------|-----------|------------------|
 | *Team Lead - Frontend Developer* | Sara Sayed Ahmed  | Overall coordination, architecture decisions |
 | *Frontend Developer* | Yara H Daraghmeh| React development, UI/UX implementation |
-| *Backend Developer* |Khaled | .NET API, database design, security |
-| *Backend Developer* | Amjed | .NET API, database design, security|
+| *Backend Developer* |Khaled Hroub | .NET API, database design, security |
+| *Backend Developer* | Amjad Hamidi | .NET API, database design, security|
 
 
 <div align="center">
