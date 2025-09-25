@@ -6,9 +6,9 @@ import {
   Clock,
   Calendar,
   Star,
-  Users,
-  Share2
+  Users
 } from "lucide-react";
+import { SiReaddotcv } from "react-icons/si";
 import { useTheme } from "../../Context/ThemeContext";
 import type { Mentor, FilterState } from "../../types/types";
 import BookingModal from "./BookingModal";
@@ -506,7 +506,9 @@ const MentorsGrid = () => {
                               : "hover:bg-gray-100 text-gray-600"
                           }`}
                         >
-                          <Share2 className="h-4 w-4" />
+                          <SiReaddotcv className="h-4 w-4" onClick={
+                            mentor.cvLink ? () => window.open(mentor.cvLink, '_blank') : undefined 
+                          }/>
                         </button>
                       </div>
                     </div>
