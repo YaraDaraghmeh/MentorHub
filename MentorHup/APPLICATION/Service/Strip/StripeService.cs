@@ -59,8 +59,8 @@ public class StripeService : IStripeService
             }
         },
             Mode = "payment", 
-            SuccessUrl = "http://localhost:5175/success?session_id={CHECKOUT_SESSION_ID}",
-            CancelUrl = "http://localhost:5175/cancel",
+            SuccessUrl = "https://mentorhub-zeta.vercel.app/success?session_id={CHECKOUT_SESSION_ID}",
+            CancelUrl = "https://mentorhub-zeta.vercel.app/cancel",
             ClientReferenceId = $"{booking.MenteeId}:{booking.MentorAvailabilityId}", // stripe لتتبع الحجز بين تطبيقي وال
 
             // الأهم 👇
