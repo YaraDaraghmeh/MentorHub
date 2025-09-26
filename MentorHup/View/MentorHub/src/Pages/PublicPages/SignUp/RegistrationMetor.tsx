@@ -67,7 +67,6 @@ const SignUpMentor = () => {
           .filter((n) => Number.isFinite(n));
       }
 
-<<<<<<< HEAD
       // availabilities from datetime-local inputs => ISO strings
       const startTimeRaw = (userData as any)?.startTime as string | undefined;
       const endTimeRaw = (userData as any)?.endTime as string | undefined;
@@ -75,10 +74,6 @@ const SignUpMentor = () => {
         ? new Date(startTimeRaw).toISOString()
         : null;
       const endTimeIso = endTimeRaw ? new Date(endTimeRaw).toISOString() : null;
-=======
-      const startTimeIso = (userData as any)?.startTimeFormatted as string | null;
-      const endTimeIso = (userData as any)?.endTimeFormatted as string | null;
->>>>>>> 7d15e275e79ee35af8d9e70cab8f22b1e0d80aba
 
       if (!stripeAccountId) {
         setGeneralError("Stripe Account ID is required.");
