@@ -276,7 +276,7 @@ namespace MentorHup.APPLICATION.Service.AuthServices
                 var token = await _userManager.GeneratePasswordResetTokenAsync(user);
                 var encodedToken = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(token)); // Base64UrlEncode => avoids conflicts in chars like (+, /, \, =,...etc), Encoding.UTF8.GetBytes(token): generate the cipher
                 var httpRequest = httpContextAccessor.HttpContext.Request;
-                var resetUrl = $"http://localhost:5175/forgot-password?email={request.Email}&token={encodedToken}";
+                var resetUrl = $"https://mentorhub-zeta.vercel.app/forgot-password?email={request.Email}&token={encodedToken}";
 
                 var html = $@"
                 <!DOCTYPE html>
