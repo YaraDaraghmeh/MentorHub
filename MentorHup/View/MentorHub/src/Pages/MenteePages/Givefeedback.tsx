@@ -29,7 +29,7 @@ const Givefeedback = () => {
                 throw new Error('No booking ID provided');
             }
 
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('accessToken');
             if (!token) {
                 throw new Error('Authentication required. Please log in again.');
             }
