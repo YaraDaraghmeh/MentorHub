@@ -168,6 +168,7 @@ const MentorsGrid = () => {
           userName:
             mentor.userName || mentor.email?.split("@")[0] || mentor.name,
           reviewCount: mentor.reviewCount || 0,
+          reviewAverage: mentor.reviewAverage || 0,
           availabilities: mentor.availabilities || [],
           imageLink: mentor.imageLink || null,
           companyName: mentor.companyName || "",
@@ -632,7 +633,7 @@ const MentorsGrid = () => {
                           <span
                             className={`ml-1 text-sm font-medium ${textClass}`}
                           >
-                            <StarReview rating={mentor.reviewCount || 0} />
+                            <StarReview rating={mentor.reviewAverage || 0} />
                           </span>
                         </div>
                       </div>
