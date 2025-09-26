@@ -452,8 +452,8 @@ const MentorsGrid = () => {
               variants={containerVariants}
               initial="hidden"
               animate="visible"
-              key={currentPage}
-              className="grid grid-cols-1 min-[400px]:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 px-1 sm:px-2 w-full max-w-[100vw] overflow-x-hidden"
+              key={currentPage} // Re-trigger animation on page change
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 sm:gap-3 md:gap-4 px-1 sm:px-2 md:px-3 mb-4 w-full"
             >
               {mentors.map((mentor) => (
                 <motion.div
@@ -461,16 +461,16 @@ const MentorsGrid = () => {
                   variants={itemVariants}
                   whileHover={{ y: -5, scale: 1.02 }}
                   transition={{ duration: 0.2 }}
-                  className={`rounded-xl border transition-all duration-300 hover:shadow-xl relative flex flex-col h-full w-full min-w-0 max-w-full ${isDark
+                  className={`rounded-xl border transition-all duration-300 hover:shadow-xl relative flex flex-col h-auto min-h-[360px] sm:min-h-[400px] md:min-h-[420px] w-full ${isDark
                       ? "bg-gray-800 border-gray-700 hover:shadow-blue-500/10"
                       : "bg-white border-gray-200 hover:shadow-blue-500/20"
                     }`}
                 >
-                    <div className="p-2.5 sm:p-3 flex-1 flex flex-col w-full h-full max-w-full overflow-hidden">
+                  <div className="p-2.5 sm:p-3.5 md:p-4 flex-1 flex flex-col w-full">
                     {/* Header */}
-                    <div className="flex items-start justify-between mb-2 sm:mb-3 w-full">
-                      <div className="flex items-center space-x-2 min-w-0 flex-1">
-                        <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full overflow-hidden flex-shrink-0">
+                    <div className="flex items-start justify-between mb-1.5 sm:mb-2.5">
+                      <div className="flex items-center space-x-3">
+                        <div className="w-9 h-9 sm:w-11 sm:h-11 rounded-full overflow-hidden flex-shrink-0">
                           <img
                             src={mentor.imageLink || defaultprofileimage}
                             alt={mentor.name}
@@ -524,7 +524,7 @@ const MentorsGrid = () => {
                     </div>
 
                     {/* Company */}
-                    <div className="mb-3 sm:mb-4">
+                    <div className="mb-4">
                       <span
                         className={`text-sm font-medium ${isDark ? "text-blue-400" : "text-blue-600"
                           }`}
@@ -548,7 +548,7 @@ const MentorsGrid = () => {
                     </div>
 
                     {/* Stats */}
-                    <div className="grid grid-cols-2 gap-2 sm:gap-3 mb-3">
+                    <div className="grid grid-cols-2 gap-1.5 sm:gap-2.5 mb-2.5">
                       <div className="text-center">
                         <div className={`text-lg font-semibold ${textClass}`}>
                           {mentor.experience || 0}
