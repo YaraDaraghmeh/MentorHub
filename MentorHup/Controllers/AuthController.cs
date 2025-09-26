@@ -13,7 +13,6 @@ using Microsoft.EntityFrameworkCore;
 using MentorHup.Exceptions;
 using MentorHub.APPLICATION.DTOs.ChangePassword;
 using System.Security.Claims;
-using Azure.Core;
 
 namespace MentorHup.Controllers
 {

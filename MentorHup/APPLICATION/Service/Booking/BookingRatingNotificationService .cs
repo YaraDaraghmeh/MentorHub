@@ -26,7 +26,7 @@ namespace MentorHup.APPLICATION.Service.Booking
                 var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 var emailSender = scope.ServiceProvider.GetRequiredService<IEmailSender>();
 
-                var now = DateTime.UtcNow;
+                var now = DateTime.Now;
 
                 var bookings = await db.Bookings
                     .Include(b => b.Mentee)
@@ -42,9 +42,33 @@ namespace MentorHup.APPLICATION.Service.Booking
                     {
                         var subject = "Rate Your Mentor";
                         var message = $@"
-                        <h3>Hello {booking.Mentee.Name},</h3>
-                        <p>Your session with mentor <strong>{booking.Mentee.Name}</strong> has ended.</p>
-                        <p>You can now rate your mentor <a href='https://mentorhub-zeta.vercel.app/givefeedback/{booking.Id}'>here</a>.</p>";
+                        <html>
+                          <body style='font-family: Arial, sans-serif; background-color: #f4f4f7; margin:0; padding:0;'>
+                            <table align='center' width='600' cellpadding='0' cellspacing='0' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1);'>
+                              <tr>
+                                <td style='padding: 20px; text-align: center; background-color: #4f46e5; color: white; font-size: 24px;'>
+                                  MentorHub
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style='padding: 30px; color: #333333;'>
+                                  <h3 style='color: #111827;'>Hello {booking.Mentee.Name},</h3>
+                                  <p>Your session with your mentor has ended.</p>
+                                  <p>We value your feedback! Please rate your mentor to help improve our community.</p>
+                                  <p style='text-align: center; margin: 30px 0;'>
+                                    <a href='https://mentorhub-zeta.vercel.app/givefeedback/{booking.Id}' 
+                                       style='background-color: #4f46e5; color: white; padding: 12px 24px; text-decoration: none; border-radius: 5px; font-weight: bold; display: inline-block;'>
+                                      Rate Your Mentor
+                                    </a>
+                                  </p>
+                                  <p style='font-size: 12px; color: #6b7280; text-align: center; margin-top: 40px;'>
+                                    © 2025 MentorHub. All rights reserved.
+                                  </p>
+                                </td>
+                              </tr>
+                            </table>
+                          </body>
+                        </html>";
 
                         await emailSender.SendEmailAsync(booking.Mentee.ApplicationUser.Email, subject, message);
 
