@@ -92,22 +92,22 @@ const TableReview = () => {
       return;
     }
 
-    // const getreview = async () => {
-    //   try {
-    //     const res = await axios.get(urlReview.GET_ALL_REVIEWS, {
-    //       headers: {
-    //         Authorization: `Bearer ${token}`,
-    //       },
-    //     });
+    const getreview = async () => {
+      try {
+        const res = await axios.get(urlReview.GET_ALL_REVIEWS, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-    //     setreviews(res.data.items);
-    //     console.log(reviews);
-    //   } catch (error: any) {
-    //     console.log(error);
-    //   }
-    // };
+        console.log("API response:", res.data);
+        setreviews(res.data.items ?? res.data);
+      } catch (error: any) {
+        console.error("Error fetching reviews:", error);
+      }
+    };
 
-    // getreview();
+    getreview();
   }, []);
 
   return (

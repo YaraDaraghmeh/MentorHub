@@ -2,11 +2,11 @@ import CalendarBook from "../../components/Calendar/CalendarBooking";
 import MenteeTableBooking from "../../components/Tables/MenteeTableBooking";
 
 const MenteeBookings = () => {
-  const user = localStorage.getItem("userName");
+  const userName = localStorage.getItem("userName");
 
   return (
     <>
-      <CalendarBook userType="mentee" user={user!} />
+      <CalendarBook userType="mentee" user={userName!} />
       {/* Table Sessions */}
       <div className="py-7 w-full">
         <MenteeTableBooking />

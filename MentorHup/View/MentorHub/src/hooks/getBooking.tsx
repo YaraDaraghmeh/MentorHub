@@ -10,7 +10,7 @@ export const GetBooking = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    console.log(res.data.items);
     return res.data.items;
   } catch (error: any) {
     console.log("Get booking: ", error);

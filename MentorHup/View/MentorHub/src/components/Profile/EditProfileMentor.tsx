@@ -14,7 +14,7 @@ interface dataUser {
   experiences: number;
   price: number;
   stripeAccountId: string;
-  skillIds: number[];
+  skillIds: any[];
 }
 
 interface dataEdit {
@@ -42,7 +42,7 @@ export const ModalEditProfile = ({
   const [descrip, setDescrip] = useState("");
   const [expeYear, setExpeYear] = useState(0);
   const [stripe, setStrip] = useState("");
-  const [selectedSkillIds, setSelectedSkillIds] = useState<number[]>([]);
+  // const [selectedSkillIds, setSelectedSkillIds] = useState([]);
 
   // init states when data changes
   useEffect(() => {
@@ -55,7 +55,7 @@ export const ModalEditProfile = ({
       setDescrip(data.description || "");
       setExpeYear(data.experiences || 0);
       setStrip(data.stripeAccountId || "");
-      setSelectedSkillIds(data.skillIds || []);
+      // setSelectedSkillIds(data.skillIds || []);
     }
   }, [data]);
 
@@ -70,9 +70,7 @@ export const ModalEditProfile = ({
       description: descrip,
       experiences: expeYear,
       stripeAccountId: stripe,
-      skillIds: selectedSkillIds
-        .filter((id) => id !== undefined && id !== null)
-        .map((id) => Number(id)),
+      // skillIds: selectedSkillIds,
     };
 
     try {

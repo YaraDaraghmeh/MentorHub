@@ -32,7 +32,7 @@ interface user {
   experiences: number;
   field: string;
   cvLink: string;
-  skills: { id: number; skillName: string }[];
+  skills: any[];
   price: number;
   stripeAccountId: string;
   availabilites: {
@@ -55,7 +55,7 @@ interface EditProfileData {
   experiences: number;
   price: number;
   stripeAccountId: string;
-  skillIds: number[];
+  skillIds: any[];
 }
 
 const ProfMentor = () => {
@@ -236,7 +236,7 @@ const ProfMentor = () => {
       experiences: userData.experiences,
       price: userData.price,
       stripeAccountId: userData.stripeAccountId,
-      skillIds: userData.skills.map((skill) => skill.id),
+      skillIds: userData.skills.map((skill) => skill.skillName),
     };
 
     setEditData(editData);
@@ -431,7 +431,7 @@ const ProfMentor = () => {
                       : "bg-[var(--primary-rgba)] text-[var(--secondary-light)]"
                   }`}
                 >
-                  {skill.skillName}
+                  {skill}
                 </span>
               ))}
             </div>
