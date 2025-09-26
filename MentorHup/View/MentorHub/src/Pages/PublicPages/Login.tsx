@@ -209,7 +209,7 @@ const LoginContent = () => {
 
               {/* Sign in */}
               <button
-                onClick={() => GoogleAuthService.initiateGoogleSignIn()}
+                onClick={handleLogin}
                 disabled={loading}
                 className={`cursor-pointer rounded-full h-auto outline outline-1 outline-offset-[-1px] outline-[var(--accent)] inline-flex justify-center items-center w-full p-[12px] bg-[var(--primary)] justify-center text-[var(--secondary-light)] text-lg font-semibold ${
                   loading ? "opacity-50 cursor-not-allowed" : ""
