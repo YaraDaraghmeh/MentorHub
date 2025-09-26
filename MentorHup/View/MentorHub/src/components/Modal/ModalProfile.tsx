@@ -1,13 +1,11 @@
 import { useEffect, useState } from "react";
 import profile from "../../assets/avatar-profile.png";
-import { FaCamera } from "react-icons/fa6";
 import { useTheme } from "../../Context/ThemeContext";
 import bg from "../../assets/bg-profile-shape.png";
 import { RxDotFilled } from "react-icons/rx";
 import axios from "axios";
 import type { Mentor } from "../../types/types";
-import FormateDate from "../Tables/date";
-import { BasicInfo } from "../Profile/basicInfo";
+import StarReview from "../Stars/StarReview";
 
 interface propsProfile {
   isOpen: boolean;
@@ -114,15 +112,15 @@ const ModalProfile = ({ isOpen, mentor, onClose }: propsProfile) => {
           <div className="flex flex-col ">
             {/* role user */}
             <div className="flex justify-end">
-              <span
+              {/* <span
                 className={`py-1 px-4 mx-2 rounded-full flex flex-col justify-center items-center border-1 ${
                   isDark
                     ? "border-gray-600 text-[var(--primary)] bg-[var(--Philippine)]"
                     : "border-gray-400 text-[var(--secondary-light)] bg-[var(--primary)]"
                 }`}
-              >
-                {mentor.reviewCount}
-              </span>
+              > */}
+              <StarReview rating={mentor.reviewCount} />
+              {/* </span> */}
             </div>
 
             {/* info basic */}
