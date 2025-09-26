@@ -33,35 +33,92 @@ const Givefeedback = () => {
             if (!token) {
                 throw new Error('Authentication required. Please log in again.');
             }
+
+            // Parse bookingId to number
+            const parsedBookingId = parseInt(bookingId, 10);
+            if (isNaN(parsedBookingId)) {
+                throw new Error('Invalid booking ID format');
+            }
+            
+            console.log('bookingId:', parsedBookingId);
+            console.log('token:', token);
+            console.log('feedbackData:', feedbackData);
+            
+            const requestBody = {
+                bookingId: parsedBookingId,
+                rating: feedbackData.rating,
+                comment: feedbackData.comment || "" // Ensure comment is not undefined
+            };
+            
+            console.log('Request body:', JSON.stringify(requestBody, null, 2));
             
             const response = await fetch('https://mentor-hub.runasp.net/api/reviews', {
                 method: 'POST',
                 headers: {
-                    'accept': 'application/json',
+                    'accept': 'text/plain', // Match your Swagger example
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({
-                    bookingId: parseInt(bookingId, 10),
-                    rating: feedbackData.rating,
-                    comment: feedbackData.comment,
-               
-                })
+                body: JSON.stringify(requestBody)
             });
 
-            const responseData = await response.json();
+            console.log('Response status:', response.status);
+            console.log('Response headers:', Object.fromEntries(response.headers.entries()));
+            
+            // Handle different response types
+            let responseData;
+            const contentType = response.headers.get('content-type');
+            
+            if (contentType && contentType.includes('application/json')) {
+                responseData = await response.json();
+            } else {
+                responseData = await response.text();
+            }
+            
+            console.log('Response data:', responseData);
             
             if (!response.ok) {
                 console.error('API Error Response:', responseData);
-                throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
+                
+                // Handle different error response formats
+                let errorMessage = `HTTP error! status: ${response.status}`;
+                
+                if (typeof responseData === 'object' && responseData.message) {
+                    errorMessage = responseData.message;
+                } else if (typeof responseData === 'string' && responseData.length > 0) {
+                    errorMessage = responseData;
+                } else if (response.status === 400) {
+                    errorMessage = 'Invalid request data. Please check your input.';
+                } else if (response.status === 401) {
+                    errorMessage = 'Authentication failed. Please log in again.';
+                } else if (response.status === 403) {
+                    errorMessage = 'Access denied. You may not have permission for this action.';
+                } else if (response.status === 404) {
+                    errorMessage = 'Booking not found or review endpoint not available.';
+                } else if (response.status >= 500) {
+                    errorMessage = 'Server error. Please try again later.';
+                }
+                
+                throw new Error(errorMessage);
             }
             
             console.log('Feedback submitted successfully:', responseData);
             toast.success('Thank you for your feedback!');
             navigate('/mentee/bookings');
+            
         } catch (error) {
             console.error('Error in handleSubmit:', error);
-            toast.error(error instanceof Error ? error.message : 'Failed to submit feedback. Please try again.');
+            
+            // More specific error handling
+            let errorMessage = 'Failed to submit feedback. Please try again.';
+            
+            if (error instanceof TypeError && error.message.includes('fetch')) {
+                errorMessage = 'Network error. Please check your internet connection.';
+            } else if (error instanceof Error) {
+                errorMessage = error.message;
+            }
+            
+            toast.error(errorMessage);
             throw error; // Re-throw to be caught by the SessionReview component
         }
     };
