@@ -6,6 +6,7 @@ import profile from "../../assets/avatar-profile.png";
 import urlMentee from "../../Utilities/Mentee/urlMentee";
 
 interface dataUser {
+  userName: string;
   name: string;
   gender: string;
   imageForm: string | null;
@@ -28,6 +29,7 @@ export const ModalEditMentee = ({
   const token = localStorage.getItem("accessToken");
 
   const [nameUser, setUserName] = useState("");
+  const [name, setName] = useState("");
   const [genderUser, setGenderUser] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [imageFile, setImageFile] = useState<File | null>(null);
@@ -35,7 +37,8 @@ export const ModalEditMentee = ({
 
   useEffect(() => {
     if (data && open) {
-      setUserName(data.name || "");
+      setName(data.name || "");
+      setUserName(data.userName || "");
       setGenderUser(data.gender || "");
       setImagePreview(data.imageForm || profile);
       setImageFile(null); // Reset file when modal opens
@@ -60,7 +63,8 @@ export const ModalEditMentee = ({
 
     try {
       const formData = new FormData();
-      formData.append("name", nameUser);
+      formData.append("userName", nameUser);
+      formData.append("name", name);
       formData.append("gender", genderUser);
 
       if (imageFile) {
@@ -76,7 +80,8 @@ export const ModalEditMentee = ({
 
       // Make sure we're sending the correct data structure
       const updatedData = {
-        name: nameUser,
+        userName: nameUser,
+        name: name,
         gender: genderUser,
         imageLink:
           res.data.imageLink ||
@@ -109,6 +114,7 @@ export const ModalEditMentee = ({
 
     // Reset form
     setUserName("");
+    setName("");
     setGenderUser("");
     setImagePreview(null);
     setImageFile(null);

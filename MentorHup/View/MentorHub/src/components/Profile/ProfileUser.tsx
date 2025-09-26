@@ -18,6 +18,7 @@ import { ModalEditMentee } from "./EditProfileMentee";
 
 interface user {
   applicationUserId: string;
+  name: string;
   email: string;
   userName: string;
   imageLink: string | null;
@@ -27,6 +28,7 @@ interface user {
 }
 
 interface EditProfileData {
+  userName: string;
   name: string;
   gender: string;
   imageForm: string | null;
@@ -35,6 +37,7 @@ interface EditProfileData {
 const ProfileUser = () => {
   const [userData, setUserData] = useState<user>({
     applicationUserId: "",
+    name: "",
     email: "",
     userName: "",
     imageLink: null,
@@ -58,6 +61,7 @@ const ProfileUser = () => {
 
   // edit mentee
   const [editMentee, setEditMentee] = useState<EditProfileData>({
+    userName: "",
     name: "",
     gender: "",
     imageForm: "",
@@ -92,7 +96,8 @@ const ProfileUser = () => {
 
   const handleEditProfile = () => {
     const editData = {
-      name: userData.userName,
+      userName: userData.userName,
+      name: userData.name,
       gender: userData.gender,
       imageForm: userData.imageLink,
     };
@@ -112,7 +117,8 @@ const ProfileUser = () => {
     // Update userData with the new information
     setUserData((prev) => ({
       ...prev,
-      userName: updatedData.name || prev.userName,
+      userName: updatedData.userName || prev.userName,
+      name: updatedData.name || prev.name,
       gender: updatedData.gender || prev.gender,
       imageLink: updatedData.imageLink || prev.imageLink,
     }));

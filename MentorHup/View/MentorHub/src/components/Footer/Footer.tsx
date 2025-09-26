@@ -25,7 +25,7 @@ const Footer = () => {
               isDark ? "text-[var(--primary-light)]" : "text-[var(--accent)]"
             } `}
           >
-            support@mentorhub.com
+            mentorhub7@gmail.com
           </span>
         </div>
         <div className="flex flex-col flex-wrap gap-2">
@@ -41,7 +41,7 @@ const Footer = () => {
               isDark ? "text-[var(--primary-light)]" : "text-[var(--accent)]"
             } `}
           >
-            business@mentorhub.com
+            mentorhub7@gmail.com
           </span>
         </div>
       </div>
