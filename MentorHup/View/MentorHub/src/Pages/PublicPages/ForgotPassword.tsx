@@ -181,7 +181,7 @@ const ForgotPassword: React.FC = () => {
             className={`p-4 rounded-lg border ${
               message.type === "success"
                 ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-700 dark:text-black"
-                : "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-700 dark:text-red-300"
+                : "bg-red-50 border-red-200 text-black dark:bg-red-900/30 dark:border-red-700 dark:text-black"
             }`}
           >
             <div className="flex items-center">
@@ -261,7 +261,7 @@ const ForgotPassword: React.FC = () => {
               />
             </div>
             {newPassword && newPassword.length < 6 && (
-              <p className="mt-1 text-xs text-red-600 dark:text-red-400 flex items-center">
+              <p className="mt-1 text-xs text-black dark:text-black flex items-center">
                 <FiAlertCircle className="w-3 h-3 mr-1" />
                 Password must be at least 6 characters long
               </p>
@@ -302,7 +302,7 @@ const ForgotPassword: React.FC = () => {
             className={`p-4 rounded-lg border ${
               message.type === "success"
                 ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-700 dark:text-green-300"
-                : "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-700 dark:text-red-300"
+                : "bg-red-50 border-red-200 text-black dark:bg-red-50 dark:border-red-700 dark:text-black"
             }`}
           >
             <div className="flex items-center">
@@ -311,7 +311,7 @@ const ForgotPassword: React.FC = () => {
               ) : (
                 <FiAlertCircle className="w-5 h-5 mr-3 flex-shrink-0" />
               )}
-              <span className="text-sm font-medium">{message.text}</span>
+              <span className="text-sm font-medium text-black">{message.text}</span>
             </div>
           </div>
         )}

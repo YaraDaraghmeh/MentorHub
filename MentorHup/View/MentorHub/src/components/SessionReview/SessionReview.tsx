@@ -6,6 +6,7 @@ interface FeedbackModalProps {
     open: boolean;
     onClose: () => void;
     onSubmit: (feedback: FeedbackData) => void;
+    bookingId?: string;
 }
 
 interface FeedbackData {
@@ -19,6 +20,7 @@ export default function FeedbackModal({
     open,
     onClose,
     onSubmit,
+    bookingId,
 }: FeedbackModalProps) {
     const { isDark } = useTheme();
     const [rating, setRating] = useState<number>(0);
@@ -84,22 +86,14 @@ export default function FeedbackModal({
 
     return (
         <Transition show={open} as={Fragment}>
-            <Dialog as="div" className="relative z-30" onClose={handleClose}>
-                {/* Background overlay */}
-                <Transition.Child
-                    as={Fragment}
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                >
-                    <div className="fixed inset-0 bg-black/50" />
-                </Transition.Child>
-
-                {/* Modal content */}
-                <div className="fixed inset-0 flex items-center justify-center p-4">
+            <Dialog onClose={onClose} className="fixed inset-0 overflow-y-auto">
+                <div className="fixed inset-0 bg-black bg-opacity-25" />
+                {bookingId && (
+                    <div className="absolute top-4 right-4 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm z-50">
+                        Session ID: {bookingId}
+                    </div>
+                )}
+                <div className="flex min-h-full items-center justify-center p-4 text-center">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -109,7 +103,7 @@ export default function FeedbackModal({
                         leaveFrom="opacity-100 scale-100"
                         leaveTo="opacity-0 scale-95"
                     >
-                        <div
+                        <Dialog.Panel
                             className={`w-full max-w-md p-6 rounded-lg shadow-xl ${isDark ? "bg-[var(--primary-light)]" : "bg-white"
                                 }`}
                         >
@@ -145,6 +139,32 @@ export default function FeedbackModal({
                                 </div>
                             </div>
 
+                            {/* Category Selection */}
+                            <div className="mb-6">
+                                <label
+                                    className={`block text-sm font-medium mb-2 ${isDark
+                                            ? "text-[var(--secondary-light)]"
+                                            : "text-[var(--primary-light)]"
+                                        }`}
+                                >
+                                    Feedback Category *
+                                </label>
+                                <select
+                                    value={category}
+                                    onChange={(e) => setCategory(e.target.value)}
+                                    className={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDark
+                                            ? "bg-[var(--primary)] border-[var(--System-Gray-300)] text-[var(--secondary-light)]"
+                                            : "bg-white border-gray-300 text-[var(--primary-light)]"
+                                        }`}
+                                >
+                                    <option value="">Select a category</option>
+                                    {categories.map((cat) => (
+                                        <option key={cat} value={cat}>
+                                            {cat}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
                             
                             {/* Comment Section */}
                             <div className="mb-6">
@@ -168,8 +188,43 @@ export default function FeedbackModal({
                                 />
                             </div>
 
-                          
-
+                            {/* Recommendation Section */}
+                            <div className="mb-6">
+                                <label
+                                    className={`block text-sm font-medium mb-2 ${isDark
+                                            ? "text-[var(--secondary-light)]"
+                                            : "text-[var(--primary-light)]"
+                                        }`}
+                                >
+                                    Would you recommend this service?
+                                </label>
+                                <div className="flex space-x-4">
+                                    <label className="flex items-center cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="recommend"
+                                            checked={wouldRecommend === true}
+                                            onChange={() => setWouldRecommend(true)}
+                                            className="mr-2 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <span className={isDark ? "text-[var(--secondary-light)]" : "text-[var(--primary-light)]"}>
+                                            Yes
+                                        </span>
+                                    </label>
+                                    <label className="flex items-center cursor-pointer">
+                                        <input
+                                            type="radio"
+                                            name="recommend"
+                                            checked={wouldRecommend === false}
+                                            onChange={() => setWouldRecommend(false)}
+                                            className="mr-2 text-blue-600 focus:ring-blue-500"
+                                        />
+                                        <span className={isDark ? "text-[var(--secondary-light)]" : "text-[var(--primary-light)]"}>
+                                            No
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
 
                             {/* Action Buttons */}
                             <div className="flex justify-between space-x-3">
@@ -193,7 +248,7 @@ export default function FeedbackModal({
                                     Submit Feedback
                                 </button>
                             </div>
-                        </div>
+                        </Dialog.Panel>
                     </Transition.Child>
                 </div>
             </Dialog>
