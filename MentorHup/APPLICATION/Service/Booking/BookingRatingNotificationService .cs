@@ -30,7 +30,9 @@ namespace MentorHup.APPLICATION.Service.Booking
 
                 var bookings = await db.Bookings
                     .Include(b => b.Mentee)
-                    .ThenInclude(m => m.ApplicationUser)
+                        .ThenInclude(mentee => mentee.ApplicationUser)
+                    .Include(b => b.Mentor)
+                        .ThenInclude(mentor => mentor.ApplicationUser)
                     .Where(b => b.EndTime <= now &&
                                 b.RatingEmailSent == false &&
                                 b.Status != BookingStatus.Cancelled)
@@ -53,7 +55,7 @@ namespace MentorHup.APPLICATION.Service.Booking
                               <tr>
                                 <td style='padding: 30px; color: #333333;'>
                                   <h3 style='color: #111827;'>Hello {booking.Mentee.Name},</h3>
-                                  <p>Your session with your mentor has ended.</p>
+                                  <p>Your session with your mentor <strong>{booking.Mentor.Name}</strong> has ended.</p>
                                   <p>We value your feedback! Please rate your mentor to help improve our community.</p>
                                   <p style='text-align: center; margin: 30px 0;'>
                                     <a href='https://mentorhub-zeta.vercel.app/givefeedback/{booking.Id}' 
