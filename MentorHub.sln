@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36408.4
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MentorHub", "MentorHup\MentorHub.csproj", "{D86C2BB7-6F1F-4630-85C9-EDA3D92B442D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D86C2BB7-6F1F-4630-85C9-EDA3D92B442D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D86C2BB7-6F1F-4630-85C9-EDA3D92B442D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D86C2BB7-6F1F-4630-85C9-EDA3D92B442D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D86C2BB7-6F1F-4630-85C9-EDA3D92B442D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AD2D1E38-35CF-43AD-866D-AF0F8925B6C8}
+	EndGlobalSection
+EndGlobal
