@@ -1,5 +1,4 @@
 import { BsCalendar2CheckFill, BsCalendarXFill } from "react-icons/bs";
-import TableBooking from "../../components/Tables/tableBooking";
 import { FaRegCalendarDays } from "react-icons/fa6";
 import CardDash from "../../components/Cards/CardDashboard";
 import { IoPeopleSharp } from "react-icons/io5";
@@ -7,6 +6,7 @@ import { useTheme } from "../../Context/ThemeContext";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import urlAdmin from "../../Utilities/Admin/urlAdmin";
+import TableAdminBooking from "../../components/Tables/tableAdmin";
 
 const SessionsAdm = () => {
   const { isDark } = useTheme();
@@ -80,7 +80,7 @@ const SessionsAdm = () => {
         ))}
       </div>
 
-      <TableBooking />
+      <TableAdminBooking />
     </>
   );
 };

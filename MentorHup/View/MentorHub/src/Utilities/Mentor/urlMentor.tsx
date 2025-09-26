@@ -9,6 +9,7 @@ const ENDPOINT = {
   UPLOAD: "upload-image",
   ADD_AVAILABILITY: "add-availability",
   UPLOAD_CV: "upload-cv",
+  EDIT_PROFILE: "edit",
 };
 
 const development = {
@@ -18,6 +19,7 @@ const development = {
   UPLOADIMG: `${API_BASE_URL_DEV_PROXY}/${ENDPOINT.UPLOAD}`,
   UPLOAD_CV: `${API_BASE_URL_DEV_PROXY}/${ENDPOINT.UPLOAD_CV}`,
   ADD_AVAILABILTY: `${API_BASE_URL_DEV_PROXY}/${ENDPOINT.ADD_AVAILABILITY}`,
+  EDIT_PROFILE: `${API_BASE_URL_DEV_PROXY}/${ENDPOINT.EDIT_PROFILE}`,
 };
 
 const production = {
@@ -27,6 +29,7 @@ const production = {
   UPLOADIMG: `${API_BASE_URL_PRODUCTION}/${ENDPOINT.UPLOAD}`,
   UPLOAD_CV: `${API_BASE_URL_PRODUCTION}/${ENDPOINT.UPLOAD_CV}`,
   ADD_AVAILABILTY: `${API_BASE_URL_PRODUCTION}/${ENDPOINT.ADD_AVAILABILITY}`,
+  EDIT_PROFILE: `${API_BASE_URL_PRODUCTION}/${ENDPOINT.EDIT_PROFILE}`,
 };
 
 // More robust environment detection

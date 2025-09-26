@@ -8,13 +8,13 @@ import CardDash from "../Cards/CardDashboard";
 import { FaUserTie } from "react-icons/fa";
 import ApxChartDash from "../Charts/ApexChart";
 import BarChartDash from "../Charts/BarChart";
-import TableBooking from "../Tables/tableBooking";
 import TableReview from "../Tables/tableReview";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import urlAdmin from "../../Utilities/Admin/urlAdmin";
 import type { week } from "../Tables/interfaces";
 import { GetBookingPerWeek } from "../../hooks/getWeeks";
+import TableAdminBooking from "../Tables/tableAdmin";
 
 const DashboardAdmin = () => {
   const { isDark } = useTheme();
@@ -119,7 +119,7 @@ const DashboardAdmin = () => {
 
       {/* Table Booking */}
       <div className="py-7 w-full">
-        <TableBooking />
+        <TableAdminBooking />
       </div>
 
       {/* Table Review */}

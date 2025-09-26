@@ -11,6 +11,7 @@ import axios from "axios";
 import urlMentor from "../../../Utilities/Mentor/urlMentor";
 import { useNavigate } from "react-router-dom";
 import type { MentorRegistrationPayload } from "../../../types/types";
+import { RiArrowLeftSLine } from "react-icons/ri";
 
 const SignUpMentor = () => {
   const navigate = useNavigate();
@@ -47,7 +48,8 @@ const SignUpMentor = () => {
       setGeneralError(null);
 
       // Parse required fields
-      const stripeAccountId = (userData as any)?.stripeAccountId?.toString().trim() || null;
+      const stripeAccountId =
+        (userData as any)?.stripeAccountId?.toString().trim() || null;
 
       // Use numeric skillIds from state when available; fallback to parse comma-separated string
       let skillIds: number[] = [];
@@ -68,7 +70,9 @@ const SignUpMentor = () => {
       // availabilities from datetime-local inputs => ISO strings
       const startTimeRaw = (userData as any)?.startTime as string | undefined;
       const endTimeRaw = (userData as any)?.endTime as string | undefined;
-      const startTimeIso = startTimeRaw ? new Date(startTimeRaw).toISOString() : null;
+      const startTimeIso = startTimeRaw
+        ? new Date(startTimeRaw).toISOString()
+        : null;
       const endTimeIso = endTimeRaw ? new Date(endTimeRaw).toISOString() : null;
 
       // Minimal validation for required backend fields
@@ -127,11 +131,13 @@ const SignUpMentor = () => {
         companyName: (userData as any)?.companyName?.trim() || "",
         description: (userData as any)?.description?.trim() || "",
         experiences:
-          (userData as any)?.experience !== undefined && (userData as any)?.experience !== ""
+          (userData as any)?.experience !== undefined &&
+          (userData as any)?.experience !== ""
             ? Number((userData as any)?.experience)
             : 0,
         price:
-          (userData as any)?.price !== undefined && (userData as any)?.price !== ""
+          (userData as any)?.price !== undefined &&
+          (userData as any)?.price !== ""
             ? Number((userData as any)?.price)
             : 0,
         stripeAccountId,
@@ -197,6 +203,12 @@ const SignUpMentor = () => {
 
   return (
     <div className="w-full h-screen flex lg:flex-row flex-col justify-center items-center px-8 py-4 bg-gradient-to-b from-[var(--primary)] from-[0%] via-[var(--teal-950)] via-[80%] to-[var(--cyan-800)] to-[100%]">
+      <a
+        className="absolute top-5 left-5 text-white cursor-pointer flex flex-row gap-2 underline"
+        href="login"
+      >
+        <RiArrowLeftSLine size={22} /> Sign in
+      </a>
       <div className="flex w-full lg:w-[78%]">
         <AppForm title="Sign up" span=" as" span2=" Mentor">
           {generalError && (
