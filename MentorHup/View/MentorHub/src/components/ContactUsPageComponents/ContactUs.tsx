@@ -208,7 +208,6 @@ Sent via MentorHub Contact Form
                     className={`w-full px-6 py-4 rounded-3xl !text-black border-2 ${themeClasses.input} focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
                     placeholder="your.email@example.com"
                   />
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-blue-600/10 to-purple-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
               </div>
 
@@ -230,7 +229,6 @@ Sent via MentorHub Contact Form
                     className={`w-full px-6 py-4 rounded-3xl border-2 !text-black ${themeClasses.input} focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 backdrop-blur-sm text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
                     placeholder="What's this about?"
                   />
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-teal-600/10 to-green-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
               </div>
 
@@ -252,7 +250,6 @@ Sent via MentorHub Contact Form
                     className={`w-full px-6 py-4 rounded-3xl border-2 ${themeClasses.input} focus:ring-4 focus:ring-blue-500/20 focus:border-blue-500 transition-all duration-300 resize-vertical backdrop-blur-sm text-lg shadow-lg hover:shadow-xl transform hover:-translate-y-1`}
                     placeholder="Tell us how we can help you..."
                   />
-                  <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-purple-600/10 to-pink-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
               </div>
 
