@@ -44,10 +44,11 @@ const CalendarBook = ({ userType, user }: CalendarBookProps) => {
   useEffect(() => {
     const getBooking = async () => {
       const data = await GetBooking();
-
       const filtered = data.filter((b: Booking) =>
         userType === "mentor" ? b.mentorName === user : b.menteeName === user
       );
+
+      console.log(filtered);
 
       const mapped = filtered.map((b: Booking) => ({
         bookingId: b.bookingId,
@@ -59,6 +60,8 @@ const CalendarBook = ({ userType, user }: CalendarBookProps) => {
         status: b.status,
         meetingUrl: b.meetingUrl,
       }));
+
+      console.log(mapped);
 
       setBooking(mapped);
     };
