@@ -2,6 +2,7 @@
 {
     public class MentorUpdateRequest
     {
+        public string? UserName { get; set; }
         public string? Name { get; set; }
         public string? CompanyName { get; set; }
         public string? Field { get; set; }

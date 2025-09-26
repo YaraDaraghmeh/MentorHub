@@ -12,6 +12,7 @@ namespace MentorHup.APPLICATION.Validators.Mentee
 
             RuleFor(x => x.Gender)
                 .Must(g => g == "Male" || g == "Female")
+                .When(g => !string.IsNullOrEmpty(g.Gender))
                 .WithMessage("Gender must be Male, Female");
 
         }

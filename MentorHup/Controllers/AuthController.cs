@@ -13,6 +13,7 @@ using Microsoft.EntityFrameworkCore;
 using MentorHup.Exceptions;
 using MentorHub.APPLICATION.DTOs.ChangePassword;
 using System.Security.Claims;
+using Azure.Core;
 
 namespace MentorHup.Controllers
 {
@@ -78,36 +79,50 @@ namespace MentorHup.Controllers
         [HttpGet("login/google/callback")]
         public async Task<IActionResult> GoogleLoginCallback([FromQuery] string returnUrl = "/")
         {
+            const string frontendBaseUrl = "https://mentorhub-zeta.vercel.app";
+            string redirectPathOnFailure = $"{frontendBaseUrl}/login";
+
             try
             {
-                // Get the authentication result from Google
+
+                // 1. احصل على نتيجة المصادقة من Google
                 var result = await HttpContext.AuthenticateAsync(GoogleDefaults.AuthenticationScheme);
 
                 if (!result.Succeeded)
-                    return Unauthorized(new { message = "Google authentication failed" });
+                    return Redirect($"{frontendBaseUrl}/login?error=GoogleAuthFailed");
 
-                // Pass the Google claims to your AuthService to handle JWT creation
+                // 2. أنشئ JWT و Refresh Token
                 var response = await _authService.LoginWithGoogleAsync(result.Principal);
 
                 if (response == null)
-                    return Unauthorized(new { message = "Failed to login with Google" });
+                    return Redirect($"{frontendBaseUrl}/login?error=LoginFailed");
 
-                // Return the JWT and Refresh Token as JSON
-                return Ok(response);
+                // 3. حدد الصفحة النهائية حسب الدور
+                string rolePath = response.Roles.Contains("Admin") ? "admin/dashboard" :
+                                  response.Roles.Contains("Mentor") ? "mentor/dashboard" :
+                                  response.Roles.Contains("Mentee") ? "mentee/main" : "";
+
+                if (string.IsNullOrEmpty(rolePath))
+                    rolePath = "login"; // fallback
+
+                // 4. أنشئ الرابط النهائي للـ frontend مع التوكنات و userId
+                var frontendRedirectUrl = $"{frontendBaseUrl}/{rolePath}?accessToken={response.AccessToken}&refreshToken={response.RefreshToken}&roles={string.Join(",", response.Roles)}&userId={response.UserId}";
+
+                // 5. Redirect مباشرة للصفحة الصحيحة
+                return Redirect(frontendRedirectUrl);
             }
-            catch(ExternalLoginProviderException ex)
+
+            catch (ExternalLoginProviderException ex)
             {
-                // Handle custom exceptions from AuthService
-                return BadRequest(new
-                {
-                    Provider = ex.Provider,
-                    Message = ex.Message
-                });
+                // Handle custom exceptions (e.g., user exists with different provider)
+                var errorMessage = Uri.EscapeDataString(ex.Message);
+                return Redirect($"{redirectPathOnFailure}?error=LoginError&details={errorMessage}");
             }
             catch (Exception ex)
             {
-                // Handle any unexpected exceptions
-                return StatusCode(500, new { Message = "Internal server error", Details = ex.Message });
+                // Handle any unexpected internal server exceptions
+                var errorMessage = Uri.EscapeDataString(ex.Message);
+                return Redirect($"{redirectPathOnFailure}?error=ServerError&details={errorMessage}");
             }
 
         }

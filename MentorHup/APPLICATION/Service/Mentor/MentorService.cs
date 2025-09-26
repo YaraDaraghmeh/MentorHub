@@ -87,12 +87,19 @@ namespace MentorHup.APPLICATION.Service.Mentor
             var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
             var mentor = await context.Mentors
+                .Include(m => m.ApplicationUser)
                 .Include(m => m.Availabilities)
                 .Include(m => m.MentorSkills)
                 .FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
 
             if (mentor == null)
                 return false;
+
+            if (!string.IsNullOrEmpty(request.UserName))
+            {
+                mentor.ApplicationUser.UserName = request.UserName;
+                mentor.ApplicationUser.NormalizedUserName = mentor.ApplicationUser.UserName.ToUpper();
+            }
 
             if (!string.IsNullOrEmpty(request.Name))
                 mentor.Name = request.Name;

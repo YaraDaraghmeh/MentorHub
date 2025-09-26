@@ -41,6 +41,12 @@ namespace MentorHup.APPLICATION.Service.Mentee
 
             var mentee = user.Mentee;
 
+            if (!string.IsNullOrEmpty(request.UserName))
+            {
+                user.UserName = request.UserName;
+                user.NormalizedUserName = user.UserName.ToUpper();
+            }
+
             if (!string.IsNullOrEmpty(request.Name))
                 mentee.Name = request.Name;
 
