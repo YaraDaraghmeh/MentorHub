@@ -9,6 +9,7 @@ export interface Mentor {
   imageLink: string;
   createdAt: string;
   reviewCount: number;
+  reviewAverage: number;
   experience: number;
   skills: string[];
   description?: string;
@@ -17,7 +18,7 @@ export interface Mentor {
   cvLink: string;
 }
 
-// API Types for backend integration - Updated to match real API schema
+
 export interface ApiMentor {
   id: number;
   name: string;
@@ -28,6 +29,7 @@ export interface ApiMentor {
   experiences: number;
   field: string;
   reviewCount: number;
+  reviewAverage: number;
   createdAt: string;
   imageLink: string;
   cvLink: string;

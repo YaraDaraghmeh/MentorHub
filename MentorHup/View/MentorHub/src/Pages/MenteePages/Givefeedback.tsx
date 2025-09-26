@@ -14,7 +14,7 @@ const Givefeedback = () => {
 
     const handleClose = () => {
         // Navigate to a default page after closing
-        navigate('/mentee/bookings');
+        navigate('/mentee/booking');
     };
 
     const handleSubmit = async (feedbackData: { 
