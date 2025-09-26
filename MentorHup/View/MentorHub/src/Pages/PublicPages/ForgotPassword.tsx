@@ -261,7 +261,7 @@ const ForgotPassword: React.FC = () => {
               />
             </div>
             {newPassword && newPassword.length < 6 && (
-              <p className="mt-1 text-xs text-red-600 dark:text-red-400 flex items-center">
+              <p className="mt-1 text-xs text-black dark:text-black flex items-center">
                 <FiAlertCircle className="w-3 h-3 mr-1" />
                 Password must be at least 6 characters long
               </p>
