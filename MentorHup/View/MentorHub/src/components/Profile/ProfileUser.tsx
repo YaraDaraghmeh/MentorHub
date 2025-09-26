@@ -6,7 +6,6 @@ import { RxDotFilled } from "react-icons/rx";
 import { BasicInfo } from "./basicInfo";
 import { GetMyProfile } from "../../hooks/getMyProfile";
 import { LabelsInfo } from "./LabelInfo";
-import { FaCamera } from "react-icons/fa6";
 import FormateDate from "../Tables/date";
 import axios from "axios";
 import urlMentee from "../../Utilities/Mentee/urlMentee";
@@ -15,6 +14,7 @@ import Alert from "../Tables/alerts";
 import ModalChangePassword from "../Modal/ModalChangePassword";
 import { useAuth } from "../../Context/AuthContext";
 import { ChangePassword } from "../../hooks/changePassword";
+import { ModalEditMentee } from "./EditProfileMentee";
 
 interface user {
   applicationUserId: string;
@@ -24,6 +24,12 @@ interface user {
   gender: string;
   role: string;
   createdAt: string;
+}
+
+interface EditProfileData {
+  name: string;
+  gender: string;
+  imageForm: string | null;
 }
 
 const ProfileUser = () => {
@@ -48,6 +54,15 @@ const ProfileUser = () => {
   const [successChange, setSuccessChange] = useState(false);
   const [logoutNow, setLogoutNow] = useState(false);
   const { logout } = useAuth();
+  const [successEdit, setSuccessEdit] = useState(false);
+
+  // edit mentee
+  const [editMentee, setEditMentee] = useState<EditProfileData>({
+    name: "",
+    gender: "",
+    imageForm: "",
+  });
+  const [openEditModal, setOpenModalEdit] = useState(false);
 
   useEffect(() => {
     const getInfo = async () => {
@@ -75,31 +90,37 @@ const ProfileUser = () => {
     getCompletedSessions();
   }, []);
 
-  // const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     const selectedFile = e.target.files[0];
-  //     setFile(selectedFile);
-
-  //     const formData = new FormData();
-  //     formData.append("Image", selectedFile);
-
-  //     try {
-  //       const res = await axios.post(urlMentor.UPLOADIMG, formData, {
-  //         headers: {
-  //           Authorization: `Bearer ${token}`,
-  //         },
-  //       });
-
-  //       const newImageLink = res.data.imageLink;
-  //       setUserData((prev) => ({ ...prev, imageLink: newImageLink }));
-  //     } catch (err) {
-  //       console.error("Upload failed:", err);
-  //     }
-  //   }
-  // };
+  const handleEditProfile = () => {
+    const editData = {
+      name: userData.userName,
+      gender: userData.gender,
+      imageForm: userData.imageLink,
+    };
+    console.log("test");
+    setEditMentee(editData);
+    setOpenModalEdit(true);
+  };
 
   const handleChangePassword = () => {
     setChangePassword(true);
+  };
+
+  // Function to handle profile update
+  const handleProfileUpdate = (updatedData: any) => {
+    console.log("Updated data from modal:", updatedData);
+
+    // Update userData with the new information
+    setUserData((prev) => ({
+      ...prev,
+      userName: updatedData.name || prev.userName,
+      gender: updatedData.gender || prev.gender,
+      imageLink: updatedData.imageLink || prev.imageLink,
+    }));
+
+    // Close the modal
+    setOpenModalEdit(false);
+    //show cuccess message
+    setSuccessEdit(true);
   };
 
   return (
@@ -120,21 +141,9 @@ const ProfileUser = () => {
             <img
               src={userData?.imageLink || profile}
               alt={profile}
-              className="w-full h-full"
+              className="w-full h-full rounded-full object-cover"
+              key={userData?.imageLink} // Force re-render when image changes
             />
-            {userData.role !== "Admin" && (
-              <div className="absolute bg-gray-300 top-[87px] left-[90px] p-2 rounded-full">
-                <label htmlFor="fileInput">
-                  <FaCamera className="text-md text-[var(--primary-light)] cursor-pointer" />
-                </label>
-                <input
-                  id="fileInput"
-                  type="file"
-                  className="hidden"
-                  // onChange={handleFileChange}
-                />
-              </div>
-            )}
           </div>
         </div>
 
@@ -234,6 +243,7 @@ const ProfileUser = () => {
           <div className="flex flex-row gap-3 justify-end items-center px-3">
             {userData.role !== "Admin" && (
               <button
+                onClick={handleEditProfile}
                 className={`text-end border-1 py-2 px-3 rounded-md border-[var(--gray-medium)] ${
                   isDark
                     ? "text-[var(--secondary)] bg-[var(--primary-dark)]"
@@ -335,6 +345,21 @@ const ProfileUser = () => {
         title="Logout"
         message="Please log out and log in again to continue."
         onConfirm={logout}
+      />
+
+      {/* Modal Edit */}
+      <ModalEditMentee
+        open={openEditModal}
+        data={editMentee}
+        onclose={() => setOpenModalEdit(false)}
+        onSubmit={handleProfileUpdate}
+      />
+
+      {/* alert success */}
+      <Alert
+        type="success"
+        message="Modified successfully!"
+        open={successEdit}
       />
     </>
   );

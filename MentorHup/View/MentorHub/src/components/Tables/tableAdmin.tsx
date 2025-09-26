@@ -4,17 +4,13 @@ import Table from "./Table";
 import type { BookingData } from "./interfaces";
 import FormateDate from "./date";
 import profile from "../../assets/avatar-profile.png";
-import { MdOutlineCancel } from "react-icons/md";
 import Duration from "./durationTime";
-import ConfirmModal from "../Modal/ModalConfirm";
-import { CancelBooking } from "../../hooks/cancelBooking";
 import { useNavigate } from "react-router-dom";
 import ToSend from "../Chatting/iconsToSend";
 
-const MentorTableBooking = () => {
+const TableAdminBooking = () => {
   const navigate = useNavigate();
   const [booking, setBooking] = useState<BookingData[]>([]);
-  const [modalCancel, setModalCancel] = useState({ bookingId: 0, show: false });
 
   useEffect(() => {
     const getBooking = async () => {
@@ -25,15 +21,10 @@ const MentorTableBooking = () => {
     getBooking();
   }, []);
 
-  // camcel booking
-  const handleCancel = (bookingId: number) => {
-    setModalCancel({ bookingId: bookingId, show: true });
-  };
-
   const columns = [
     {
       id: "menteeName",
-      header: "Mentor Name",
+      header: "Mentee Name",
       accessor: "menteeName" as keyof BookingData,
       render: (row: BookingData) => (
         <div className="flex items-center gap-3 justify-start text-start">
@@ -45,6 +36,23 @@ const MentorTableBooking = () => {
             />
           </div>
           {row.menteeName}
+        </div>
+      ),
+    },
+    {
+      id: "mentorName",
+      header: "Mentor Name",
+      accessor: "menteeName" as keyof BookingData,
+      render: (row: BookingData) => (
+        <div className="flex items-center gap-3 justify-start text-start">
+          <div className="w-12 h-12">
+            <img
+              src={row.mentorImageLink || profile}
+              className="hidden lg:block w-full h-full rounded-full"
+              alt={profile}
+            />
+          </div>
+          {row.mentorName}
         </div>
       ),
     },
@@ -83,68 +91,42 @@ const MentorTableBooking = () => {
         );
       },
     },
-    {
-      id: "actions",
-      header: "Action",
-      render: (row: BookingData) => (
-        <div className="flex justify-center items-center gap-2">
-          <MdOutlineCancel
-            className="w-5 h-5 cursor-pointer"
-            onClick={() => handleCancel(row.bookingId)}
-          />
-          {row.menteeUserId != null && (
-            <ToSend
-              onClick={() =>
-                handleMessageClick(
-                  row.menteeUserId,
-                  row.menteeName,
-                  row.menteeImageLink || profile
-                )
-              }
-            />
-          )}
-        </div>
-      ),
-    },
+    // {
+    //   id: "actions",
+    //   header: "Action",
+    //   render: (row: BookingData) => (
+    //     <div className="flex justify-center items-center gap-2">
+    //       {row.menteeUserId != null && (
+    //         <ToSend
+    //           onClick={() =>
+    //             handleMessageClick(
+    //               row.menteeUserId,
+    //               row.menteeName,
+    //               row.menteeImageLink || profile
+    //             )
+    //           }
+    //         />
+    //       )}
+    //     </div>
+    //   ),
+    // },
   ];
 
-  const handleMessageClick = (id: string, name: string, image: string) => {
-    localStorage.setItem("MessageIdUser", id);
-    localStorage.setItem("MessageUserName", name);
-    localStorage.setItem("imageUser", image);
+  //   const handleMessageClick = (id: string, name: string, image: string) => {
+  //     localStorage.setItem("MessageIdUser", id);
+  //     localStorage.setItem("MessageUserName", name);
+  //     localStorage.setItem("imageUser", image);
 
-    navigate("/mentor/chatting");
-  };
+  //     navigate("/mentee/chatting");
+  //   };
 
   return (
     <>
       {/* Table Sessions */}
       <div className="py-7 w-full">
-        <Table
-          titleTable="My Booked Sessions"
-          data={booking}
-          columns={columns}
-        />
+        <Table titleTable="Booking" data={booking} columns={columns} />
       </div>
-
-      {/* Modal cancel Booking */}
-      <ConfirmModal
-        open={modalCancel.show}
-        title="Cancel Booking"
-        message="Are you sure you want to cancel this booking?"
-        onClose={() => setModalCancel((prev) => ({ ...prev, show: false }))}
-        onConfirm={async () => {
-          const cancel = await CancelBooking(modalCancel.bookingId);
-
-          if (cancel === 200) {
-            setBooking((prev) =>
-              prev.filter((boo) => boo.bookingId !== modalCancel.bookingId)
-            );
-            setModalCancel({ bookingId: 0, show: false });
-          }
-        }}
-      />
     </>
   );
 };
-export default MentorTableBooking;
+export default TableAdminBooking;

@@ -17,6 +17,7 @@ import Alert from "../Tables/alerts";
 import ModalOk from "../Modal/ModalOk";
 import { useAuth } from "../../Context/AuthContext";
 import { AvailabilityModal } from "./AddAvailabilty";
+import { ModalEditProfile } from "./EditProfileMentor";
 
 interface user {
   applicationUserId: string;
@@ -32,6 +33,7 @@ interface user {
   cvLink: string;
   skills: [];
   price: number;
+  stripeAccountId: string;
   availabilites: {
     mentorAvailabilityId: number;
     dayOfWeek: string;
@@ -41,6 +43,18 @@ interface user {
     isBooked: boolean;
   }[];
   reviewsCount: [];
+}
+
+interface EditProfileData {
+  name: string;
+  companyName: string;
+  field: string;
+  description: string;
+  experiences: number;
+  price: number;
+  stripeAccountId: string;
+  skillIds: [];
+  availabilities: any[]; // Fixed: should be array, not object
 }
 
 const ProfMentor = () => {
@@ -55,6 +69,7 @@ const ProfMentor = () => {
     createdAt: "",
     description: "",
     experiences: 0,
+    stripeAccountId: "",
     price: 0,
     field: "",
     skills: [],
@@ -70,6 +85,7 @@ const ProfMentor = () => {
     ],
     reviewsCount: [],
   });
+
   const { isDark } = useTheme();
   const token = localStorage.getItem("accessToken");
   const [mentor, setMentor] = useState(0);
@@ -86,6 +102,20 @@ const ProfMentor = () => {
   const { logout } = useAuth();
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [addTimeSuccess, setAddTimeSuccess] = useState(false);
+
+  // edit modal
+  const [editDataProfile, setEditData] = useState<EditProfileData>({
+    name: "",
+    companyName: "",
+    field: "",
+    description: "",
+    experiences: 0,
+    price: 0,
+    stripeAccountId: "",
+    skillIds: [],
+    availabilities: [], // Fixed: properly initialized as array
+  });
+  const [openEditModal, setOpenModalEdit] = useState(false);
 
   useEffect(() => {
     const getInfo = async () => {
@@ -128,10 +158,10 @@ const ProfMentor = () => {
           },
         });
 
-        const newImageLink = `${res.data.imageLink}?v=${Date.now()}`;
+        // Fixed: Update image without query params, let React handle the update
         setUserData((prev) => ({
           ...prev,
-          imageLink: newImageLink,
+          imageLink: res.data.imageLink,
         }));
       } catch (err) {
         console.error("Upload failed:", err);
@@ -155,10 +185,9 @@ const ProfMentor = () => {
         });
 
         console.log(res.data);
-        const newCV = `${res.data.cvLink}?v=${Date.now()}`;
         setUserData((prev) => ({
           ...prev,
-          cvLink: newCV,
+          cvLink: res.data.cvLink,
         }));
         setUploadSuccess(true);
       } catch (err) {
@@ -194,11 +223,49 @@ const ProfMentor = () => {
     }
   };
 
+  const handleEditProfile = () => {
+    const editData = {
+      name: userData.name,
+      companyName: userData.companyName,
+      description: userData.description,
+      field: userData.field,
+      experiences: userData.experiences,
+      price: userData.price,
+      stripeAccountId: userData.stripeAccountId,
+      skillIds: userData.skills,
+      availabilities: userData.availabilites, // Fixed: correct property name
+    };
+
+    setEditData(editData);
+    setOpenModalEdit(true);
+  };
+
+  // Fixed: Better update handler
+  const handleProfileUpdate = (updatedData: any) => {
+    console.log("Updated data from modal:", updatedData);
+
+    setUserData((prev) => ({
+      ...prev,
+      name: updatedData.name || prev.name,
+      companyName: updatedData.companyName || prev.companyName,
+      field: updatedData.field || prev.field,
+      description: updatedData.description || prev.description,
+      experiences: updatedData.experiences || prev.experiences,
+      price: updatedData.price || prev.price,
+      stripeAccountId: updatedData.stripeAccountId || prev.stripeAccountId,
+      // Keep existing skills and availabilities unless specifically updated
+      skills: updatedData.skills || prev.skills,
+      availabilites: updatedData.availabilites || prev.availabilites,
+    }));
+
+    setOpenModalEdit(false);
+  };
+
   return (
     <>
       <div>
         {/* background + picture */}
-        <div className="relative w-full h-38">
+        <div className="relative w-full h-38 ">
           <div
             className="absolute rounded-md inset-0 "
             style={{
@@ -208,11 +275,12 @@ const ProfMentor = () => {
             }}
           ></div>
 
-          <div className="relative top-[77px] left-12 z-12 w-32 h-32">
+          <div className="relative top-[77px] left-12 z-12 rounded-full border-4 border-white w-32 h-32">
             <img
-              src={userData.imageLink || profile}
+              src={userData?.imageLink || profile}
               alt={profile}
-              className="rounded-full border-4 border-white w-full h-full"
+              className="w-full h-full rounded-full object-cover"
+              key={userData?.imageLink} // Force re-render when image changes
             />
             <div className="absolute bg-gray-300 top-[87px] left-[90px] p-2 rounded-full">
               <label htmlFor="fileInput">
@@ -223,6 +291,7 @@ const ProfMentor = () => {
                 type="file"
                 className="hidden"
                 onChange={handleFileChange}
+                accept="image/*" // Added accept attribute
               />
             </div>
           </div>
@@ -306,10 +375,10 @@ const ProfMentor = () => {
             </div>
 
             {/* description */}
-            <div className="flex flex-row p-2 justify-between items-center">
+            <div className="flex lg:flex-row md:flex-col p-2 justify-between items-start">
               <div className="flex flex-col">
                 <p
-                  className={`w-160 text-start ${
+                  className={`lg:w-160 md:w-80  text-start ${
                     isDark
                       ? "text-[var(--secondary-light)]"
                       : "text-[var(--primary)]"
@@ -336,7 +405,7 @@ const ProfMentor = () => {
           ></hr>
 
           <div
-            className={`flex flex-col justify-start items-start py-5 px-2 gap-3`}
+            className={`flex flex-col w-full justify-start items-start py-5 px-2 gap-3`}
           >
             <h2
               className={`text-lg font-semibold ${
@@ -347,11 +416,11 @@ const ProfMentor = () => {
             >
               Skills
             </h2>
-            <div>
+            <div className="flex lg:flex-row md:flex-col">
               {userData.skills.map((skill, index) => (
                 <span
                   key={index}
-                  className={`px-3 py-2 rounded-full text-sm m-2 ${
+                  className={`px-3 py-1 rounded-full text-sm m-2 ${
                     isDark
                       ? "bg-[var(--System-Gray-300)] text-[var(--primary-dark)]"
                       : "bg-[var(--primary-rgba)] text-[var(--secondary-light)]"
@@ -389,7 +458,6 @@ const ProfMentor = () => {
                   <label htmlFor="cvUp" className="cursor-pointer">
                     Change CV
                   </label>
-                  {/* <span onClick={handleDownloadCV}>Download CV</span> */}
                 </span>
               ) : (
                 <label htmlFor="cvUp" className="cursor-pointer">
@@ -401,6 +469,7 @@ const ProfMentor = () => {
                 type="file"
                 className="hidden"
                 onChange={handleUploadCV}
+                accept=".pdf,.doc,.docx" // Added accept attribute
               />
             </span>
           </div>
@@ -462,24 +531,27 @@ const ProfMentor = () => {
                     No available times
                   </span>
                 ) : (
-                  userData.availabilites
-                    .filter((boo) => !boo.isBooked)
-                    .map((boo) => (
-                      <label
-                        className={`text-sm p-2 rounded-lg flex flex-col gap-2 ${
-                          isDark
-                            ? "bg-[var(--green-medium)] text-[var(--System-Gray-200)]"
-                            : "bg-[var(--green-dark)] text-[var(--gray-lighter)]"
-                        }`}
-                      >
-                        <span className="flex">
-                          {day(boo.dayOfWeek)}, {FormateDate(boo.endTime)}
-                        </span>
-                        <span className="flex">
-                          {time(boo.startTime, boo.endTime)}
-                        </span>
-                      </label>
-                    ))
+                  <div className="grid grid-cols-2 gap-2 w-full">
+                    {userData.availabilites
+                      .filter((boo) => !boo.isBooked)
+                      .map((boo) => (
+                        <label
+                          key={boo.mentorAvailabilityId} // Added key
+                          className={`text-sm p-2 rounded-lg flex flex-col gap-2 ${
+                            isDark
+                              ? "bg-[var(--green-medium)] text-[var(--System-Gray-200)]"
+                              : "bg-[var(--green-dark)] text-[var(--gray-lighter)]"
+                          }`}
+                        >
+                          <span className="flex">
+                            {day(boo.dayOfWeek)}, {FormateDate(boo.endTime)}
+                          </span>
+                          <span className="flex">
+                            {time(boo.startTime, boo.endTime)}
+                          </span>
+                        </label>
+                      ))}
+                  </div>
                 )}
               </div>
 
@@ -505,22 +577,24 @@ const ProfMentor = () => {
                     No booked times
                   </span>
                 ) : (
-                  userData.availabilites
-                    .filter((boo) => boo.isBooked)
-                    .map((boo) => (
-                      <label
-                        className={`text-sm ${
-                          isDark
-                            ? "text-[var(--System-Gray-300)]"
-                            : "text-[var(--green-dark)]"
-                        }`}
-                      >
-                        {boo.dayOfWeek ? day(boo.dayOfWeek) : "N/A"},
-                        {boo.endTime ? FormateDate(boo.endTime) : ""}
-                        {/* {day(boo.dayOfWeek)}, {FormateDate(boo.startTime)} */}
-                        {time(boo.startTime, boo.endTime)}
-                      </label>
-                    ))
+                  <div className="grid grid-cols-2 gap-2 w-full">
+                    {userData.availabilites
+                      .filter((boo) => boo.isBooked)
+                      .map((boo) => (
+                        <label
+                          key={boo.mentorAvailabilityId} // Added key
+                          className={`text-sm p-2 rounded-lg flex flex-col gap-2 ${
+                            isDark
+                              ? "text-[var(--System-Gray-300)]"
+                              : "text-[var(--green-dark)]"
+                          }`}
+                        >
+                          {boo.dayOfWeek ? day(boo.dayOfWeek) : "N/A"},
+                          {boo.endTime ? FormateDate(boo.endTime) : ""}
+                          {time(boo.startTime, boo.endTime)}
+                        </label>
+                      ))}
+                  </div>
                 )}
               </div>
             </div>
@@ -549,6 +623,7 @@ const ProfMentor = () => {
               className={`text-end border-1 text-[var(--secondary-light)] py-2 px-3 rounded-md border-[var(--gray-medium)] ${
                 isDark ? "bg-[var(--primary-dark)]" : "bg-[var(--primary)]"
               }`}
+              onClick={handleEditProfile}
             >
               Edit Profile
             </button>
@@ -665,6 +740,14 @@ const ProfMentor = () => {
         open={addAvail}
         onSubmit={addtime}
         onclose={() => setAddAvail(false)}
+      />
+
+      {/* Modal Edit */}
+      <ModalEditProfile
+        open={openEditModal}
+        data={editDataProfile}
+        onclose={() => setOpenModalEdit(false)}
+        onSubmit={handleProfileUpdate}
       />
     </>
   );
