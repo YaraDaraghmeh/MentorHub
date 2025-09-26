@@ -38,7 +38,6 @@ export default function FeedbackModal({
       const feedbackData = {
         rating,
         comment,
-        wouldRecommend,
         bookingId: bookingId ? parseInt(bookingId, 10) : undefined
       };
       
