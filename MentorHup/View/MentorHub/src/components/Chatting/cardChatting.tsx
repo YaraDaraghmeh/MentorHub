@@ -39,7 +39,11 @@ const CardChat = ({
         }`}
       >
         <div className="w-14 h-14 rounded-full">
-          <img src={picture} className="w-full h-full" alt={picture} />
+          <img
+            src={picture}
+            className="w-full h-full rounded-full"
+            alt={picture}
+          />
         </div>
         <div className="flex-1 text-start self-stretch px-2 flex flex-wrap justify-start items-start gap-2.5 overflow-hidden">
           {/* information person */}
