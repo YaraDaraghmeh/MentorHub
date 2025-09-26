@@ -25,13 +25,14 @@ interface user {
   name: string;
   imageLink: string | null;
   companyName: string;
+  userName: string;
   role: string;
   createdAt: string;
   description: string;
   experiences: number;
   field: string;
   cvLink: string;
-  skills: [];
+  skills: { id: number; skillName: string }[];
   price: number;
   stripeAccountId: string;
   availabilites: {
@@ -46,6 +47,7 @@ interface user {
 }
 
 interface EditProfileData {
+  userName: string;
   name: string;
   companyName: string;
   field: string;
@@ -53,8 +55,7 @@ interface EditProfileData {
   experiences: number;
   price: number;
   stripeAccountId: string;
-  skillIds: [];
-  availabilities: any[]; // Fixed: should be array, not object
+  skillIds: number[];
 }
 
 const ProfMentor = () => {
@@ -62,6 +63,7 @@ const ProfMentor = () => {
     applicationUserId: "",
     email: "",
     name: "",
+    userName: "",
     imageLink: "",
     companyName: "",
     cvLink: "",
@@ -102,10 +104,12 @@ const ProfMentor = () => {
   const { logout } = useAuth();
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [addTimeSuccess, setAddTimeSuccess] = useState(false);
+  const [successEdit, setSuccessEdit] = useState(false);
 
   // edit modal
   const [editDataProfile, setEditData] = useState<EditProfileData>({
     name: "",
+    userName: "",
     companyName: "",
     field: "",
     description: "",
@@ -113,7 +117,6 @@ const ProfMentor = () => {
     price: 0,
     stripeAccountId: "",
     skillIds: [],
-    availabilities: [], // Fixed: properly initialized as array
   });
   const [openEditModal, setOpenModalEdit] = useState(false);
 
@@ -226,14 +229,14 @@ const ProfMentor = () => {
   const handleEditProfile = () => {
     const editData = {
       name: userData.name,
+      userName: userData.userName,
       companyName: userData.companyName,
       description: userData.description,
       field: userData.field,
       experiences: userData.experiences,
       price: userData.price,
       stripeAccountId: userData.stripeAccountId,
-      skillIds: userData.skills,
-      availabilities: userData.availabilites, // Fixed: correct property name
+      skillIds: userData.skills.map((skill) => skill.id),
     };
 
     setEditData(editData);
@@ -247,6 +250,7 @@ const ProfMentor = () => {
     setUserData((prev) => ({
       ...prev,
       name: updatedData.name || prev.name,
+      userName: updatedData.userName || prev.userName,
       companyName: updatedData.companyName || prev.companyName,
       field: updatedData.field || prev.field,
       description: updatedData.description || prev.description,
@@ -259,6 +263,7 @@ const ProfMentor = () => {
     }));
 
     setOpenModalEdit(false);
+    setSuccessEdit(true);
   };
 
   return (
@@ -426,7 +431,7 @@ const ProfMentor = () => {
                       : "bg-[var(--primary-rgba)] text-[var(--secondary-light)]"
                   }`}
                 >
-                  {skill}
+                  {skill.skillName}
                 </span>
               ))}
             </div>
@@ -585,13 +590,16 @@ const ProfMentor = () => {
                           key={boo.mentorAvailabilityId} // Added key
                           className={`text-sm p-2 rounded-lg flex flex-col gap-2 ${
                             isDark
-                              ? "text-[var(--System-Gray-300)]"
-                              : "text-[var(--green-dark)]"
+                              ? " bg-[var(--green-dark)] text-[var(--System-Gray-200)]"
+                              : "bg-[var(--green-medium)] text-[var(--gray-lighter)]"
                           }`}
                         >
-                          {boo.dayOfWeek ? day(boo.dayOfWeek) : "N/A"},
-                          {boo.endTime ? FormateDate(boo.endTime) : ""}
-                          {time(boo.startTime, boo.endTime)}
+                          <span className="flex">
+                            {day(boo.dayOfWeek)}, {FormateDate(boo.endTime)}
+                          </span>
+                          <span className="flex">
+                            {time(boo.startTime, boo.endTime)}
+                          </span>
                         </label>
                       ))}
                   </div>
@@ -748,6 +756,12 @@ const ProfMentor = () => {
         data={editDataProfile}
         onclose={() => setOpenModalEdit(false)}
         onSubmit={handleProfileUpdate}
+      />
+
+      <Alert
+        open={successEdit}
+        type="success"
+        message="Modified successfully!"
       />
     </>
   );

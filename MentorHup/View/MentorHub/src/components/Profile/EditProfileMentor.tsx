@@ -6,6 +6,7 @@ import axios from "axios";
 import urlMentor from "../../Utilities/Mentor/urlMentor";
 
 interface dataUser {
+  userName: string;
   name: string;
   companyName: string;
   field: string;
@@ -13,8 +14,7 @@ interface dataUser {
   experiences: number;
   price: number;
   stripeAccountId: string;
-  skillIds: [];
-  availabilities: {};
+  skillIds: number[];
 }
 
 interface dataEdit {
@@ -35,36 +35,44 @@ export const ModalEditProfile = ({
 
   // states for editable fields
   const [nameUser, setUserName] = useState("");
+  const [name, setName] = useState("");
   const [company, setCompany] = useState("");
   const [fieldUser, setFieldUser] = useState("");
   const [priceS, setPriceS] = useState(0);
   const [descrip, setDescrip] = useState("");
   const [expeYear, setExpeYear] = useState(0);
   const [stripe, setStrip] = useState("");
+  const [selectedSkillIds, setSelectedSkillIds] = useState<number[]>([]);
 
   // init states when data changes
   useEffect(() => {
     if (data) {
-      setUserName(data.name || "");
+      setUserName(data.userName || "");
+      setName(data.name || "");
       setCompany(data.companyName || "");
       setFieldUser(data.field || "");
       setPriceS(data.price || 0);
       setDescrip(data.description || "");
       setExpeYear(data.experiences || 0);
       setStrip(data.stripeAccountId || "");
+      setSelectedSkillIds(data.skillIds || []);
     }
   }, [data]);
 
   const handleSave = async () => {
     const updated: dataUser = {
-      ...data, // keep skills & availabilities
-      name: nameUser,
+      ...data,
+      name,
+      userName: nameUser,
       companyName: company,
       field: fieldUser,
       price: priceS,
       description: descrip,
       experiences: expeYear,
       stripeAccountId: stripe,
+      skillIds: selectedSkillIds
+        .filter((id) => id !== undefined && id !== null)
+        .map((id) => Number(id)),
     };
 
     try {
@@ -118,8 +126,8 @@ export const ModalEditProfile = ({
                   </label>
                   <input
                     type="text"
-                    value={nameUser}
-                    onChange={(e) => setUserName(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="flex w-full items-center text-[var(--primary)] rounded-md h-12 p-2 border border-[var(--System-Gray-300)] bg-gray-100"
                   />
                 </div>
