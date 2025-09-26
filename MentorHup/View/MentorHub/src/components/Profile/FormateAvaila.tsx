@@ -1,6 +1,6 @@
 export const day = (dayAva?: string) => {
   if (!dayAva) return "N/A";
-  const newDay = dayAva.slice(0, 4);
+  const newDay = dayAva.slice(0, 3);
 
   return newDay;
 };

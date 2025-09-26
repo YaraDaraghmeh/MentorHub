@@ -24,9 +24,10 @@ const CardUser = ({ name, picture, onClick }: listCard) => {
     >
       <div className="w-fit inline-flex flex-col justify-center items-center">
         <img
-          className="self-stretch h-56 "
+          className="self-stretch h-56 rounded-full"
           src={picture}
           alt="/src/assets/avatar-girl-with-glasses.png"
+          style={{ borderRadius: "50px" }}
         />
       </div>
 
