@@ -44,7 +44,6 @@ namespace MentorHup.APPLICATION.Service.Booking
                     {
                         var subject = "Rate Your Mentor";
                         var message = $@"
-<<<<<<< Updated upstream
                         <html>
                           <body style='font-family: Arial, sans-serif; background-color: #f4f4f7; margin:0; padding:0;'>
                             <table align='center' width='600' cellpadding='0' cellspacing='0' style='background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.1);'>
@@ -72,11 +71,6 @@ namespace MentorHup.APPLICATION.Service.Booking
                             </table>
                           </body>
                         </html>";
-=======
-                        <h3>Hello {booking.Mentee.Name},</h3>
-                        <p>Your session with mentor <strong>{booking.Mentor.Name}</strong> has ended.</p>
-                        <p>You can now rate your mentor <a href='https://mentorhub-zeta.vercel.app/givefeedback/{booking.Id}'>here</a>.</p>";
->>>>>>> Stashed changes
 
                         await emailSender.SendEmailAsync(booking.Mentee.ApplicationUser.Email, subject, message);
 
