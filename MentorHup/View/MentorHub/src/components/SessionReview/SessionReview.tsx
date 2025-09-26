@@ -1,11 +1,11 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { Fragment, useState } from "react";
 import { useTheme } from "../../Context/ThemeContext";
-
 interface FeedbackModalProps {
     open: boolean;
     onClose: () => void;
     onSubmit: (feedback: FeedbackData) => void;
+    bookingId?: string;
 }
 
 interface FeedbackData {
@@ -19,6 +19,7 @@ export default function FeedbackModal({
     open,
     onClose,
     onSubmit,
+    bookingId,
 }: FeedbackModalProps) {
     const { isDark } = useTheme();
     const [rating, setRating] = useState<number>(0);
@@ -84,22 +85,13 @@ export default function FeedbackModal({
 
     return (
         <Transition show={open} as={Fragment}>
-            <Dialog as="div" className="relative z-30" onClose={handleClose}>
-                {/* Background overlay */}
-                <Transition.Child
-                    as={Fragment}
-                    enter="ease-out duration-300"
-                    enterFrom="opacity-0"
-                    enterTo="opacity-100"
-                    leave="ease-in duration-200"
-                    leaveFrom="opacity-100"
-                    leaveTo="opacity-0"
-                >
-                    <div className="fixed inset-0 bg-black/50" />
-                </Transition.Child>
-
-                {/* Modal content */}
-                <div className="fixed inset-0 flex items-center justify-center p-4">
+            <div className="fixed inset-0 overflow-y-auto">
+                {bookingId && (
+                    <div className="absolute top-4 right-4 bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm">
+                        Session ID: {bookingId}
+                    </div>
+                )}
+                <div className="flex min-h-full items-center justify-center p-4 text-center">
                     <Transition.Child
                         as={Fragment}
                         enter="ease-out duration-300"
@@ -196,7 +188,7 @@ export default function FeedbackModal({
                         </div>
                     </Transition.Child>
                 </div>
-            </Dialog>
+            </div   >
         </Transition>
     );
 }

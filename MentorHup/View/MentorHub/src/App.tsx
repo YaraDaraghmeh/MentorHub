@@ -102,7 +102,7 @@ function App() {
               <Route path="/registration" element={<ChooseUser />} />
               <Route path="/SignUp-mentee" element={<SignUpMentee />} />
               <Route path="/SignUp-mentor" element={<SignUpMentor />} />
-              <Route path="/givefeedback" element={<Givefeedback />} />
+              <Route path="/givefeedback/:bookingId" element={<Givefeedback />} />
               {/* Admin Routes - Protected */}
               <Route
                 path="/admin/*"
