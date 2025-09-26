@@ -181,7 +181,7 @@ const ForgotPassword: React.FC = () => {
             className={`p-4 rounded-lg border ${
               message.type === "success"
                 ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-700 dark:text-black"
-                : "bg-red-50 border-red-200 text-red-800 dark:bg-red-900/30 dark:border-red-700 dark:text-red-300"
+                : "bg-red-50 border-red-200 text-black dark:bg-red-900/30 dark:border-red-700 dark:text-black"
             }`}
           >
             <div className="flex items-center">
@@ -302,7 +302,7 @@ const ForgotPassword: React.FC = () => {
             className={`p-4 rounded-lg border ${
               message.type === "success"
                 ? "bg-green-50 border-green-200 text-green-800 dark:bg-green-900/30 dark:border-green-700 dark:text-green-300"
-                : "bg-red-50 border-red-200 text-black dark:bg-black dark:border-red-700 dark:text-red-300"
+                : "bg-red-50 border-red-200 text-black dark:bg-black dark:border-red-700 dark:text-black"
             }`}
           >
             <div className="flex items-center">
