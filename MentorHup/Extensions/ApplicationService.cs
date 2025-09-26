@@ -53,6 +53,8 @@ namespace MentorHup.Extensions
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddScoped<IWeeklyDashboardService, WeeklyDashboardService>();
             services.AddScoped<IEarningsService, EarningsService>();
+            services.AddHostedService<BookingRatingNotificationService>();
+
 
 
 

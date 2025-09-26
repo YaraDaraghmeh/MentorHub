@@ -20,6 +20,7 @@ public class Booking
     public BookingStatus Status { get; set; } = BookingStatus.Pending;
 
     public string? MeetingUrl { get; set; }
+    public bool RatingEmailSent { get; set; } = false;
 
 
 
