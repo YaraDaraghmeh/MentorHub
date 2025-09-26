@@ -16,8 +16,9 @@ const LoginContent = () => {
   // Debug: Log current location
   useEffect(() => {
     console.log('Current route:', location.pathname);
-    console.log('Navigation state:', location.state);
+    console.log('Navigation state:-Here-', location.state);
   }, [location]);
+
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [error, setError] = useState("");
@@ -214,7 +215,7 @@ const LoginContent = () => {
                   loading ? "opacity-50 cursor-not-allowed" : ""
                 }`}
               >
-                {loading ? ".................Logging In " : "Sign in"}
+                {loading ? "Logging In " : "Sign in"}
               </button>
             </div>
 

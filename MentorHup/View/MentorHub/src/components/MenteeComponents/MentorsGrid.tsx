@@ -6,9 +6,9 @@ import {
   Clock,
   Calendar,
   Star,
-  Users,
-  Share2
+  Users
 } from "lucide-react";
+import { SiReaddotcv } from "react-icons/si";
 import { useTheme } from "../../Context/ThemeContext";
 import type { Mentor, FilterState } from "../../types/types";
 import BookingModal from "./BookingModal";
@@ -51,16 +51,8 @@ const MentorsGrid = () => {
     selectedRating: 'all'
   });
 
-  
-  const mentors = useMemo(() => {
-    
-    console.log('🔍 DEBUG: Current page mentors from API:', {
-      currentPage,
-      pageSize,
-      mentorsLength: allMentors.length,
-      mentorNames: allMentors.map(m => m.name)
-    });
 
+  const mentors = useMemo(() => {
     return allMentors;
   }, [allMentors, currentPage, pageSize]);
 
@@ -91,18 +83,18 @@ const MentorsGrid = () => {
     }
 
     const requestId = `req_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-    
+
     // Prepare filter params for API
     const filterParams: Record<string, any> = {};
-    
+
     // Map UI filters to API filters
     if (apiFilters.skillName) filterParams.skillName = apiFilters.skillName;
     if (apiFilters.experiences) filterParams.experiences = apiFilters.experiences;
     if (apiFilters.field) filterParams.field = apiFilters.field;
 
-    console.log(`🔍 [${requestId}] Starting to fetch mentors...`, { 
-      pageNumber, 
-      pageSize, 
+    console.log(`🔍 [${requestId}] Starting to fetch mentors...`, {
+      pageNumber,
+      pageSize,
       retryCount,
       filters: filterParams
     });
@@ -157,7 +149,7 @@ const MentorsGrid = () => {
         if (retryCount < MAX_RETRIES) {
           const retryIn = RETRY_DELAY * (retryCount + 1);
           setTimeout(() => {
-            getMentors(pageNumber, pageSize, retryCount+ 1);
+            getMentors(pageNumber, pageSize, retryCount + 1);
           }, retryIn);
           return;
         }
@@ -216,20 +208,46 @@ const MentorsGrid = () => {
   const startIndex = (currentPage - 1) * pageSize + 1;
   const endIndex = Math.min(currentPage * pageSize, totalItems);
 
-  // Generate page numbers for pagination
+  // Generate page numbers for pagination with first, last, and dots
   const getPageNumbers = () => {
     const pages = [];
-    const maxPagesToShow = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxPagesToShow / 2));
-    const endPage = Math.min(totalPages, startPage + maxPagesToShow - 1);
     
-    if (endPage - startPage + 1 < maxPagesToShow) {
-      startPage = Math.max(1, endPage - maxPagesToShow + 1);
+    // Always show first page
+    pages.push(1);
+    
+    // Calculate start and end of the middle section
+    let startPage = Math.max(2, currentPage - 1);
+    let endPage = Math.min(totalPages - 1, currentPage + 1);
+    
+    // Adjust if we're near the start or end
+    if (currentPage <= 3) {
+      endPage = Math.min(4, totalPages - 1);
+    } else if (currentPage >= totalPages - 2) {
+      startPage = Math.max(2, totalPages - 3);
     }
     
+    // Add dots after first page if needed
+    if (startPage > 2) {
+      pages.push('...');
+    }
+    
+    // Add middle pages
     for (let i = startPage; i <= endPage; i++) {
-      pages.push(i);
+      if (i > 1 && i < totalPages) {
+        pages.push(i);
+      }
     }
+    
+    // Add dots before last page if needed
+    if (endPage < totalPages - 1) {
+      pages.push('...');
+    }
+    
+    // Always show last page if there is more than one page
+    if (totalPages > 1) {
+      pages.push(totalPages);
+    }
+    
     return pages;
   };
 
@@ -237,33 +255,33 @@ const MentorsGrid = () => {
   const handleFilterChange = (newFilters: Partial<FilterState>) => {
     setFilters(prev => {
       const updatedFilters = { ...prev, ...newFilters };
-      
+
       // Map the filter values to match the API expected format
       const apiFilters: Partial<MentorFilters> = {};
-      
+
       if (updatedFilters.searchTerm) {
         apiFilters.skillName = updatedFilters.searchTerm;
       }
-      
+
       if (updatedFilters.selectedExperience !== 'all') {
         const experience = parseInt(updatedFilters.selectedExperience);
         if (!isNaN(experience)) {
           apiFilters.experiences = experience;
         }
       }
-      
+
       if (updatedFilters.selectedSpecialty !== 'all') {
         apiFilters.field = updatedFilters.selectedSpecialty;
       }
-      
+
       // Update the filters and reset to first page
       setCurrentPage(1);
-      
+
       // Make the API call with the mapped filters
       if (token) {
         getMentors(1, pageSize, apiFilters);
       }
-      
+
       // Return the updated UI filter state
       return updatedFilters;
     });
@@ -273,25 +291,25 @@ const MentorsGrid = () => {
   useEffect(() => {
     if (token) {
       console.log('🔍 Fetching mentors with filters:', filters);
-      
+
       // Map the UI filters to API filters
       const apiFilters: Partial<MentorFilters> = {};
-      
+
       if (filters.searchTerm) {
         apiFilters.skillName = filters.searchTerm;
       }
-      
+
       if (filters.selectedExperience !== 'all') {
         const experience = parseInt(filters.selectedExperience);
         if (!isNaN(experience)) {
           apiFilters.experiences = experience;
         }
       }
-      
+
       if (filters.selectedSpecialty !== 'all') {
         apiFilters.field = filters.selectedSpecialty;
       }
-      
+
       // Use the mapped filters for the API call
       getMentors(currentPage, pageSize, apiFilters);
     }
@@ -362,11 +380,10 @@ const MentorsGrid = () => {
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
-              className={`mb-6 p-4 rounded-lg border ${
-                isDark
+              className={`mb-6 p-4 rounded-lg border ${isDark
                   ? "bg-red-900/20 border-red-800 text-red-400"
                   : "bg-red-50 border-red-200 text-red-600"
-              }`}
+                }`}
             >
               <div className="flex items-center">
                 <div className="ml-2">
@@ -382,17 +399,15 @@ const MentorsGrid = () => {
             <div className="mb-6 flex justify-between items-center">
               <div>
                 <p
-                  className={`text-sm ${
-                    isDark ? "text-gray-400" : "text-gray-600"
-                  }`}
+                  className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"
+                    }`}
                 >
                   Showing {startIndex}-{endIndex} of {totalItems} mentors
                 </p>
               </div>
               <div
-                className={`text-sm ${
-                  isDark ? "text-gray-400" : "text-gray-600"
-                }`}
+                className={`text-sm ${isDark ? "text-gray-400" : "text-gray-600"
+                  }`}
               >
                 Page {currentPage} of {totalPages}
               </div>
@@ -407,9 +422,8 @@ const MentorsGrid = () => {
               className="text-center py-12"
             >
               <div className="flex justify-center items-center space-x-2">
-                <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${
-                  isDark ? "border-blue-400" : "border-blue-600"
-                }`}></div>
+                <div className={`animate-spin rounded-full h-8 w-8 border-b-2 ${isDark ? "border-blue-400" : "border-blue-600"
+                  }`}></div>
                 <span className={`text-lg ${isDark ? "text-gray-300" : "text-gray-600"}`}>
                   Loading mentors...
                 </span>
@@ -447,11 +461,10 @@ const MentorsGrid = () => {
                   variants={itemVariants}
                   whileHover={{ y: -5, scale: 1.02 }}
                   transition={{ duration: 0.2 }}
-                  className={`rounded-xl border transition-all duration-300 hover:shadow-xl relative flex flex-col h-auto min-h-[360px] sm:min-h-[400px] md:min-h-[420px] w-full ${
-                    isDark
+                  className={`rounded-xl border transition-all duration-300 hover:shadow-xl relative flex flex-col h-auto min-h-[360px] sm:min-h-[400px] md:min-h-[420px] w-full ${isDark
                       ? "bg-gray-800 border-gray-700 hover:shadow-blue-500/10"
                       : "bg-white border-gray-200 hover:shadow-blue-500/20"
-                  }`}
+                    }`}
                 >
                   <div className="p-2.5 sm:p-3.5 md:p-4 flex-1 flex flex-col w-full">
                     {/* Header */}
@@ -472,9 +485,8 @@ const MentorsGrid = () => {
                             {mentor.name}
                           </h3>
                           <p
-                            className={`text-sm ${
-                              isDark ? "text-gray-300" : "text-gray-600"
-                            }`}
+                            className={`text-sm ${isDark ? "text-gray-300" : "text-gray-600"
+                              }`}
                           >
                             {mentor.field}
                           </p>
@@ -487,26 +499,26 @@ const MentorsGrid = () => {
                             mentor.id,
                             mentor.imageLink || defaultprofileimage
                           )}
-                          className={`p-2 rounded-lg transition-colors ${
-                            isDark
+                          className={`p-2 rounded-lg transition-colors ${isDark
                               ? "hover:bg-gray-700 text-gray-400"
                               : "hover:bg-gray-100 text-gray-600"
-                          }`}
+                            }`}
                         >
                           <ToSend onClick={() => handleSendIconClick(
-                            mentor.name ,
+                            mentor.name,
                             mentor.id,
                             mentor.imageLink || defaultprofileimage
                           )} />
                         </button>
                         <button
-                          className={`p-2 rounded-lg transition-colors ${
-                            isDark
+                          className={`p-2 rounded-lg transition-colors ${isDark
                               ? "hover:bg-gray-700 text-gray-400"
                               : "hover:bg-gray-100 text-gray-600"
-                          }`}
+                            }`}
                         >
-                          <Share2 className="h-4 w-4" />
+                          <SiReaddotcv className="h-4 w-4" onClick={
+                            mentor.cvLink ? () => window.open(mentor.cvLink, '_blank') : undefined
+                          } />
                         </button>
                       </div>
                     </div>
@@ -514,9 +526,8 @@ const MentorsGrid = () => {
                     {/* Company */}
                     <div className="mb-4">
                       <span
-                        className={`text-sm font-medium ${
-                          isDark ? "text-blue-400" : "text-blue-600"
-                        }`}
+                        className={`text-sm font-medium ${isDark ? "text-blue-400" : "text-blue-600"
+                          }`}
                       >
                         {mentor.companyName}
                       </span>
@@ -543,9 +554,8 @@ const MentorsGrid = () => {
                           {mentor.experience || 0}
                         </div>
                         <div
-                          className={`text-xs ${
-                            isDark ? "text-gray-400" : "text-gray-500"
-                          }`}
+                          className={`text-xs ${isDark ? "text-gray-400" : "text-gray-500"
+                            }`}
                         >
                           Years Experience
                         </div>
@@ -555,9 +565,8 @@ const MentorsGrid = () => {
                           ${mentor.price}
                         </div>
                         <div
-                          className={`text-xs ${
-                            isDark ? "text-gray-400" : "text-gray-500"
-                          }`}
+                          className={`text-xs ${isDark ? "text-gray-400" : "text-gray-500"
+                            }`}
                         >
                           Per Hour
                         </div>
@@ -570,22 +579,20 @@ const MentorsGrid = () => {
                         {mentor.skills?.slice(0, 2).map((specialty, index) => (
                           <span
                             key={index}
-                            className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              isDark
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${isDark
                                 ? "bg-blue-900 text-blue-300"
                                 : "bg-blue-100 text-blue-800"
-                            }`}
+                              }`}
                           >
                             {specialty}
                           </span>
                         ))}
                         {mentor.skills && mentor.skills.length > 2 && (
                           <span
-                            className={`px-3 py-1 rounded-full text-xs font-medium ${
-                              isDark
+                            className={`px-3 py-1 rounded-full text-xs font-medium ${isDark
                                 ? "bg-gray-700 text-gray-300"
                                 : "bg-gray-100 text-gray-600"
-                            }`}
+                              }`}
                           >
                             +{mentor.skills.length - 2} more
                           </span>
@@ -598,9 +605,8 @@ const MentorsGrid = () => {
                       <div className="mb-3 sm:mb-4">
                         <div className="flex items-center mb-1">
                           <Clock className="h-4 w-4 mr-1.5 text-green-500" />
-                          <span className={`text-sm font-medium ${
-                            isDark ? "text-gray-300" : "text-gray-700"
-                          }`}>
+                          <span className={`text-sm font-medium ${isDark ? "text-gray-300" : "text-gray-700"
+                            }`}>
                             Next Available
                           </span>
                         </div>
@@ -609,51 +615,48 @@ const MentorsGrid = () => {
                             .filter(availability => !availability.isBooked)
                             .slice(0, 1)
                             .map((availability, index) => (
-                            <div key={availability.mentorAvailabilityId || index}
-                                 className={`text-sm p-2.5 rounded-lg ${
-                                   isDark
-                                     ? "bg-gray-700/80 text-gray-200 border border-gray-600"
-                                     : "bg-gray-50 text-gray-700 border border-gray-200"
-                                 }`}>
-                              <div className="flex items-center justify-between">
-                                <div className="flex items-center space-x-2">
-                                  <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
-                                  <span className="font-medium">{availability.dayOfWeek}</span>
+                              <div key={availability.mentorAvailabilityId || index}
+                                className={`text-sm p-2.5 rounded-lg ${isDark
+                                    ? "bg-gray-700/80 text-gray-200 border border-gray-600"
+                                    : "bg-gray-50 text-gray-700 border border-gray-200"
+                                  }`}>
+                                <div className="flex items-center justify-between">
+                                  <div className="flex items-center space-x-2">
+                                    <Calendar className="h-3.5 w-3.5 flex-shrink-0" />
+                                    <span className="font-medium">{availability.dayOfWeek}</span>
+                                  </div>
+                                  <div className="flex items-center space-x-1.5">
+                                    <Clock className="h-3.5 w-3.5 flex-shrink-0" />
+                                    <span className="font-medium">
+                                      <FormattedDateComponent
+                                        isoDateString={availability.startTime}
+                                        showDate={false}
+                                        className="font-medium"
+                                      />
+                                      <span className="mx-0.5">-</span>
+                                      <FormattedDateComponent
+                                        isoDateString={availability.endTime}
+                                        showDate={false}
+                                        className="font-medium"
+                                      />
+                                    </span>
+                                  </div>
                                 </div>
-                                <div className="flex items-center space-x-1.5">
-                                  <Clock className="h-3.5 w-3.5 flex-shrink-0" />
-                                  <span className="font-medium">
-                                    <FormattedDateComponent
-                                      isoDateString={availability.startTime}
-                                      showDate={false}
-                                      className="font-medium"
-                                    />
-                                    <span className="mx-0.5">-</span>
-                                    <FormattedDateComponent
-                                      isoDateString={availability.endTime}
-                                      showDate={false}
-                                      className="font-medium"
-                                    />
-                                  </span>
+                                <div className="text-xs text-gray-500 mt-1.5 flex items-center">
+                                  <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 mr-1.5"></span>
+                                  {availability.durationInMinutes} min session • Available now
                                 </div>
                               </div>
-                              <div className="text-xs text-gray-500 mt-1.5 flex items-center">
-                                <span className="inline-block w-1.5 h-1.5 rounded-full bg-green-400 mr-1.5"></span>
-                                {availability.durationInMinutes} min session • Available now
-                              </div>
-                            </div>
-                          ))}
+                            ))}
                           {mentor.availabilities.filter(a => !a.isBooked).length > 1 && (
-                            <div className={`text-[11px] text-center pt-0.5 ${
-                              isDark ? "text-gray-400" : "text-gray-500"
-                            }`}>
+                            <div className={`text-[11px] text-center pt-0.5 ${isDark ? "text-gray-400" : "text-gray-500"
+                              }`}>
                               +{mentor.availabilities.filter(a => !a.isBooked).length - 1} more slots
                             </div>
                           )}
                           {mentor.availabilities.filter(a => !a.isBooked).length === 0 && (
-                            <div className={`text-[11px] text-center py-1 ${
-                              isDark ? "text-gray-400" : "text-gray-500"
-                            }`}>
+                            <div className={`text-[11px] text-center py-1 ${isDark ? "text-gray-400" : "text-gray-500"
+                              }`}>
                               No available slots
                             </div>
                           )}
@@ -664,7 +667,7 @@ const MentorsGrid = () => {
                     {/* Fixed bottom section with member since and action buttons */}
                     <div className="mt-auto">
                       {/* Action buttons */}
-                      <div className="px-2.5 sm:px-3 pb-1.5 pt-1.5 border-t border-gray-200 dark:border-gray-700">
+                      <div className="px-1.5 sm:px-3 pb-1.5 pt-1.5 border-t border-gray-600 dark:border-gray-600">
                         <div className="flex justify-between items-center text-[10px] text-gray-500 mb-1">
                           <div className="flex items-center">
                             <Calendar className="h-2 w-2 mr-1 flex-shrink-0" />
@@ -682,24 +685,29 @@ const MentorsGrid = () => {
                           </div>
                         </div>
                         <div className="flex space-x-2">
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => onBookSession(mentor)}
-                          className="flex-1 bg-gradient-to-r from-teal-950 to-teal-500 hover:from-teal-500 hover:to-teal-950 text-white py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200"
-                        >
-                          Book Session
-                        </motion.button>
-                        <motion.button
-                          whileHover={{ scale: 1.02 }}
-                          whileTap={{ scale: 0.98 }}
-                          onClick={() => navigate(`/mentor/${mentor.id}`)}
-                          className="flex-1 border border-gray-600 dark:border-gray-600 text-white dark:text-white py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                        >
-                          View Profile
-                        </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => onBookSession(mentor)}
+                            className="flex-1 bg-gradient-to-r from-teal-950 to-teal-500 hover:from-teal-500 hover:to-teal-950 text-white py-2 px-3 rounded-lg text-sm font-medium transition-all duration-200"
+                          >
+                            Book Session
+                          </motion.button>
+                          <motion.button
+                            whileHover={{ scale: 1.02 }}
+                            whileTap={{ scale: 0.98 }}
+                            onClick={() => navigate(`/mentor/${mentor.id}`)}
+                            className="flex-1 border border-gray-600 
+                                       text-sm font-medium py-2 px-3 rounded-lg
+                                       transition-all duration-200
+                                       text-gray-500 hover:text-black dark:text-white dark:hover:text-white
+                                      hover:bg-gray-100 dark:hover:bg-gray-700 
+                                      dark:border-gray-600"
+                          >
+                            View Profile
+                          </motion.button>
+                        </div>
                       </div>
-                    </div>
                     </div>
                   </div>
                 </motion.div>
@@ -722,15 +730,13 @@ const MentorsGrid = () => {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handlePageChange(currentPage - 1)}
                 disabled={currentPage === 1}
-                className={`flex items-center px-3 py-2 rounded-lg border transition-all duration-200 ${
-                  currentPage === 1
+                className={`flex items-center px-3 py-2 rounded-lg border transition-all duration-200 ${currentPage === 1
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:shadow-md"
-                } ${
-                  isDark
+                  } ${isDark
                     ? "border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700"
                     : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 <ChevronLeft className="h-4 w-4 mr-1" />
                 Previous
@@ -738,53 +744,45 @@ const MentorsGrid = () => {
 
               {/* Page Numbers */}
               <div className="flex items-center space-x-1">
-                {getPageNumbers().map((page, index) => (
-                  <div key={index}>
-                    {page === "..." ? (
-                      <span
-                        className={`px-3 py-2 ${
-                          isDark ? "text-gray-400" : "text-gray-500"
-                        }`}
-                      >
-                        ...
-                      </span>
-                    ) : (
-                      <motion.button
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
-                        onClick={() => handlePageChange(page as number)}
-                        className={`px-3 py-2 rounded-lg border transition-all duration-200 min-w-[2.5rem] ${
-                          currentPage === (typeof page === 'number' ? page : parseInt(page as string, 10))
-                            ? isDark
-                              ? "bg-teal-600 border-teal-600 text-white shadow-lg"
-                              : "bg-teal-500 border-teal-500 text-white shadow-lg"
-                            : isDark
-                            ? "border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700"
-                            : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                        }`}
-                      >
-                        {page}
-                      </motion.button>
-                    )}
-                  </div>
-                ))}
+                {getPageNumbers().map((page, index) => {
+                  const isActive = currentPage === page;
+                  const isDots = page === '...';
+                  const pageNum = typeof page === 'number' ? page : 0;
+                  
+                  return (
+                    <div key={`${page}-${index}`} className="flex items-center">
+                      {isDots ? (
+                        <span className={`px-2 py-1 ${isDark ? 'text-gray-500' : 'text-gray-400'}`}>
+                          •••
+                        </span>
+                      ) : (
+                        <motion.button
+                          whileHover={!isActive ? { scale: 1.1 } : {}}
+                          whileTap={!isActive ? { scale: 0.95 } : {}}
+                          onClick={() => handlePageChange(pageNum)}
+                          disabled={isActive}
+                          className={`px-3 py-1.5 mx-0.5 rounded-md text-sm font-medium transition-all duration-200 min-w-[36px] border ${isActive ? 'border-transparent' : 'border'} ${isActive ? 'bg-teal-600 text-white shadow-md cursor-default' : isDark ? 'text-gray-300 hover:bg-gray-700 hover:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'}`}
+                        >
+                          {page}
+                        </motion.button>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
 
               {/* Next Button */}
               <motion.button
                 whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
                 onClick={() => handlePageChange(currentPage + 1)}
                 disabled={currentPage === totalPages}
-                className={`flex items-center px-3 py-2 rounded-lg border transition-all duration-200 ${
-                  currentPage === totalPages
+                className={`flex items-center px-3 py-2 rounded-lg border transition-all duration-200 ${currentPage === totalPages
                     ? "opacity-50 cursor-not-allowed"
                     : "hover:shadow-md"
-                } ${
-                  isDark
+                  } ${isDark
                     ? "border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700"
                     : "border-gray-300 bg-white text-gray-700 hover:bg-gray-50"
-                }`}
+                  }`}
               >
                 Next
                 <ChevronRight className="h-4 w-4 ml-1" />
@@ -800,14 +798,12 @@ const MentorsGrid = () => {
               className="text-center py-12"
             >
               <Users
-                className={`h-16 w-16 mx-auto mb-4 ${
-                  isDark ? "text-gray-600" : "text-gray-400"
-                }`}
+                className={`h-16 w-16 mx-auto mb-4 ${isDark ? "text-gray-600" : "text-gray-400"
+                  }`}
               />
               <h3
-                className={`text-xl font-medium mb-2 ${
-                  isDark ? "text-gray-300" : "text-gray-600"
-                }`}
+                className={`text-xl font-medium mb-2 ${isDark ? "text-gray-300" : "text-gray-600"
+                  }`}
               >
                 No mentors found
               </h3>

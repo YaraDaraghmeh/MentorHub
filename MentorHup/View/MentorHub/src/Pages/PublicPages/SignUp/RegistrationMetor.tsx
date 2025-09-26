@@ -67,6 +67,7 @@ const SignUpMentor = () => {
           .filter((n) => Number.isFinite(n));
       }
 
+<<<<<<< HEAD
       // availabilities from datetime-local inputs => ISO strings
       const startTimeRaw = (userData as any)?.startTime as string | undefined;
       const endTimeRaw = (userData as any)?.endTime as string | undefined;
@@ -74,8 +75,11 @@ const SignUpMentor = () => {
         ? new Date(startTimeRaw).toISOString()
         : null;
       const endTimeIso = endTimeRaw ? new Date(endTimeRaw).toISOString() : null;
+=======
+      const startTimeIso = (userData as any)?.startTimeFormatted as string | null;
+      const endTimeIso = (userData as any)?.endTimeFormatted as string | null;
+>>>>>>> 7d15e275e79ee35af8d9e70cab8f22b1e0d80aba
 
-      // Minimal validation for required backend fields
       if (!stripeAccountId) {
         setGeneralError("Stripe Account ID is required.");
         return;
@@ -88,28 +92,7 @@ const SignUpMentor = () => {
         setGeneralError("Availability start and end times are required.");
         return;
       }
-      if (!(userData as any)?.name?.trim()) {
-        setGeneralError("Name is required.");
-        return;
-      }
-      if (!(userData as any)?.email?.trim()) {
-        setGeneralError("Email is required.");
-        return;
-      }
-      if (!(userData as any)?.password?.trim()) {
-        setGeneralError("Password is required.");
-        return;
-      }
-      if (!(userData as any)?.companyName?.trim()) {
-        setGeneralError("Company Name is required.");
-        return;
-      }
-      if (!(userData as any)?.field?.trim()) {
-        setGeneralError("Field is required.");
-        return;
-      }
 
-      // Validate that start time is in the future
       const startDate = new Date(startTimeIso);
       const now = new Date();
       if (startDate <= now) {

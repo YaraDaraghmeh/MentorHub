@@ -40,6 +40,7 @@ import ProfileMentee from "./Pages/MenteePages/ProfileMentee";
 import ProfileMentor from "./Pages/MentorPages/ProfileMentor";
 import PaymentSuccess from "./Pages/MenteePages/SuccessPage";
 import ForgotPassword from "./Pages/PublicPages/ForgotPassword";
+import Givefeedback from "./Pages/MenteePages/Givefeedback";
 // import { chatConnection, notificaConnection } from "./Services/chatConnection";
 
 
@@ -101,7 +102,7 @@ function App() {
               <Route path="/registration" element={<ChooseUser />} />
               <Route path="/SignUp-mentee" element={<SignUpMentee />} />
               <Route path="/SignUp-mentor" element={<SignUpMentor />} />
-
+              <Route path="/givefeedback" element={<Givefeedback />} />
               {/* Admin Routes - Protected */}
               <Route
                 path="/admin/*"

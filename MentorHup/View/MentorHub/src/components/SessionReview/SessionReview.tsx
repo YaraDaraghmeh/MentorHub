@@ -168,25 +168,7 @@ export default function FeedbackModal({
                                 />
                             </div>
 
-                            {/* Recommendation Question */}
-                            <div className="mb-6">
-                                <label className="flex items-center space-x-2 cursor-pointer">
-                                    <input
-                                        type="checkbox"
-                                        checked={wouldRecommend}
-                                        onChange={(e) => setWouldRecommend(e.target.checked)}
-                                        className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                                    />
-                                    <span
-                                        className={`text-sm ${isDark
-                                                ? "text-[var(--secondary-light)]"
-                                                : "text-[var(--primary-light)]"
-                                            }`}
-                                    >
-                                        I would recommend this to others
-                                    </span>
-                                </label>
-                            </div>
+                          
 
 
                             {/* Action Buttons */}
