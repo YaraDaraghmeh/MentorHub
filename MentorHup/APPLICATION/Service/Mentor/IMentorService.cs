@@ -20,5 +20,7 @@ public interface IMentorService
     Task<MentorDashboardDto> GetMentorDashboardAsync(string mentorId);
 
     Task<(bool IsSuccess, string Message)> CreateAvailabilityAsync(CreateAvailabilityRequest request);
+    Task<(bool IsSuccess, string Message)> DeleteAvailabilityAsync(int availabilityId);
+    Task<(bool IsSuccess, string Message)> DeleteAllAvailabilitiesAsync();
 
 }

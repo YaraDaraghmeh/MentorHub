@@ -379,5 +379,56 @@ namespace MentorHup.APPLICATION.Service.Mentor
             return (true, "Availability created successfully.");
         }
 
+        public async Task<(bool IsSuccess, string Message)> DeleteAvailabilityAsync(int availabilityId)
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (!string.IsNullOrEmpty(userId))
+                return (false, "User is not authenticated.");
+
+            var mentor = await context.Mentors
+                .Include(m => m.Availabilities)
+                .FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
+
+            if (mentor == null)
+                return (false, "Mentor profile not found.");
+
+            var availability = mentor.Availabilities.FirstOrDefault(a => a.Id == availabilityId);
+            if (availability == null)
+                return (false, "Availability not found.");
+
+            if (availability.IsBooked)
+                return (false, "Cannot delete availability because it is already booked.");
+
+            context.MentorAvailabilities.Remove(availability);
+            await context.SaveChangesAsync();
+
+            return (true, "Availability deleted successfully.");
+        }
+
+
+        public async Task<(bool IsSuccess, string Message)> DeleteAllAvailabilitiesAsync()
+        {
+            var userId = httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (string.IsNullOrEmpty(userId))
+                return (false, "User is not authenticated.");
+
+            var mentor = await context.Mentors
+                .Include(m => m.Availabilities)
+                .FirstOrDefaultAsync(m => m.ApplicationUserId == userId);
+
+            if (mentor == null)
+                return (false, "Mentor profile not found.");
+
+            var availabilitiesToDelete = mentor.Availabilities.Where(a => !a.IsBooked).ToList();
+            if (!availabilitiesToDelete.Any())
+                return (false, "No available slots can be deleted (all are booked).");
+
+            context.MentorAvailabilities.RemoveRange(availabilitiesToDelete);
+            await context.SaveChangesAsync();
+
+            return (true, "All availabilities deleted successfully.");
+        }
+
+
     }
 }

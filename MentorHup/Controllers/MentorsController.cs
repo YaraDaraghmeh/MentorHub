@@ -149,5 +149,28 @@ namespace MentorHup.API.Controllers
             return Ok(new { message = "Availability created successfully." });
         }
 
+        [HttpDelete("availability/{availabilityId}")]
+        [Authorize(Roles = "Mentor")]
+        public async Task<IActionResult> DeleteAvailability(int availabilityId)
+        {
+            var (isSuccess, message) = await _mentorService.DeleteAvailabilityAsync(availabilityId);
+            if (!isSuccess)
+                return BadRequest(new { message });
+
+            return Ok(new { message });
+        }
+
+
+        [HttpDelete("availability/all")]
+        [Authorize(Roles = "Mentor")]
+        public async Task<IActionResult> DeleteAllAvailabilities()
+        {
+            var (isSuccess, message) = await _mentorService.DeleteAllAvailabilitiesAsync();
+            if (!isSuccess)
+                return BadRequest(new { message });
+
+            return Ok(new { message });
+        }
+
     }
 }
