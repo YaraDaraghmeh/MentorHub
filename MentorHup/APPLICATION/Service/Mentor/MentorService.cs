@@ -122,21 +122,20 @@ namespace MentorHup.APPLICATION.Service.Mentor
             if (!string.IsNullOrEmpty(request.StripeAccountId))
                 mentor.StripeAccountId = request.StripeAccountId;
 
-            if (request.SkillIds != null)
+            if (request.SkillNames != null && request.SkillNames.Any())
             {
+                var skills = await context.Skills
+                    .Where(s => request.SkillNames.Contains(s.SkillName))
+                    .ToListAsync();
+
                 context.MentorSkills.RemoveRange(mentor.MentorSkills);
 
-                foreach (var skillId in request.SkillIds)
+                foreach (var skill in skills)
                 {
-                    var skillExists = await context.Skills.AnyAsync(s => s.Id == skillId);
-                    if (!skillExists)
-                    {
-                        return false;
-                    }
                     context.MentorSkills.Add(new MentorSkill
                     {
                         MentorId = mentor.Id,
-                        SkillId = skillId
+                        SkillId = skill.Id
                     });
                 }
             }

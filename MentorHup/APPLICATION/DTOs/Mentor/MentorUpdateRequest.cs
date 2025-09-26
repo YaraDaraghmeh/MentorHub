@@ -11,7 +11,7 @@
         public decimal? Price { get; set; }
         public string? StripeAccountId { get; set; }
 
-        public List<int>? SkillIds { get; set; }
+        public List<string>? SkillNames { get; set; }
         //public List<MentorAvailabilityRequest>? Availabilities { get; set; }
     }
 }
