@@ -27,7 +27,7 @@ namespace MentorHup.APPLICATION.Validators.Mentor
             RuleFor(x => x.Field)
                 .MaximumLength(100).WithMessage("Field must not exceed 100 characters");
 
-
+            /*
             RuleForEach(x => x.Availabilities).ChildRules(
                 a =>
                 {
@@ -42,6 +42,7 @@ namespace MentorHup.APPLICATION.Validators.Mentor
                         .Must(end => end > DateTime.Now)
                         .WithMessage("EndTime cannot be in the past.");
                 });
+            */
 
             RuleFor(x => x.StripeAccountId)
                 .MaximumLength(100).WithMessage("StripeAccountId must not exceed 100 characters");

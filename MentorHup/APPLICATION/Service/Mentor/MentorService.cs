@@ -141,6 +141,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                 }
             }
 
+            /*
             if (request.Availabilities != null)
             {
                 context.MentorAvailabilities.RemoveRange(mentor.Availabilities);
@@ -159,7 +160,7 @@ namespace MentorHup.APPLICATION.Service.Mentor
                     });
                 }
             }
-
+            */
 
             await context.SaveChangesAsync();
             return true;
