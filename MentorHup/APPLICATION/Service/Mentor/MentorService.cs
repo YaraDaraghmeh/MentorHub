@@ -75,7 +75,10 @@ namespace MentorHup.APPLICATION.Service.Mentor
                         DurationInMinutes = (int)(a.EndTime - a.StartTime).TotalMinutes,
                         IsBooked = a.IsBooked,
                     }).ToList(),
-                    ReviewCount =  m.Bookings.Count(b => b.Review != null)
+                    ReviewCount =  m.Bookings.Count(b => b.Review != null),
+                    ReviewAverage = m.Bookings.Where(b => b.Review != null).Any()
+                        ? m.Bookings.Where(b => b.Review != null).Average(b => b.Review!.Rating)
+                        : 1
                 })
                 .ToListAsync();
 

@@ -12,6 +12,7 @@
         public int Experiences { get; set; }
         public string Field { get; set; } = null!;
         public int ReviewCount { get; set; }
+        public double ReviewAverage { get; set; }
         public DateTime CreatedAt { get; set; }
         public string ImageLink { get; set; }
         public string CVLink { get; set; }
