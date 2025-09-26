@@ -539,7 +539,7 @@ const BookingModal = ({
       { value: "interview-prep", label: "Interview Preparation", price: basePrice, disabled: true },
       { value: "resume-review", label: "Resume Review", price: Math.round(basePrice * 0.8), disabled: true },
       { value: "career-guidance", label: "Career Guidance", price: Math.round(basePrice * 0.9), disabled: true },
-      { value: "mock-interview", label: "Mock Interview", price: Math.round(basePrice * 1.1), disabled: false },
+      { value: "mock-interview", label: "Mock Interview", price: Math.round(basePrice * 1), disabled: false },
     ];
   }, [mentor?.price]);
 
