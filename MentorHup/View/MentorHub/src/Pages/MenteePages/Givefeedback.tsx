@@ -17,36 +17,52 @@ const Givefeedback = () => {
         navigate('/mentee/bookings');
     };
 
-    const handleSubmit = async (feedbackData: { rating: number; category: string; comment: string; wouldRecommend: boolean }) => {
-        if (!bookingId) return;
-        
+    const handleSubmit = async (feedbackData: { 
+        rating: number; 
+        comment: string; 
+        bookingId?: number;
+    }) => {
         try {
-            const token = localStorage.getItem('token'); // or your auth token storage
+            console.log('Submitting feedback:', feedbackData);
+            
+            if (!bookingId) {
+                throw new Error('No booking ID provided');
+            }
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                throw new Error('Authentication required. Please log in again.');
+            }
             
             const response = await fetch('https://mentor-hub.runasp.net/api/reviews', {
                 method: 'POST',
                 headers: {
-                    'accept': 'text/plain',
+                    'accept': 'application/json',
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
                 body: JSON.stringify({
                     bookingId: parseInt(bookingId, 10),
                     rating: feedbackData.rating,
-                    comment: feedbackData.comment
+                    comment: feedbackData.comment,
+               
                 })
             });
 
+            const responseData = await response.json();
+            
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Failed to submit feedback');
+                console.error('API Error Response:', responseData);
+                throw new Error(responseData.message || `HTTP error! status: ${response.status}`);
             }
             
+            console.log('Feedback submitted successfully:', responseData);
             toast.success('Thank you for your feedback!');
             navigate('/mentee/bookings');
         } catch (error) {
-            console.error('Error submitting feedback:', error);
-            toast.error('Failed to submit feedback. Please try again.');
+            console.error('Error in handleSubmit:', error);
+            toast.error(error instanceof Error ? error.message : 'Failed to submit feedback. Please try again.');
+            throw error; // Re-throw to be caught by the SessionReview component
         }
     };
 
