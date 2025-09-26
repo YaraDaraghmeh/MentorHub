@@ -61,8 +61,6 @@ const CalendarBook = ({ userType, user }: CalendarBookProps) => {
         meetingUrl: b.meetingUrl,
       }));
 
-      console.log(mapped);
-
       setBooking(mapped);
     };
 

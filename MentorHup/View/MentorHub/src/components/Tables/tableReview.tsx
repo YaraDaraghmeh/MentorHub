@@ -100,8 +100,8 @@ const TableReview = () => {
           },
         });
 
-        console.log("API response:", res.data); // اطبع الرد كامل
-        setreviews(res.data.items ?? res.data); // جرب items أو الداتا مباشرة
+        console.log("API response:", res.data);
+        setreviews(res.data.items ?? res.data);
       } catch (error: any) {
         console.error("Error fetching reviews:", error);
       }
