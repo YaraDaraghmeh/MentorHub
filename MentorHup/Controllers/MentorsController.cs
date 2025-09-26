@@ -111,7 +111,6 @@ namespace MentorHup.API.Controllers
 
         [HttpPatch("edit")]
         [Authorize(Roles = "Mentor")]
-
         public async Task<IActionResult> Edit([FromBody] MentorUpdateRequest mentorUpdateRequest)
         {
             var result = await _mentorService.UpdateAsync(mentorUpdateRequest);

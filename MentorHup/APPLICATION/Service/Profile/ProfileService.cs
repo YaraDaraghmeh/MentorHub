@@ -64,6 +64,7 @@ namespace MentorHup.APPLICATION.Service.Profile
                         Description = mentor.Description,
                         Experiences = mentor.Experiences,
                         Price = mentor.Price,
+                        StripeAccountId = mentor.StripeAccountId,
                         Field = mentor.Field,
                         CreatedAt = mentor.ApplicationUser.CreatedAt,
                         Skills = mentor.MentorSkills.Select(s => s.Skill.SkillName).ToList(),
