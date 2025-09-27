@@ -239,6 +239,8 @@ Figure 1 - UI Prototypes and Mockups
 | *Backend Developer* |Khaled Hroub | .NET API, database design, security |
 | *Backend Developer* | Amjad Hamidi | .NET API, database design, security |
 
+APIs Documentation (Swagger): https://mentor-hub.runasp.net/index.html
+Project Demo (Vercel): https://mentorhub-zeta.vercel.app/home
 
 <div align="center">
 
