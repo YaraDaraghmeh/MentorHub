@@ -6,8 +6,6 @@ import { useTheme } from "../../Context/ThemeContext";
 import type { message } from "../Tables/interfaces";
 import { useEffect, useRef, useState } from "react";
 import { IoSend } from "react-icons/io5";
-import axios from "axios";
-import urlChatting from "../../Utilities/Chatting/urlChatting";
 import { useSignalRChat } from "../../Services/chatConnection";
 
 type ListInfo = {
