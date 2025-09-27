@@ -67,13 +67,11 @@ const SignUpMentor = () => {
           .filter((n) => Number.isFinite(n));
       }
 
-      // availabilities from datetime-local inputs => ISO strings
-      const startTimeRaw = (userData as any)?.startTime as string | undefined;
-      const endTimeRaw = (userData as any)?.endTime as string | undefined;
-      const startTimeIso = startTimeRaw
-        ? new Date(startTimeRaw).toISOString()
-        : null;
-      const endTimeIso = endTimeRaw ? new Date(endTimeRaw).toISOString() : null;
+      // Get pre-formatted ISO strings from AvailableDays component
+      const startTimeIso = (userData as any)?.startTimeFormatted as string | undefined;
+      const endTimeIso = (userData as any)?.endTimeFormatted as string | undefined;
+      
+      console.log('Availability Times:', { startTimeIso, endTimeIso });
 
       if (!stripeAccountId) {
         setGeneralError("Stripe Account ID is required.");
