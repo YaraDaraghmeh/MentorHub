@@ -8,6 +8,7 @@ import { MdOutlineCancel } from "react-icons/md";
 import Duration from "./durationTime";
 import ConfirmModal from "../Modal/ModalConfirm";
 import { CancelBooking } from "../../hooks/cancelBooking";
+import { FcCancel } from "react-icons/fc";
 
 const MenteeTableBooking = () => {
   const [booking, setBooking] = useState<BookingData[]>([]);
@@ -83,14 +84,19 @@ const MenteeTableBooking = () => {
     {
       id: "actions",
       header: "Action",
-      render: (row: BookingData) => (
-        <div className="flex justify-center items-center">
-          <MdOutlineCancel
-            className="w-5 h-5 cursor-pointer"
-            onClick={() => handleCancel(row.bookingId)}
-          />
-        </div>
-      ),
+      render: (row: BookingData) =>
+        row.status === "Confirmed" ? (
+          <div className="flex justify-center items-center">
+            <MdOutlineCancel
+              className="w-5 h-5 cursor-pointer"
+              onClick={() => handleCancel(row.bookingId)}
+            />
+          </div>
+        ) : (
+          <div className="flex justify-center items-center">
+            <FcCancel className="w-5 h-5 cursor-not-allowed" />
+          </div>
+        ),
     },
   ];
 
@@ -104,6 +110,24 @@ const MenteeTableBooking = () => {
           columns={columns}
         />
       </div>
+
+      {/* Modal cancel Booking */}
+      <ConfirmModal
+        open={modalCancel.show}
+        title="Cancel Booking"
+        message="Are you sure you want to cancel this booking?"
+        onClose={() => setModalCancel((prev) => ({ ...prev, show: false }))}
+        onConfirm={async () => {
+          const cancel = await CancelBooking(modalCancel.bookingId);
+
+          if (cancel === 200) {
+            setBooking((prev) =>
+              prev.filter((boo) => boo.bookingId !== modalCancel.bookingId)
+            );
+            setModalCancel({ bookingId: 0, show: false });
+          }
+        }}
+      />
 
       {/* Modal cancel Booking */}
       <ConfirmModal

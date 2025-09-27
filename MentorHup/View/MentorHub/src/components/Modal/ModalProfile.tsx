@@ -14,7 +14,6 @@ interface propsProfile {
 }
 
 const ModalProfile = ({ isOpen, mentor, onClose }: propsProfile) => {
-  // const [userData, setUserData] = useState<mentor>();
   const { isDark } = useTheme();
 
   console.log("user: ", mentor);

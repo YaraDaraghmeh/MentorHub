@@ -109,9 +109,11 @@ const ListOfChat = ({ onSelectChat }: listOfChat) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setSearch((pr) => ({ ...pr, [name]: value }));
-
-    console.log(search);
   };
+
+  const filteredConversations = conversation.filter((chat) =>
+    chat.conversationWithName.toLowerCase().includes(search.name.toLowerCase())
+  );
 
   return (
     <div
@@ -139,11 +141,11 @@ const ListOfChat = ({ onSelectChat }: listOfChat) => {
           }`}
         >
           <input
-            name="content"
+            name="name"
             className="justify-start leading-normal text-base font-medium "
             placeholder="Search..."
             value={search.name}
-            onChange={(e) => handleChange(e)}
+            onChange={handleChange}
           />
           <BiSearch className="w-[22px] h-[22px]" />
         </div>
@@ -157,7 +159,7 @@ const ListOfChat = ({ onSelectChat }: listOfChat) => {
            isDark ? "bg-[var(--primary-rgba)]" : "bg-[var(--secondary-light)]"
          }`}
         >
-          {conversation.map((chat) => (
+          {filteredConversations.map((chat) => (
             <CardChat
               key={chat.conversationWithId}
               isRead={chat.isRead}
